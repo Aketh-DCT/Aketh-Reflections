@@ -76,6 +76,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SendFragment()).commit()
             }
 
+            R.id.nav_share ->{
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, GameDescFragment()).commit()
+            }
+
 
             else ->
             {

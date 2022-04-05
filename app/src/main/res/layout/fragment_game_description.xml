@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/imageTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/dxahavtwgnr81" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageTest"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="0dp"
+            android:padding="10dp"
+            android:text="Poli kali fasi Titlos"
+            android:textColor="#00FFFF"
+            android:textSize="24sp" />
+
+
+        <ImageView
+            android:id="@+id/testImage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+
+
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:src="@drawable/ic_battery" />
+
+        <TextView
+            android:id="@+id/textSide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTitle"
+
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/testImage2"
+            android:padding="15dp"
+            android:text="@string/company_name" />
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_toEndOf="@id/textSide"
+            android:text="bra" />
+
+
+        <TextView
+            android:id="@+id/textTest2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonStart"
+
+            android:padding="10dp"
+            android:text="@string/default_gamedesc_text" />
+
+        <TextView
+            android:id="@+id/textTest3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textTest2"
+            android:layout_marginTop="0dp"
+
+            android:padding="10dp"
+            android:text="@string/default_gamedesc_text" />
+
+
+    </RelativeLayout>
+</ScrollView>
