@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
@@ -26,8 +27,16 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
+import gr.aketh.echoes.classes.GameSceneInitializer
+import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
 import gr.aketh.echoes.classes.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
+import org.json.JSONArray
+import org.json.JSONObject
+import org.json.JSONTokener
+import java.io.IOException
+import java.io.InputStream
+import java.nio.charset.Charset
 
 class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener,
     GoogleMap.OnMyLocationButtonClickListener {
@@ -36,6 +45,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var mMap: GoogleMap
     private var permissionDenied = false
+
+    //Game object
+    lateinit var gameSceneObject: GameSceneInitializer
 
     //Current location (set to aketh)
     var currentLocation: LatLng = LatLng(39.542678, 21.775136)
@@ -48,6 +60,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext)!!))
+        loadJSONFromAsset(applicationContext)?.let { jsonParser(it) }
     }
 
 
@@ -57,6 +72,18 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         googleMap.setOnMyLocationClickListener(this)
         googleMap.setOnMyLocationButtonClickListener(this)
         enableMyLocation()
+
+        //Marker stuff test
+        val tsitsanisMuseum = LatLng(39.550598, 21.769916)
+
+        //Circle stuff
+
+
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(tsitsanisMuseum)
+                .title("Tsitsanis Museum")
+        )
     }
 
     //enable location layer if fine location permissions been granted
@@ -168,6 +195,19 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     {
         newInstance(true).show(supportFragmentManager, "dialog")
     }
+
+    //Convert json file to usable stuff
+    private fun jsonParser(json: String): JSONObject {
+        var jsonObject = JSONTokener(json).nextValue() as JSONObject
+
+        var jsonArray = jsonObject.getJSONArray("data") as JSONArray
+
+        return jsonObject;
+
+
+    }
+
+
 
 
     companion object {

@@ -1,0 +1,19 @@
+{
+    "data": [
+        {
+            "circleProperties": {
+                "circle_center": {
+                    "lat": 10,
+                    "lon": 10
+                },
+                "circle_radius": 10,
+                "circle_color": "FFFFFF"
+            },
+            "smallMapBalloon": {
+                "local_img_url": "aa",
+                "title": "title",
+                "description": "aa"
+            }
+        }
+    ]
+}
