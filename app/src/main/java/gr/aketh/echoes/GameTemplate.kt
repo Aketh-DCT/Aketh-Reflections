@@ -2,31 +2,20 @@ package gr.aketh.echoes
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings
-import android.util.Log
-import android.widget.Button
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.libraries.places.api.Places
 import gr.aketh.echoes.classes.GameSceneInitializer
 import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
@@ -34,9 +23,7 @@ import gr.aketh.echoes.classes.PermissionUtils.PermissionDeniedDialog.Companion.
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
-import java.io.IOException
-import java.io.InputStream
-import java.nio.charset.Charset
+
 
 class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationClickListener,
     GoogleMap.OnMyLocationButtonClickListener {
@@ -45,6 +32,10 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     lateinit var mFusedLocationClient: FusedLocationProviderClient
     lateinit var mMap: GoogleMap
     private var permissionDenied = false
+
+    private lateinit var mLocationRequest: LocationRequest
+
+    private lateinit var locationCallback: LocationCallback
 
     //Game object
     lateinit var gameSceneObject: GameSceneInitializer
@@ -61,8 +52,29 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+        //Loads all the stuff
         this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext)!!))
         loadJSONFromAsset(applicationContext)?.let { jsonParser(it) }
+
+        //Location Update Stuff
+        mLocationRequest = LocationRequest.create().setInterval(1000)
+            .setFastestInterval(1000)
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setMaxWaitTime(100).setSmallestDisplacement(3F);
+
+        //Location callback stuff
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                //Log.e("working", "yes")
+                if (locationResult == null) {
+                    return
+                }
+                //passes arguments so code is clearer
+                gameSceneObject.locationCallbackFunc(locationResult)
+            }
+        }
+
     }
 
 
@@ -76,8 +88,14 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         //Marker stuff test
         val tsitsanisMuseum = LatLng(39.550598, 21.769916)
 
-        //Circle stuff
 
+        this.gameSceneObject.addCirclesToMap(googleMap)
+        //Circle stuff
+        //googleMap.addCircle(CircleOptions().center(
+          //  LatLng(39.550598, 21.769916)).
+        //    radius(1000.0).
+        //    strokeColor(Color.RED).
+        //    fillColor(Color.BLUE));
 
         googleMap.addMarker(
             MarkerOptions()
@@ -205,6 +223,18 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         return jsonObject;
 
 
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates(){
+        //For map updates
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            return
+        }
+
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest,locationCallback, Looper.getMainLooper())
     }
 
 

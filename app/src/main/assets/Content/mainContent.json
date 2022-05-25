@@ -2,17 +2,38 @@
     "data": [
         {
             "circleProperties": {
-                "circle_center": {
-                    "lat": 10,
-                    "lon": 10
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.550598,
+                        "lon": 21.769916
+                    },
+                    "circle_radius": 1000,
+                    "circle_color": "#FF0000"
                 },
-                "circle_radius": 10,
-                "circle_color": "FFFFFF"
-            },
-            "smallMapBalloon": {
-                "local_img_url": "aa",
-                "title": "title",
-                "description": "aa"
+                "content": {
+                    "local_img_url": "aa",
+                    "title": "title",
+                    "description": "aa"
+                }
+
+            }
+        },
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.546213,
+                        "lon": 21.771712
+                    },
+                    "circle_radius": 1000,
+                    "circle_color": "#FF00FF"
+                },
+                "content": {
+                    "local_img_url": "bb",
+                    "title": "title",
+                    "description": "bb"
+                }
+
             }
         }
     ]
