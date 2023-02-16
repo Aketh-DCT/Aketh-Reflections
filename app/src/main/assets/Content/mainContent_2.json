@@ -1,0 +1,133 @@
+{
+    "data": [
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.556298,
+                        "lon": 21.769260
+
+
+
+                    },
+                    "circle_radius": 30,
+                    "circle_color": "#FF0000",
+                    "id": 4
+                },
+                "content": {
+                    "local_img_url": "aa",
+                    "title": "Συναγωγή",
+                    "description": "",
+                    "sound": "synagogue",
+                    "type": "quiz",
+                    "data":
+                    {
+                        "question": "Η συναγωγή είναι ενας χώρος συνδεδεμένος με την:",
+                        "answers": ["Ευραική θρησκεία","Χριστιανική Θρησκεία"],
+                        "correct_answer": 0,
+                        "points": 100
+                    }
+                }
+
+            }
+        },
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.551085376406995,
+                        "lon": 21.76988935078523
+                    },
+                    "circle_radius": 20,
+                    "circle_color": "#FF00FF",
+                    "id": 4
+                },
+                "content": {
+                    "local_img_url": "bb",
+                    "title": "Didimo Othomaniko Loutro",
+                    "description": "Loutro",
+                    "sound": "old_prison",
+                    "type": "quiz",
+                    "data":
+                    {
+                        "question": "Το οθωμανικό λουτρό χρησιμοποιούταν για:",
+                        "answers": ["Θέατρο","Μουσικό στάδιο","Μπάνιο"],
+                        "correct_answer": 2,
+                        "points": 100
+                    }
+                }
+
+            }
+        },
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.55023602279318,
+                        "lon": 21.770983141158442
+                    },
+                    "circle_radius": 20,
+                    "circle_color": "#FF00FF",
+                    "id": 1
+                },
+                "content": {
+                    "local_img_url": "bb",
+                    "title": "Tzami",
+                    "description": "Tzami",
+                    "sound": "islam_shah_mosque",
+                    "type": "quiz",
+                    "data":
+                    {
+                        "question": "Το τζαμί φτιάχτηκε το 1571;",
+                        "answers": ["Ναι","Οχι"],
+                        "correct_answer": 1,
+                        "points": 100
+                    }
+                }
+            }
+        },
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.555484202427024,
+                        "lon": 21.76773591671989
+                    },
+                    "circle_radius": 14,
+                    "circle_color": "#FF00FF",
+                    "id": 2
+                },
+                "content": {
+                    "local_img_url": "bb",
+                    "title": "central_bridge_of_trikala",
+                    "description": "bb",
+                    "sound": "central_bridge_of_trikala",
+                    "type": "camera"
+
+                }
+
+            }
+        },
+        {
+            "circleProperties": {
+                "properties": {
+                    "circle_center": {
+                        "lat": 39.55540714703848,
+                        "lon": 21.76687274690491
+                    },
+                    "circle_radius": 14,
+                    "circle_color": "#FF00FF",
+                    "id": 3
+                },
+                "content": {
+                    "local_img_url": "bb",
+                    "title": "Asklipios",
+                    "description": "bb",
+                    "sound": "asclipion",
+                    "type": "camera"
+                }
+
+            }
+        }
+    ]
+}

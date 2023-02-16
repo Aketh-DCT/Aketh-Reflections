@@ -13,6 +13,12 @@ class BatteryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
+        //Set the code for Battery fragment
+
+
+
+
         return inflater.inflate(R.layout.fragment_battery,container,false)
         //return super.onCreateView(inflater, container, savedInstanceState)
     }

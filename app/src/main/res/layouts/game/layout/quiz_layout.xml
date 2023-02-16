@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+
+    android:orientation="vertical"
+
+    android:id="@+id/layout_quiz"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/quiz_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Quiz - Question 1"
+        android:textColor="@color/black"
+
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/quiz_tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Yoo"
+
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+
+    <LinearLayout
+        android:id="@+id/quiz_linearView_radioOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/quiz_rg"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+
+
+           >
+
+            <RadioButton
+                android:id="@+id/quiz_rb_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="BrokoLoko"
+                android:textColor="@color/black"/>
+
+            <RadioButton
+                android:id="@+id/quiz_rb_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:text="Double penpinaple pie" />
+            <RadioButton
+                android:id="@+id/quiz_rb_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:text="Double penpinaple pie"
+                android:visibility="gone"/>
+
+            <RadioButton
+                android:id="@+id/quiz_rb_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:text="Double penpinaple pie"
+                android:visibility="gone"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/quiz_bt_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="ANSWER"/>
+
+    <TextView
+        android:id="@+id/quiz_hiddenVariable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+
+</LinearLayout>

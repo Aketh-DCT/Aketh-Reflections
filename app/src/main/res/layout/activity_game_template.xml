@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".GameTemplate">
+    tools:context=".GameTemplate"
+    android:id="@+id/activity_game_layout"
+   >
 
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/map"
@@ -13,17 +15,88 @@
         android:layout_height="match_parent"
         map:cameraTilt="30"
         map:uiRotateGestures="true"
-        map:uiZoomControls="true" />
+        map:uiZoomControls="true"
+        android:theme="@style/Theme.Echoes_Aketh.NoActionBar2"/>
+
+    <include
+        android:id="@+id/include_quiz_layout"
+        layout="@layout/quiz_layout"
+        android:layout_height="400dp"
+        android:layout_width="300dp"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/include_wrong_layout"
+        layout="@layout/wrong_layout"
+        android:layout_height="400dp"
+        android:layout_width="300dp"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/include_correct_layout"
+        layout="@layout/correct_layout"
+        android:layout_height="400dp"
+        android:layout_width="300dp"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/include_camera_layout"
+        layout="@layout/camera_layout"
+        android:layout_height="400dp"
+        android:layout_width="300dp"
+
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
 
     <Button
         android:id="@+id/currentLocation"
-        android:layout_width="30sp"
-        android:layout_height="40sp"
-        android:layout_alignBottom="@+id/map"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignEnd="@+id/map"
-        android:layout_alignRight="@+id/map"
-        android:layout_marginRight="30sp"
-        android:layout_marginBottom="30sp" />
+        android:layout_alignBottom="@+id/map"
+        android:layout_marginEnd="30sp"
+        android:layout_marginBottom="30sp"
+        android:contentDescription="Random Text"/>
+
+    <TextView
+        android:id="@+id/points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/map"
+        android:layout_alignBottom="@+id/map"
+        android:layout_marginStart="30sp"
+        android:layout_marginBottom="30sp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:text="Points: 0"/>
+
+
 
 
 </RelativeLayout>
