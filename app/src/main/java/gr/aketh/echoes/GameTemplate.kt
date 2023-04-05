@@ -90,6 +90,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        //Set the theme for no action bar
         setTheme(R.style.Theme_Echoes_Aketh_NoActionBar2);
         supportActionBar?.hide();
 
@@ -411,6 +412,12 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //OnPause do things
+        gameSceneObject.onPause()
     }
 
 

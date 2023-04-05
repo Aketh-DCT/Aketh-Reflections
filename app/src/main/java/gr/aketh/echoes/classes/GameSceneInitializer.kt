@@ -43,6 +43,7 @@ class GameSceneInitializer(
     private lateinit var quizLayout: LinearLayout
     private lateinit var wrongLayout: RelativeLayout
     private lateinit var cameraLayout: ConstraintLayout
+    private lateinit var slidingPuzzleLayout: LinearLayout
     private lateinit var pointsTextView: TextView
 
     private var points = 0
@@ -118,7 +119,7 @@ class GameSceneInitializer(
         //Points text
         pointsTextView = this.activity.findViewById<TextView>(R.id.points)
 
-        //Init the layout and do something with the button
+        //Init the different layouts and do something with the button (MAKE SURE TO PUT THEM AS INCLUDE INSIDE activity_game_template!!!
         quizLayout = this.activity.findViewById<LinearLayout>(R.id.include_quiz_layout)
         var buttonStart = quizLayout.findViewById<Button>(R.id.quiz_bt_answer)
         var quizRadioGroup = quizLayout.findViewById<RadioGroup>(R.id.quiz_rg)
@@ -131,6 +132,10 @@ class GameSceneInitializer(
 
         cameraLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_camera_layout)
         var buttonDoneCamera = cameraLayout.findViewById<Button>(R.id.camera_bt_done)
+
+
+        slidingPuzzleLayout = this.activity.findViewById<LinearLayout>(R.id.include_slidingPuzzle_layout)
+
 
 
         //When i click it dissapears
@@ -246,7 +251,7 @@ class GameSceneInitializer(
     }
 
     fun locationCallbackFunc(locationResult: LocationResult) {
-        //All the stuff that need to be done
+        //Activates any activities or sounds as per the parameters
 
         for (circle in jsonList) {
             try {
@@ -282,6 +287,11 @@ class GameSceneInitializer(
                         //Show layout and do calculation
                         this.showCorrectLayoutWithContent(circle)
                     } else if (circle["type"] == "camera" && !(circle["running"] as Boolean)) {
+                        //Show layout and do calculation
+                        this.showCorrectLayoutWithContent(circle)
+                    }
+                    else if(circle["type"] == "slidingPuzzle")
+                    {
                         //Show layout and do calculation
                         this.showCorrectLayoutWithContent(circle)
                     }
@@ -350,6 +360,10 @@ class GameSceneInitializer(
                 }
 
             }
+            "slidingPuzzle" -> {
+                slidingPuzzleLayout.visibility = View.VISIBLE
+
+            }
         }
     }
 
@@ -360,6 +374,20 @@ class GameSceneInitializer(
     private fun getMedia(mediaName: Int): Uri? {
         return Uri.parse("android.resource://" + applicationContext.packageName.toString() + "/raw/" + mediaName)
     }
+
+
+
+    fun onPause() {
+
+        // Release all the MediaPlayer instances
+        for (mediaPlayer in mediaPlayerList.values) {
+            mediaPlayer.release()
+        }
+
+        // Clear the mediaPlayerList to avoid any confusion or potential issues
+        mediaPlayerList.clear()
+    }
+
 
 
 }

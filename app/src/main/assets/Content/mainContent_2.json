@@ -66,7 +66,7 @@
                         "lat": 39.55023602279318,
                         "lon": 21.770983141158442
                     },
-                    "circle_radius": 20,
+                    "circle_radius": 2000,
                     "circle_color": "#FF00FF",
                     "id": 1
                 },
@@ -75,7 +75,7 @@
                     "title": "Tzami",
                     "description": "Tzami",
                     "sound": "islam_shah_mosque",
-                    "type": "quiz",
+                    "type": "slidingPuzzle",
                     "data":
                     {
                         "question": "Το τζαμί φτιάχτηκε το 1571;",

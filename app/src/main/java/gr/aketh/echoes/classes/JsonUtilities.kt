@@ -72,7 +72,7 @@ object JsonUtilities
 
 
 
-
+        //Created all the correct variables that is reads from my json file
         for(i in 0 until jsonArray.length())
         {
             val dict = mutableMapOf<String,Any?>()
