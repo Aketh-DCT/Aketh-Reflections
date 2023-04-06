@@ -1,5 +1,6 @@
 package gr.aketh.echoes.classes
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,10 +20,8 @@ import com.google.android.gms.maps.model.LatLng
 import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
 import gr.aketh.echoes.classes.JsonUtilities.jsonArrayToMutableMap
-import gr.aketh.echoes.databinding.ActivityGameTemplateBinding
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.reflect.typeOf
 
 
 class GameSceneInitializer(
@@ -134,7 +134,13 @@ class GameSceneInitializer(
         var buttonDoneCamera = cameraLayout.findViewById<Button>(R.id.camera_bt_done)
 
 
+        //Sliding Puzzle test
         slidingPuzzleLayout = this.activity.findViewById<LinearLayout>(R.id.include_slidingPuzzle_layout)
+        var buttonPuzzle8 = slidingPuzzleLayout.findViewById<Button>(R.id.slidingPuzzle_bt_8)
+
+
+        //buttonPuzzle8.setOnTouchListener(object : view)
+
 
 
 

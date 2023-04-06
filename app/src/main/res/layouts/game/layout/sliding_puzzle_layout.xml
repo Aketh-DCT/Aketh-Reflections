@@ -50,9 +50,11 @@
             android:layout_height="100dp"
             android:text="I'm a button"/>
 
-        <Button android:layout_width="100dp"
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="I'm a button"/>
+            android:text="I'm a button"
+            android:clickable="true"
+            android:id="@+id/slidingPuzzle_bt_8"/>
 
 
 

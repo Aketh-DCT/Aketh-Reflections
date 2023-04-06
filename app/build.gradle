@@ -81,6 +81,8 @@ dependencies {
     implementation('com.journeyapps:zxing-android-embedded:4.3.0') { transitive = false }
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'androidx.databinding:databinding-runtime:7.4.1'
+    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.core:core-ktx:+'
 
     def camerax_version = "1.1.0-beta01"//Define
 
