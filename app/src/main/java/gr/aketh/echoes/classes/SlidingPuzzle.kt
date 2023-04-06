@@ -16,7 +16,7 @@ class SlidingPuzzle {
     }
 
     fun calculateDirection()
-    {//
+    {
 
         var te:Int = 5
 
