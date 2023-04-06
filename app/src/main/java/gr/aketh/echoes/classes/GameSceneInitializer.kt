@@ -11,6 +11,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.location.LocationResult
@@ -19,9 +21,11 @@ import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
+import gr.aketh.echoes.classes.Const.SWIPETHRESHOLD
 import gr.aketh.echoes.classes.JsonUtilities.jsonArrayToMutableMap
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.abs
 
 
 class GameSceneInitializer(
@@ -45,6 +49,8 @@ class GameSceneInitializer(
     private lateinit var cameraLayout: ConstraintLayout
     private lateinit var slidingPuzzleLayout: LinearLayout
     private lateinit var pointsTextView: TextView
+    private lateinit var buttonArray: MutableList<MutableList<Float>>;
+
 
     private var points = 0
 
@@ -135,13 +141,99 @@ class GameSceneInitializer(
 
 
         //Sliding Puzzle test
-        slidingPuzzleLayout = this.activity.findViewById<LinearLayout>(R.id.include_slidingPuzzle_layout)
-        var buttonPuzzle8 = slidingPuzzleLayout.findViewById<Button>(R.id.slidingPuzzle_bt_8)
+        slidingPuzzleLayout =
+            this.activity.findViewById<LinearLayout>(R.id.include_slidingPuzzle_layout)
+        var buttonPuzzle8 = slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_8)
+        var buttonPuzzleEmpty =
+            slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_empty)
+        //Testing the arrays to see if movement works
+        buttonArray = mutableListOf()
+        buttonArray.add(mutableListOf(0.0F, 0.0F))
+
+        buttonArray[0][0] = 0.0F
+        buttonArray[0][1] = 0.0F
+        var tempPos: Int = 8;
+        var isSwipeEnabled = true
 
 
-        //buttonPuzzle8.setOnTouchListener(object : view)
+        buttonPuzzle8.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
+                if (isSwipeEnabled) {
 
 
+                    when (event?.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            //Temporary solution
+                            buttonArray[0][0] = event.x
+                            buttonArray[0][1] = event.y
+                        }
+
+                        MotionEvent.ACTION_MOVE -> {
+                            val dx = event.x - buttonArray[0][0]
+                            val dy = event.y - buttonArray[0][1]
+
+                            if (abs(dx) > SWIPETHRESHOLD || abs(dy) > SWIPETHRESHOLD) {
+                                //Calculate direction
+
+                                if (abs(dx) > abs(dy)) {
+                                    //Left right
+
+                                    if (dx > 0) {
+                                        if (tempPos % 3 != 0) {
+                                            //Calculate new position for the button based on the invisible one
+                                            val clickedButtonParams =
+                                                buttonPuzzle8.layoutParams as GridLayout.LayoutParams
+                                            val emtpyButtonParams =
+                                                buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                            val animation = TranslateAnimation(
+                                                Animation.RELATIVE_TO_SELF, 0f,
+                                                Animation.RELATIVE_TO_SELF, 10F,
+                                                Animation.RELATIVE_TO_SELF, 0F,
+                                                Animation.RELATIVE_TO_SELF, 0F
+
+                                            )
+
+                                            val tmpS = clickedButtonParams.rowSpec
+                                            val tmpN = clickedButtonParams.columnSpec
+
+                                            clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                            clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+
+                                            emtpyButtonParams.rowSpec = GridLayout.spec(2)
+                                            emtpyButtonParams.columnSpec = GridLayout.spec(1)
+
+                                            animation.duration = 300
+                                            buttonPuzzle8.startAnimation(animation)
+
+
+                                            // Request a layout pass to apply the updated layout parameters
+                                            buttonPuzzle8.requestLayout()
+                                            buttonPuzzleEmpty.requestLayout()
+
+                                            isSwipeEnabled=false
+
+
+
+                                            p0?.postDelayed({
+                                                isSwipeEnabled = true
+                                            }, animation.duration)
+
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+
+                }
+                return true
+            }
+
+
+        })
 
 
         //When i click it dissapears
@@ -274,8 +366,7 @@ class GameSceneInitializer(
 
                 //Here everything is executed
                 if (distance[0] > circle["circle_radius"] as Double) {
-                    if (circle["running"] as Boolean)
-                    {
+                    if (circle["running"] as Boolean) {
 
                         this.mediaPlayerList[circle["sound"]]?.stop()
                     }
@@ -295,9 +386,7 @@ class GameSceneInitializer(
                     } else if (circle["type"] == "camera" && !(circle["running"] as Boolean)) {
                         //Show layout and do calculation
                         this.showCorrectLayoutWithContent(circle)
-                    }
-                    else if(circle["type"] == "slidingPuzzle")
-                    {
+                    } else if (circle["type"] == "slidingPuzzle") {
                         //Show layout and do calculation
                         this.showCorrectLayoutWithContent(circle)
                     }
@@ -382,7 +471,6 @@ class GameSceneInitializer(
     }
 
 
-
     fun onPause() {
 
         // Release all the MediaPlayer instances
@@ -395,5 +483,8 @@ class GameSceneInitializer(
     }
 
 
+}
 
+object Const {
+    const val SWIPETHRESHOLD: Int = 50
 }

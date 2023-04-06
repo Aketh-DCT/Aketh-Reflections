@@ -56,6 +56,13 @@
             android:clickable="true"
             android:id="@+id/slidingPuzzle_bt_8"/>
 
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="I' the button"
+            android:clickable="true"
+            android:id="@+id/slidingPuzzle_bt_empty"
+            android:visibility="visible"/>
+
 
 
 
