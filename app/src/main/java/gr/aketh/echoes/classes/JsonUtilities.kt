@@ -134,6 +134,16 @@ object JsonUtilities
 
             }
 
+            //Slizing puzzle init
+            if(content_data_type=="slidingPuzzle")
+            {
+                val typeData = content.getJSONObject("data")
+                //Read the quiz data so I can load it?
+                val pieces = arrayOf<Array<Int>>()
+                val sliding_puzzle_pieces = typeData.getJSONArray("pieces")
+                Log.d("PIECES --------", sliding_puzzle_pieces.toString())
+            }
+
             //Combining to one
             dict["circle_center_lat"] = circle_center_lat
             dict["circle_center_lon"] = circle_center_lon

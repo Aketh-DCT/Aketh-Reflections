@@ -78,10 +78,8 @@
                     "type": "slidingPuzzle",
                     "data":
                     {
-                        "question": "Το τζαμί φτιάχτηκε το 1571;",
-                        "answers": ["Ναι","Οχι"],
-                        "correct_answer": 1,
-                        "points": 100
+                        "pieces" : [[4,7,3],[2,6,8],[5,1,-1]],
+                        "imgs" : "Notthing right now"
                     }
                 }
             }
