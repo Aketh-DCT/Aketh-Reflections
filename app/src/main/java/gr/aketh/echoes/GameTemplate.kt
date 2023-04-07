@@ -103,6 +103,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         )
 
+
+
         //Camera
         this.requestCameraXPermissions()
 

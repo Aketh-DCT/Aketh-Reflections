@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.location.Location
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -48,7 +50,11 @@ class GameSceneInitializer(
     private lateinit var cameraLayout: ConstraintLayout
     private lateinit var slidingPuzzleLayout: LinearLayout
     private lateinit var pointsTextView: TextView
-    private lateinit var buttonArray: MutableList<MutableList<Float>>;
+    private lateinit var buttonArray: MutableList<MutableList<Float>>
+    private lateinit var buttonLayoutArray: MutableList<CustomButton>
+    private lateinit var correctLayout : RelativeLayout
+
+    var isSwipeEnabled = true
 
 
     private var points = 0
@@ -107,6 +113,18 @@ class GameSceneInitializer(
             MediaPlayer.create(applicationContext, getMedia(R.raw.synagogue))
 
 
+        mediaPlayerList["cinema"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.cinema))
+        mediaPlayerList["energeia"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.energeia))
+        mediaPlayerList["fotosinthesi"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.fotosinthesi))
+        mediaPlayerList["milos"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.milos))
+        mediaPlayerList["treno"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.treno))
+
+
         //Add sound effect
         soundeffectsPlayerList.add(MediaPlayer.create(applicationContext, getMedia(R.raw.points)))
         soundeffectsPlayerList.add(
@@ -132,7 +150,7 @@ class GameSceneInitializer(
         wrongLayout = this.activity.findViewById<RelativeLayout>(R.id.include_wrong_layout)
         var buttonWrong = wrongLayout.findViewById<Button>(R.id.wrong_bt_close)
 
-        var correctLayout = this.activity.findViewById<RelativeLayout>(R.id.include_correct_layout)
+        correctLayout = this.activity.findViewById<RelativeLayout>(R.id.include_correct_layout)
         var buttonCorrect = correctLayout.findViewById<Button>(R.id.correct_bt_close)
 
         cameraLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_camera_layout)
@@ -144,8 +162,399 @@ class GameSceneInitializer(
             this.activity.findViewById<LinearLayout>(R.id.include_slidingPuzzle_layout)
         var buttonPuzzle8 = slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_8)
         var buttonPuzzle1 = slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_1)
+        var buttonPuzzle5 = slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_5)
+
         var buttonPuzzleEmpty =
             slidingPuzzleLayout.findViewById<CustomButton>(R.id.slidingPuzzle_bt_empty)
+
+
+        buttonLayoutArray = mutableListOf()//Buttonarray
+        var arraySlid: Array<Array<Int>> = arrayOf(
+            arrayOf(1, 5, 2),
+            arrayOf(4, 3, 6),
+            arrayOf(7, 8, -1)
+        )
+        for (x in 1..8) {
+            //Finds and loads all the buttons
+            val buttonNameId = applicationContext.resources.getIdentifier(
+                "slidingPuzzle_bt_$x",
+                "id",
+                applicationContext.packageName
+            )
+            val button = slidingPuzzleLayout.findViewById<CustomButton>(buttonNameId)
+            val tempBP = button.layoutParams as GridLayout.LayoutParams
+            tempBP.rowSpec = tempBP.rowSpec
+            tempBP.columnSpec = tempBP.columnSpec
+            button.requestLayout()
+
+            button.setOnTouchListener(object : View.OnTouchListener {
+                    override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
+                        var currentNumberInside = x
+                        if (isSwipeEnabled) {
+
+
+                            when (event?.action) {
+                                MotionEvent.ACTION_DOWN -> {
+                                    //Temporary solution
+                                    buttonArray[0][0] = event.x
+                                    buttonArray[0][1] = event.y
+                                }
+
+                                MotionEvent.ACTION_MOVE -> {
+                                    val dx = event.x - buttonArray[0][0]
+                                    val dy = event.y - buttonArray[0][1]
+                                    var minusPosition = getCurrentPosition(arraySlid, -1)
+
+                                    if (abs(dx) > SWIPETHRESHOLD || abs(dy) > SWIPETHRESHOLD) {
+                                        //Calculate direction
+
+                                        if (abs(dx) > abs(dy)) {
+                                            //Left right
+
+                                            if (dx > 0) {
+
+                                                if (findRelativePosition(arraySlid,
+                                                     currentNumberInside, -1 ) ==
+                                                    RelativePosition.RIGHT && isAdjacentToValue(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    ))
+                                                 {
+                                                    //Calculate new position for the button based on the invisible one
+                                                    val clickedButtonParams =
+                                                        p0!!.layoutParams as GridLayout.LayoutParams
+                                                    val emtpyButtonParams =
+                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                    val animation = TranslateAnimation(
+                                                        Animation.RELATIVE_TO_SELF, 0f,
+                                                        Animation.RELATIVE_TO_SELF, 5F,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, 0F
+
+                                                    )
+
+                                                    val tmpS = minusPosition!![0]
+                                                    val tmpN = minusPosition[1]
+
+                                                    val oldS = getCurrentPosition(
+                                                        arraySlid,
+                                                        currentNumberInside
+                                                    )
+
+                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                    //Button 1
+
+                                                    clickedButtonParams.rowSpec = GridLayout.spec(minusPosition[0], 1.0F)
+                                                    clickedButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1],1.0F)
+
+
+                                                    //Button 2
+                                                    emtpyButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition[0], 1.0F)
+                                                    emtpyButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1] - 1, 1.0F)
+
+                                                    //val tempRow = clickedButtonParams.rowSpec
+                                                    //val tempColumn = clickedButtonParams.columnSpec
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                    //emtpyButtonParams.rowSpec = tempRow
+                                                    //emtpyButtonParams.columnSpec = tempColumn
+
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec.also { emtpyButtonParams.rowSpec = clickedButtonParams.rowSpec }
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec.also { emtpyButtonParams.columnSpec = clickedButtonParams.columnSpec }
+
+                                                    Log.d("Button $x", "New button position position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0]} row:${minusPosition[1]-1}")
+
+                                                    arraySlid = swapAdjacentValues(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+
+                                                    animation.duration = 300
+                                                    //p0!!.startAnimation(animation)
+
+
+                                                    // Request a layout pass to apply the updated layout parameters
+                                                    p0!!.requestLayout()
+                                                    buttonPuzzleEmpty.requestLayout()
+                                                    //updateLayoutAll()
+
+                                                    isSwipeEnabled = false
+
+
+
+                                                    p0?.postDelayed({
+                                                        isSwipeEnabled = true
+                                                    }, animation.duration)
+
+
+
+
+                                                }
+                                            } else {
+                                                //minuspositon
+                                                // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
+                                                //Swipe Left
+                                                //var minusPosition = getCurrentPosition(arraySlid, -1)
+                                                if (findRelativePosition(arraySlid, currentNumberInside ,-1) ==
+                                                    RelativePosition.LEFT && isAdjacentToValue(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+                                                ) {
+                                                    //Calculate new position for the button based on the invisible one
+                                                    val clickedButtonParams =
+                                                        p0!!.layoutParams as GridLayout.LayoutParams
+                                                    val emtpyButtonParams =
+                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                    val animation = TranslateAnimation(
+                                                        Animation.RELATIVE_TO_SELF, 0f,
+                                                        Animation.RELATIVE_TO_SELF, -5F,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, 0F
+
+                                                    )
+
+                                                    //val tmpS = tempPos
+                                                    val tmpN = clickedButtonParams.columnSpec
+
+                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
+
+                                                    //Button 1
+                                                    clickedButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition!![0], 1.0F)
+                                                    clickedButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                    //Button 2
+                                                    emtpyButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition[0], 1.0F)
+                                                    emtpyButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1] + 1, 1.0F)
+
+                                                    Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] } row:${minusPosition[1] +1}")
+
+                                                    arraySlid = swapAdjacentValues(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+
+                                                    animation.duration = 300
+                                                    //p0!!.startAnimation(animation)
+
+
+                                                    // Request a layout pass to apply the updated layout parameters
+
+                                                    p0!!.requestLayout()
+                                                    buttonPuzzleEmpty.requestLayout()
+                                                    //updateLayoutAll()
+
+                                                    isSwipeEnabled = false
+
+
+
+                                                    p0?.postDelayed({
+                                                        isSwipeEnabled = true
+                                                    }, animation.duration)
+
+
+                                                }
+                                            }
+                                        } else {
+                                            //top down
+
+                                            if (dy > 0) {
+                                                //down
+                                                if (findRelativePosition(arraySlid,currentNumberInside ,-1) ==
+                                                    RelativePosition.BELOW && isAdjacentToValue(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+                                                ) {
+                                                    //Calculate new position for the button based on the invisible one
+                                                    val clickedButtonParams =
+                                                        p0!!.layoutParams as GridLayout.LayoutParams
+                                                    val emtpyButtonParams =
+                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                    val animation = TranslateAnimation(
+                                                        Animation.RELATIVE_TO_SELF, 0f,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, 5F
+
+                                                    )
+
+                                                    val tmpS = clickedButtonParams.rowSpec
+                                                    val tmpN = clickedButtonParams.columnSpec
+
+                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                    //Button 1
+                                                    clickedButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition!![0], 1.0F)
+                                                    clickedButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                    //Button 2
+                                                    emtpyButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition[0] - 1, 1.0F)
+                                                    emtpyButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                    Log.d("Button $x", "New button position col:${minusPosition[0] } row:${minusPosition[1]}")
+                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] - 1} row:${minusPosition[1]}")
+
+                                                    arraySlid = swapAdjacentValues(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+
+                                                    animation.duration = 300
+                                                    //p0!!.startAnimation(animation)
+
+
+                                                    // Request a layout pass to apply the updated layout parameters
+                                                    p0!!.requestLayout()
+                                                    buttonPuzzleEmpty.requestLayout()
+                                                    //updateLayoutAll()
+
+                                                    isSwipeEnabled = false
+
+
+
+                                                    p0?.postDelayed({
+                                                        isSwipeEnabled = true
+                                                    }, animation.duration)
+
+
+                                                }
+                                            } else {
+                                                //minuspositon
+                                                // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
+                                                //Swipe Up-----------
+                                                //var minusPosition = getCurrentPosition(arraySlid, -1)
+                                                if (findRelativePosition(arraySlid,currentNumberInside ,-1 ) ==
+                                                    RelativePosition.ABOVE && isAdjacentToValue(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+                                                ) {
+                                                    //Calculate new position for the button based on the invisible one
+                                                    val clickedButtonParams =
+                                                        p0!!.layoutParams as GridLayout.LayoutParams
+                                                    val emtpyButtonParams =
+                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                    val animation = TranslateAnimation(
+                                                        Animation.RELATIVE_TO_SELF, 0f,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, 0F,
+                                                        Animation.RELATIVE_TO_SELF, -5F
+
+                                                    )
+
+                                                    val tmpS = clickedButtonParams.rowSpec
+                                                    val tmpN = clickedButtonParams.columnSpec
+
+                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                    //Button 1
+                                                    clickedButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition!![0], 1.0F)
+                                                    clickedButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1], 1.0F)
+
+                                                   // slidingPuzzleLayout.removeView(p0)
+
+
+                                                    //Button 2
+                                                    //val emptyButtonIndex = slidingPuzzleLayout.indexOfChild(buttonPuzzleEmpty)
+                                                    emtpyButtonParams.rowSpec =
+                                                        GridLayout.spec(minusPosition[0] + 1, 1.0F)
+                                                    emtpyButtonParams.columnSpec =
+                                                        GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                   // slidingPuzzleLayout.addView(p0,emptyButtonIndex)
+
+                                                    Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] + 1} row:${minusPosition[1]}")
+
+                                                    arraySlid = swapAdjacentValues(
+                                                        arraySlid,
+                                                        currentNumberInside,
+                                                        -1
+                                                    )
+
+                                                    animation.duration = 300
+                                                    //p0!!.startAnimation(animation)
+
+
+                                                    // Request a layout pass to apply the updated layout parameters
+                                                    p0!!.requestLayout()
+                                                    buttonPuzzleEmpty.requestLayout()
+                                                    //updateLayoutAll()
+
+                                                    isSwipeEnabled = false
+
+
+
+                                                    p0?.postDelayed({
+                                                        isSwipeEnabled = true
+                                                    }, animation.duration)
+
+
+                                                }
+                                            }
+                                        }
+
+                                        if(isArrayEqual(arraySlid))
+                                        {
+                                            //call some function to win
+                                            slidingDone()
+                                        }
+                                    }
+                                }
+
+                            }
+
+
+                        }
+
+                        return true
+                    }
+
+
+                })
+            buttonLayoutArray.add(button)
+        }
         //Testing the arrays to see if movement works
         buttonArray = mutableListOf()
         buttonArray.add(mutableListOf(0.0F, 0.0F))
@@ -155,17 +564,13 @@ class GameSceneInitializer(
         var tempPos: IntArray = intArrayOf(2, 2);
 
 
-        var arraySlid: Array<Array<Int>> = arrayOf(
-            arrayOf(4, 7, 3),
-            arrayOf(2, 6, 8),
-            arrayOf(5, 1, -1)
-        )
 
 
-        var isSwipeEnabled = true
 
 
-        buttonPuzzle8.setOnTouchListener(object : View.OnTouchListener {
+
+
+        /*buttonPuzzle8.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
                 var currentNumberInside = 8
                 if (isSwipeEnabled) {
@@ -242,6 +647,7 @@ class GameSceneInitializer(
                                             // Request a layout pass to apply the updated layout parameters
                                             buttonPuzzle8.requestLayout()
                                             buttonPuzzleEmpty.requestLayout()
+                                            updateLayoutAll()
 
                                             isSwipeEnabled = false
 
@@ -309,8 +715,10 @@ class GameSceneInitializer(
 
 
                                             // Request a layout pass to apply the updated layout parameters
+
                                             buttonPuzzle8.requestLayout()
                                             buttonPuzzleEmpty.requestLayout()
+                                            updateLayoutAll()
 
                                             isSwipeEnabled = false
 
@@ -380,6 +788,7 @@ class GameSceneInitializer(
                                             // Request a layout pass to apply the updated layout parameters
                                             buttonPuzzle8.requestLayout()
                                             buttonPuzzleEmpty.requestLayout()
+                                            updateLayoutAll()
 
                                             isSwipeEnabled = false
 
@@ -448,6 +857,7 @@ class GameSceneInitializer(
                                             // Request a layout pass to apply the updated layout parameters
                                             buttonPuzzle8.requestLayout()
                                             buttonPuzzleEmpty.requestLayout()
+                                            updateLayoutAll()
 
                                             isSwipeEnabled = false
 
@@ -472,9 +882,11 @@ class GameSceneInitializer(
             }
 
 
-        })
+        })*/
 
-        buttonPuzzle1.setOnTouchListener(object : View.OnTouchListener {
+
+        //
+        /*buttonPuzzle1.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
                 var currentNumberInside = 1
                 if (isSwipeEnabled) {
@@ -498,7 +910,8 @@ class GameSceneInitializer(
                                 if (abs(dx) > abs(dy)) {
                                     //Left right
 
-                                    if (dx > 0) {
+                                    if (dx > 0)
+                                    {
                                         if (((calculateRCtoNum(
                                                 minusPosition!![0],
                                                 minusPosition[1]
@@ -598,6 +1011,8 @@ class GameSceneInitializer(
                                             //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
                                             //var tmpArr: IntArray = calculateNumToRC(tempPos)
 
+                                            Log.d("", "onTouch: ")
+
                                             //Button 1
                                             clickedButtonParams.rowSpec =
                                                 GridLayout.spec(tempPos[0])
@@ -781,7 +1196,7 @@ class GameSceneInitializer(
             }
 
 
-        })
+        })*/
 
 
         //When i click it dissapears
@@ -927,17 +1342,28 @@ class GameSceneInitializer(
 
                     //Read the quiz layout and display it
                     if (circle["type"] == "quiz" && !(circle["running"] as Boolean)) {
-                        this.quizLayout.visibility = View.VISIBLE
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            // Your Code
+                            this.quizLayout.visibility = View.VISIBLE
+                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
+
 
 
                         //Show layout and do calculation
                         this.showCorrectLayoutWithContent(circle)
                     } else if (circle["type"] == "camera" && !(circle["running"] as Boolean)) {
                         //Show layout and do calculation
-                        this.showCorrectLayoutWithContent(circle)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            // Your Code
+                            this.showCorrectLayoutWithContent(circle)
+                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
+
                     } else if (circle["type"] == "slidingPuzzle") {
                         //Show layout and do calculation
-                        this.showCorrectLayoutWithContent(circle)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            // Your Code
+                            this.showCorrectLayoutWithContent(circle)
+                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
                     }
 
                     circle["running"] = true
@@ -982,6 +1408,9 @@ class GameSceneInitializer(
 
                 questionTv.text = tmpMap["question"] as String
 
+                var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
+                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+
 
 
                 for (index in 0 until tmpArray.length()) {
@@ -1000,15 +1429,29 @@ class GameSceneInitializer(
                 if (this.cameraEnabled) {
                     parentClass.startCamera()
                     cameraLayout.visibility = View.VISIBLE
+                    var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
+                    val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
+                    bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
 
                 }
 
             }
             "slidingPuzzle" -> {
                 slidingPuzzleLayout.visibility = View.VISIBLE
+                //qrPuzzle =
+
+                var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
+                val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
+                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
 
             }
         }
+    }
+
+    private fun slidingDone()
+    {
+        slidingPuzzleLayout.visibility = View.INVISIBLE
+        correctLayout.visibility = View.VISIBLE
     }
 
     public fun cameraPermissionsDone() {
@@ -1042,6 +1485,8 @@ class GameSceneInitializer(
         }
         return -1
     }
+
+
 
     fun isAdjacentToValue(
         matrix: Array<Array<Int>>,
@@ -1123,6 +1568,83 @@ class GameSceneInitializer(
         }
 
         return matrix
+    }
+
+
+    fun updateLayoutAll() {
+        for (element in buttonLayoutArray) {
+            element.requestLayout()
+
+
+        }
+    }
+
+    enum class RelativePosition { ABOVE, BELOW, LEFT, RIGHT, NONE }
+
+    fun findRelativePosition(arr: Array<Array<Int>>, value1: Int, value2: Int): RelativePosition {
+        var value1Row = -1
+        var value1Col = -1
+        var value2Row = -1
+        var value2Col = -1
+
+        // Find the indices of value1 and value2 in the array
+        for (i in arr.indices) {
+            for (j in arr[i].indices) {
+                if (arr[i][j] == value1) {
+                    value1Row = i
+                    value1Col = j
+                } else if (arr[i][j] == value2) {
+                    value2Row = i
+                    value2Col = j
+                }
+            }
+        }
+        Log.d("Value1Row Value1Col", "$value1Row : $value1Col")
+        Log.d("value2Row value2Col", "$value2Row : $value2Col")
+
+        // Determine the relative position based on the indices
+        if (value1Row == value2Row) {
+            if (value1Col == value2Col - 1) {
+                Log.d("RiGHT", RelativePosition.RIGHT.toString())
+                return RelativePosition.RIGHT
+
+            } else if (value1Col == value2Col + 1) {
+                Log.d("RiGHT", RelativePosition.LEFT.toString())
+                return RelativePosition.LEFT
+            }
+        } else if (value1Col == value2Col) {
+            if (value1Row == value2Row - 1) {
+                Log.d("RiGHT", RelativePosition.BELOW.toString())
+                return RelativePosition.BELOW
+            } else if (value1Row == value2Row + 1) {
+                Log.d("RiGHT", RelativePosition.ABOVE.toString())
+                return RelativePosition.ABOVE
+            }
+        }
+
+        return RelativePosition.NONE
+    }
+
+    fun isArrayEqual(array: Array<Array<Int>>): Boolean {
+
+        val targetArray = arrayOf(
+            arrayOf(1, 2, 3),
+            arrayOf(4, 5, 6),
+            arrayOf(7, 8, -1)
+        )
+        if (array.size != targetArray.size || array[0].size != targetArray[0].size) {
+            return false
+        }
+
+        for (i in array.indices) {
+            for (j in array[0].indices) {
+                if (array[i][j] != targetArray[i][j]) {
+                    return false
+                }
+            }
+        }
+
+        return true
     }
 
 

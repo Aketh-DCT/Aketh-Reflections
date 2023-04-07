@@ -18,85 +18,118 @@
         android:background="#FFFFFF"
         android:columnCount="3"
         android:rowCount="3">
-
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
+        <!-- 1 5 2. -->
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
             android:clickable="true"
-            android:src="@drawable/row_2_column_1"
-            android:id="@+id/slidingPuzzle_bt_4"
+            android:src="@drawable/row_1_column_1"
+            android:id="@+id/slidingPuzzle_bt_1"
             android:scaleType="fitXY"
-            android:text="I'm a button"/>
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
+
+            android:layout_margin="0dp" />
+
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
             android:clickable="true"
-            android:src="@drawable/row_3_column_1"
-            android:id="@+id/slidingPuzzle_bt_7"
+            android:src="@drawable/row_2_column_2"
+            android:id="@+id/slidingPuzzle_bt_5"
             android:scaleType="fitXY"
-            android:text="I'm a button"/>
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"/>
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clickable="true"
-            android:src="@drawable/row_1_column_3"
-            android:id="@+id/slidingPuzzle_bt_3"
-            android:scaleType="fitXY"
-            android:text="I'm a button"/>
-
-        <!-- 4 7 3. -->
-
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
             android:clickable="true"
             android:src="@drawable/row_1_column_2"
             android:id="@+id/slidingPuzzle_bt_2"
             android:scaleType="fitXY"
-            android:text="I'm a button"/>
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"/>
+        <!--        . -->
 
+        <!-- 4 3 6. -->
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:clickable="true"
+            android:src="@drawable/row_2_column_1"
+            android:id="@+id/slidingPuzzle_bt_4"
+            android:scaleType="fitXY"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
+            />
+
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:clickable="true"
+            android:src="@drawable/row_1_column_3"
+            android:id="@+id/slidingPuzzle_bt_3"
+            android:scaleType="fitXY"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"/>
+
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
             android:clickable="true"
             android:src="@drawable/row_2_column_3"
             android:id="@+id/slidingPuzzle_bt_6"
             android:scaleType="fitXY"
-            android:text="I'm a button"/>
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"/>
+
+        <!--        . -->
+
+        <!-- 7 8. -->
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:clickable="true"
+            android:src="@drawable/row_3_column_1"
+            android:id="@+id/slidingPuzzle_bt_7"
+            android:scaleType="fitXY"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"/>
 
 
 
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:text="I'm a button"
+
+
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
             android:clickable="true"
             android:id="@+id/slidingPuzzle_bt_8"
             android:src="@drawable/row_3_column_2"
             android:scaleType="fitXY"/>
 
-        <!-- 2 6 8. -->
-
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:clickable="true"
-            android:src="@drawable/row_2_column_2"
-            android:id="@+id/slidingPuzzle_bt_5"
-            android:scaleType="fitXY"
-            android:text="I'm a button"/>
 
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-
-            android:layout_height="100dp"
-            android:clickable="true"
-            android:src="@drawable/row_1_column_1"
-            android:id="@+id/slidingPuzzle_bt_1"
-            android:scaleType="fitXY"
-            android:text="I'm a button"
 
 
-            android:layout_margin="0dp" />
 
-        <!-- 5 1. -->
+
+
+        <!--    -->
 
 
 
@@ -111,12 +144,16 @@
 
 
 
-        <gr.aketh.echoes.classes.CustomButton android:layout_width="100dp"
-            android:layout_height="100dp"
+        <gr.aketh.echoes.classes.CustomButton android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
             android:text="I' the button"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
             android:clickable="true"
             android:id="@+id/slidingPuzzle_bt_empty"
-            android:visibility="invisible"
+            android:visibility="visible"
             />
 
 

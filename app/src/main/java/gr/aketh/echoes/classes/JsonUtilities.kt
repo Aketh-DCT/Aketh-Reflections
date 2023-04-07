@@ -118,6 +118,7 @@ object JsonUtilities
                 val quiz_correct_answers = typeData.getInt("correct_answer")
                 val quiz_points = typeData.getInt("points")
                 val quiz_answers_temp = typeData.getJSONArray("answers")
+                val quiz_letters = typeData.getString("letters")
 
                 //Load all of them into the dict data for cleaner look
                 val dict_quiz_data = mutableMapOf<String,Any?>()
@@ -126,6 +127,7 @@ object JsonUtilities
                 dict_quiz_data["answers"] = quiz_answers_temp
                 dict_quiz_data["correct_answer"] = quiz_correct_answers
                 dict_quiz_data["points"] = quiz_points
+                dict_quiz_data["letters"] = quiz_letters
 
 
                 //Load to the main dict
@@ -141,7 +143,27 @@ object JsonUtilities
                 //Read the quiz data so I can load it?
                 val pieces = arrayOf<Array<Int>>()
                 val sliding_puzzle_pieces = typeData.getJSONArray("pieces")
+                val sliding_puzzle_letters = typeData.getString("letters")
                 Log.d("PIECES --------", sliding_puzzle_pieces.toString())
+
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+            }
+
+            if(content_data_type=="camera")
+            {
+                val typeData = content.getJSONObject("data")
+                //Read the quiz data so I can load it?
+                val pieces = arrayOf<Array<Int>>()
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
             }
 
             //Combining to one
