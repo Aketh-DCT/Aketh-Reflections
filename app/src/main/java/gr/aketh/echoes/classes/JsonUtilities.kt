@@ -165,6 +165,15 @@ object JsonUtilities
 
                 dict["data"] = dict_quiz_data
             }
+            if(content_data_type=="justAnswer")
+            {
+                val typeData = content.getJSONObject("data")
+                val sliding_puzzle_letters = typeData.getString("letters")
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+            }
 
             //Combining to one
             dict["circle_center_lat"] = circle_center_lat

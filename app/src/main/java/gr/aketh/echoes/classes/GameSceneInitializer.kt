@@ -1255,6 +1255,7 @@ class GameSceneInitializer(
                 soundeffectsPlayerList[0].start()
                 points += 100
                 pointsTextView.text = "Points: " + points
+                correctLayout.visibility = View.VISIBLE//Sets the new visibility so it works correctly
             }
         })
 
@@ -1365,6 +1366,13 @@ class GameSceneInitializer(
                             this.showCorrectLayoutWithContent(circle)
                         }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
                     }
+                    else if (circle["type"] == "justAnswer") {
+                        //Show layout and do calculation
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            // Your Code
+                            this.showCorrectLayoutWithContent(circle)
+                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
+                    }
 
                     circle["running"] = true
 
@@ -1443,6 +1451,16 @@ class GameSceneInitializer(
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
                 val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
                 bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+
+            }
+            "justAnswer" -> {
+                //slidingPuzzleLayout.visibility = View.VISIBLE
+                //qrPuzzle =
+
+                var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
+                val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
+                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+                correctLayout.visibility = View.VISIBLE
 
             }
         }
@@ -1653,12 +1671,14 @@ class GameSceneInitializer(
 
         // Release all the MediaPlayer instances
         for (mediaPlayer in mediaPlayerList.values) {
-            mediaPlayer.release()
+            mediaPlayer.pause()
         }
 
         // Clear the mediaPlayerList to avoid any confusion or potential issues
-        mediaPlayerList.clear()
+        //mediaPlayerList.clear()
     }
+
+
 
 
 }

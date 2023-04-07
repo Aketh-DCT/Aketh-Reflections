@@ -11,7 +11,7 @@
 
                     },
                     "circle_radius": 15,
-                    "circle_color": "#FF0000",
+                    "circle_color": "#FF00FF",
                     "id": 4
                 },
                 "content": {
@@ -19,7 +19,7 @@
                     "title": "Συναγωγή",
                     "description": "",
                     "sound": "fotosinthesi",
-                    "type": "quiz",
+                    "type": "justAnswer",
                     "data":
                     {
                         "question": "QR CODE",
@@ -103,7 +103,7 @@
                     "title": "central_bridge_of_trikala",
                     "description": "bb",
                     "sound": "cinema",
-                    "type": "quiz",
+                    "type": "justAnswer",
                     "data":
                     {
                         "question": "AR",
