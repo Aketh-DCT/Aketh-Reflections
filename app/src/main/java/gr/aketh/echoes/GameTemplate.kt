@@ -119,8 +119,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         //Location Update Stuff
-        mLocationRequest = LocationRequest.create().setInterval(5000)
-            .setFastestInterval(5000)
+        mLocationRequest = LocationRequest.create().setInterval(1000)
+            .setFastestInterval(1000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setMaxWaitTime(100).setSmallestDisplacement(3F);
 
@@ -423,8 +423,16 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        //Onresume first check if still inside circle
 
 
+    }
+
+    fun onGameCompleted(points: Int) {
+        this.gameSceneObject.onGameCompleted(points)
+    }
 
 
     companion object {

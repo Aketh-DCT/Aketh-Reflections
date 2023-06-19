@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Quiz - Question 1"
+        android:text="Quiz - Question 1 - What is love?"
         android:textColor="@color/black"
 
         android:textSize="18sp" />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
 
 
-                android:text="BrokoLoko"
+                android:text="A complex structure of instructions design to attract"
                 android:textColor="@color/black"/>
 
             <RadioButton
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
 
                 android:textColor="@color/black"
-                android:text="Double penpinaple pie" />
+                android:text="Something different" />
             <RadioButton
                 android:id="@+id/quiz_rb_3"
                 android:layout_width="wrap_content"

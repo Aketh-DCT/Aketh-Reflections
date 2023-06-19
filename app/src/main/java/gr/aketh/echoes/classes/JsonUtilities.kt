@@ -137,7 +137,7 @@ object JsonUtilities
             }
 
             //Slizing puzzle init
-            if(content_data_type=="slidingPuzzle")
+            else if(content_data_type=="slidingPuzzle")
             {
                 val typeData = content.getJSONObject("data")
                 //Read the quiz data so I can load it?
@@ -152,7 +152,7 @@ object JsonUtilities
                 dict["data"] = dict_quiz_data
             }
 
-            if(content_data_type=="camera")
+            else if(content_data_type=="camera")
             {
                 val typeData = content.getJSONObject("data")
                 //Read the quiz data so I can load it?
@@ -165,7 +165,7 @@ object JsonUtilities
 
                 dict["data"] = dict_quiz_data
             }
-            if(content_data_type=="justAnswer")
+            else if(content_data_type=="justAnswer")
             {
                 val typeData = content.getJSONObject("data")
                 val sliding_puzzle_letters = typeData.getString("letters")
@@ -173,6 +173,19 @@ object JsonUtilities
                 dict_quiz_data["letters"] = sliding_puzzle_letters
 
                 dict["data"] = dict_quiz_data
+            }
+            else if(content_data_type=="wordSearch"){
+                val typeData = content.getJSONObject("data")
+
+
+                val url = "https://puzzel.org/wordseeker/play?p=-NYHJJv3ExXvLGiOrLKZ"
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+                dict["gameUrl"] = "https://puzzel.org/wordseeker/play?p=-NYHJJv3ExXvLGiOrLKZ"
             }
 
             //Combining to one
@@ -185,6 +198,8 @@ object JsonUtilities
             dict["type"] = content_data_type
 
             dict["running"] = false
+            dict["finished"] = false
+            dict["started"] = false
 
 
             dictList.add(dict)//Adds to dictionary

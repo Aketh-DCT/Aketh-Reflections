@@ -49,16 +49,16 @@
     <include
         android:id="@+id/include_correct_layout"
         layout="@layout/correct_layout"
-        android:layout_height="400dp"
         android:layout_width="300dp"
+        android:layout_height="400dp"
 
+        android:layout_centerInParent="true"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="60dp"
         android:layout_marginRight="30dp"
+
         android:layout_marginBottom="60dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
 
     <include
         android:id="@+id/include_camera_layout"
@@ -77,6 +77,37 @@
     <include
         android:id="@+id/include_slidingPuzzle_layout"
         layout="@layout/sliding_puzzle_layout"
+        android:layout_width="313dp"
+        android:layout_height="335dp"
+
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/include_character_layout"
+        layout="@layout/character_layout"
+        android:layout_width="265dp"
+        android:layout_height="375dp"
+
+        android:layout_above="@+id/debugButton"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="435dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="3dp"
+
+
+        />
+
+    <include
+        android:id="@+id/include_webview_layout"
+        layout="@layout/web_view_test"
+
         android:layout_height="400dp"
         android:layout_width="300dp"
 
@@ -89,7 +120,7 @@
         />
 
     <Button
-        android:id="@+id/currentLocation"
+        android:id="@+id/debugButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignEnd="@+id/map"

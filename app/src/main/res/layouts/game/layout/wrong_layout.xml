@@ -18,7 +18,7 @@
         android:layout_marginTop="30dp"
 
         android:textColor="@color/black"
-        android:text="Bottox"
+        android:text=":("
         android:textSize="50sp" />
 
     <TextView
