@@ -1,25 +1,41 @@
 <!DOCTYPE html>
-<html lang="en-us">
+
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | WORDSEARCH</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Output.json", {onProgress: UnityProgress});
-    </script>
+    <meta charset="UTF-8" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      table {
+        width: 80%;
+        min-width: 60%;
+        max-width: 80%;
+        height: 20%;
+        border-collapse: collapse;
+      }
+
+      td {
+        padding: 5px;
+        font-size: 3vw;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #bbb;
+      }
+
+      .highlighted {
+        color: #aaa !important;
+      }
+    </style>
+
+    <script type="text/javascript" src="Scripts/main.js"></script>
   </head>
-  <body>
-    <div class="webgl-content">
-      <div id="unityContainer" style="width: 1080px; height: 1920px"></div>
-      <div class="footer">
-        <div class="webgl-logo"></div>
-        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
-        <div class="title">WORDSEARCH</div>
-      </div>
-    </div>
-  </body>
+
+  <body></body>
 </html>

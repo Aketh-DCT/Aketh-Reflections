@@ -29,7 +29,7 @@ class GameDescFragment : Fragment() {
         }
 
 
-        var sound: MediaPlayer = MediaPlayer.create(this.context, R.raw.intro)
+        var sound: MediaPlayer = MediaPlayer.create(this.context, R.raw.test_intro)
 
         sound.start()
 

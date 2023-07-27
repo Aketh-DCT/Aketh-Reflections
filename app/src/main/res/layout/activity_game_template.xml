@@ -63,16 +63,15 @@
     <include
         android:id="@+id/include_camera_layout"
         layout="@layout/camera_layout"
-        android:layout_height="400dp"
         android:layout_width="300dp"
+        android:layout_height="400dp"
 
+        android:layout_centerInParent="true"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="60dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="60dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
 
     <include
         android:id="@+id/include_slidingPuzzle_layout"
@@ -101,14 +100,14 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="3dp"
 
-
+        android:visibility="gone"
         />
 
     <include
         android:id="@+id/include_webview_layout"
         layout="@layout/web_view_test"
 
-        android:layout_height="400dp"
+        android:layout_height="600dp"
         android:layout_width="300dp"
 
         android:layout_marginLeft="30dp"
@@ -118,6 +117,36 @@
         android:layout_centerInParent="true"
         android:visibility="gone"
         />
+
+    <include
+        android:id="@+id/include_qrcode_layout"
+        layout="@layout/qrcode_layout"
+
+        android:layout_width="300dp"
+        android:layout_height="600dp"
+
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+       android:visibility="gone"/>
+    <include
+
+        android:id="@+id/include_completedActivity_layout"
+        layout="@layout/completed_activity_layout"
+
+        android:layout_width="300dp"
+        android:layout_height="600dp"
+
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:visibility="gone"/>
+
+
 
     <Button
         android:id="@+id/debugButton"

@@ -108,6 +108,8 @@ object JsonUtilities
 
             var content_data_type = content.getString("type")
 
+            var title_of = content.getString("title");
+
             //quiz stuff
             if(content_data_type=="quiz")
             {
@@ -178,14 +180,55 @@ object JsonUtilities
                 val typeData = content.getJSONObject("data")
 
 
-                val url = "https://puzzel.org/wordseeker/play?p=-NYHJJv3ExXvLGiOrLKZ"
+                val url = "file:///android_asset/Content/WordSearch/index.html"
 
                 val sliding_puzzle_letters = typeData.getString("letters")
                 val dict_quiz_data = mutableMapOf<String,Any?>()
                 dict_quiz_data["letters"] = sliding_puzzle_letters
 
                 dict["data"] = dict_quiz_data
-                dict["gameUrl"] = "https://puzzel.org/wordseeker/play?p=-NYHJJv3ExXvLGiOrLKZ"
+                dict["gameUrl"] = url
+            }
+            else if(content_data_type=="puzzleV2"){
+                val typeData = content.getJSONObject("data")
+
+
+                val url = "file:///android_asset/Content/puzzle.html"
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+                dict["gameUrl"] = url
+            }
+            else if(content_data_type=="matchPairs")
+            {
+                val typeData = content.getJSONObject("data")
+
+
+                val url = "file:///android_asset/Content/MatchPairs/matching_pairs.html"
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+                dict["gameUrl"] = url
+            }
+            else if(content_data_type=="qrCode")
+            {
+                val typeData = content.getJSONObject("data")
+
+
+                //val url = "file:///android_asset/Content/MatchPairs/matching_pairs.html"
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+                dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                dict["data"] = dict_quiz_data
+                //dict["gameUrl"] = url
             }
 
             //Combining to one
@@ -196,6 +239,7 @@ object JsonUtilities
             dict["cid"] = cid
             dict["sound"] = musicSoundName
             dict["type"] = content_data_type
+            dict["title"] = title_of
 
             dict["running"] = false
             dict["finished"] = false

@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.978"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/tsitsanis"/>
+        android:src="@drawable/tsi"/>
 
     <Space
         android:id="@+id/space"
@@ -43,6 +43,6 @@
         app:layout_constraintVertical_bias="0.978"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/karagkouna_zografia"
+        android:src="@drawable/kara"
         android:scaleX="-1"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

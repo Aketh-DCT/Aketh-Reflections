@@ -320,7 +320,7 @@
   <div class="options">
     <div class="fgroup grid">
       <div class="fieldset">
-        <label for="numrows" ># of rows</label>
+        <label for="numrows"># of rows</label>
         <input type="number" name="numrows" value="3" min="1" max="10" />
 
         <label for="numcolumns"># of columns</label>
@@ -520,8 +520,7 @@
           this.difficulty;
           this.settings = {
             el: null,
-            image:
-              "making-mega-man-big.png",
+            image: "g.jpg",
             fullImg: null,
             numcolumns: 3,
             numrows: 3,
@@ -1315,11 +1314,10 @@
           }
 
           function runCallBacks(slot, dragSlot, tile, dragTile, evt) {
-
             var points = 100; // Assume the points are calculated
 
             // Call the Android interface method
-            AndroidGameInterface.onGameCompleted(points);
+
             let tileInPlace =
               Array.from(instance.grid.children).indexOf(slot) ==
               Number(tile.dataset.position) - 1;
@@ -1360,6 +1358,7 @@
                 instance.settings.finished &&
                 typeof instance.settings.finished === "function"
               ) {
+                AndroidGameInterface.onGameCompleted(points);
                 instance.settings.finished(params);
               }
             }

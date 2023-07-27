@@ -4,18 +4,18 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 39.542709,
-            "lon": 21.775088
+            "lat": 39.55082945541312,
+            "lon":  21.77018562880516
           },
-          "circle_radius": 5,
+          "circle_radius": 7,
           "circle_color": "#FF00FF",
           "id": 4
         },
         "content": {
           "local_img_url": "aa",
-          "title": "Έξω απο ακεθ 1",
+          "title": "Τσιτσάνη",
           "description": "",
-          "sound": "voice_1_test",
+          "sound": "voice_2_test",
           "type": "justAnswer",
           "data": {
             "question": "QR CODE",
@@ -34,18 +34,18 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 39.542592137369255,
-            "lon": 21.775207665606562
+            "lat": 39.55020694580428,
+            "lon":  21.77098658744251
           },
-          "circle_radius": 5,
+          "circle_radius": 10,
           "circle_color": "#FF00FF",
           "id": 4
         },
         "content": {
           "local_img_url": "bb",
-          "title": "Έξω απο ΑΚΕΘ 2",
+          "title": "Τζαμι",
           "description": "Loutro",
-          "sound": "voice_2_test",
+          "sound": "voice_1_test",
           "type": "quiz",
           "data": {
             "question": "Τί αγαθά παρήγαγε ο Μύλος όταν λειτουργούσε;",
@@ -66,18 +66,18 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 39.5424685509824,
-            "lon": 21.775327694466135
+            "lat": 39.55537469854134,
+            "lon": 21.76992645325066
           },
-          "circle_radius": 5,
+          "circle_radius": 7,
           "circle_color": "#FF00FF",
           "id": 1
         },
         "content": {
           "local_img_url": "bb",
-          "title": "Tzami",
+          "title": "Νομαρχια",
           "description": "Έξω απο το ακεθ 3",
-          "sound": "energeia",
+          "sound": "voice_3_test",
           "type": "puzzleV2",
           "data": {
             "pieces": [
@@ -107,19 +107,19 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 39.5457927,
-            "lon": 21.7586800
+            "lat": 39.55633106760214,
+            "lon": 21.76928250734672
           },
-          "circle_radius": 2400,
+          "circle_radius": 5,
           "circle_color": "#FF00FF",
           "id": 2
         },
         "content": {
           "local_img_url": "bb",
-          "title": "central_bridge_of_trikala",
+          "title": "jewish",
           "description": "bb",
-          "sound": "cinema",
-          "type": "wordSearch",
+          "sound": "voice_4_test",
+          "type": "qrCode",
           "data": {
             "question": "AR",
             "answers": [
@@ -137,24 +137,189 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 41.0233924,
-            "lon": 28.9738967
+            "lat": 39.55542141970912,
+            "lon": 21.767696491472222
           },
-          "circle_radius": 14,
+          "circle_radius": 7  ,
           "circle_color": "#FF00FF",
           "id": 3
         },
         "content": {
           "local_img_url": "bb",
-          "title": "Treno Trikala",
+          "title": "Κεντρική γέφυρα",
           "description": "bb",
-          "sound": "voice_1_test",
+          "sound": "voice_5_test",
           "type": "camera",
           "data": {
             "letters": "Ι Ν"
           }
         }
       }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.555387367656074,
+            "lon": 21.76688890290859
+          },
+          "circle_radius": 5,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Ασκληπιός",
+          "description": "Έξω απο το ακεθ 5",
+          "sound": "voice_6_test",
+          "type": "wordSearch",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55662635701729,
+            "lon": 21.764783167430238
+          },
+          "circle_radius": 6,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+          "content": {
+          "local_img_url": "bb",
+          "title": "Αρχαία Τρίκκη",
+          "description": "Έξω απο το ακεθ 6",
+          "sound": "voice_7_test",
+          "type": "matchPairs",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.556482522309715,
+            "lon": 21.763873008836672
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Άγιος Νικόλαος",
+          "description": "Άγιος Νικόλαος",
+          "sound": "voice_9_test",
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55737531709299,
+            "lon": 21.762965724611004
+          },
+          "circle_radius": 8,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Ρολόι",
+          "description": "Ρολόι",
+          "sound": "voice_8_test",
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
     }
+
   ]
 }
