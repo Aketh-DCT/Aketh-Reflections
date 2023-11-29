@@ -125,7 +125,7 @@ class GameSceneInitializer(
 
     //private lateinit var arSceneLayout: ConstraintLayout
     private  var arSceneView: ArSceneView? = null
-    lateinit var arvideoNode: VideoNode
+    private var arvideoNode: VideoNode? = null
     //lateinit var modelTest: ModelNode
     lateinit var arOrNotLayout: ViewGroup
     //private lateinit var arSceneFragment: ArFragment
@@ -149,6 +149,9 @@ class GameSceneInitializer(
 
 
     private var points = 0
+
+    private var AR1_c = true
+    private var AR2_c = true
 
     //Sound Stuff
     //private lateinit var mediaPlayer: MediaPlayer
@@ -232,6 +235,17 @@ class GameSceneInitializer(
         mediaPlayerList["voice_7_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_7))
         mediaPlayerList["voice_8_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_8))
         mediaPlayerList["voice_9_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_9))
+
+        mediaPlayerList["eng_1"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_1))
+        mediaPlayerList["eng_2"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_2))
+        mediaPlayerList["eng_3"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_3))
+        mediaPlayerList["eng_4"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_4))
+        mediaPlayerList["eng_5"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_5))
+        mediaPlayerList["eng_6"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_6))
+        mediaPlayerList["eng_7"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_7))
+        mediaPlayerList["eng_8"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_8))
+        mediaPlayerList["eng_9"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_9))
+        mediaPlayerList["eng_10"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_10))
 
 
         //Add sound effect
@@ -360,8 +374,8 @@ class GameSceneInitializer(
             arOrNotBtn = arOrNotLayout.findViewById<Button>(R.id.no_ar_bt_close)
             arOrNotBtn.setOnClickListener { arOrNotLayout.visibility = View.INVISIBLE
                 if(arSceneView!=null){
-                    arSceneView?.arSession?.pause()
-                    arSceneView?.arSession?.destroy()
+                    //arSceneView?.arSession?.pause()
+                    //arSceneView?.arSession?.destroy()
                 }}
 
             //arSceneView!!.arSession?.pause()
@@ -1033,11 +1047,19 @@ class GameSceneInitializer(
                             skipVoice=false
                             this.mediaPlayerList[circle["sound"]]?.seekTo(this.mediaPlayerList[circle["sound"]]!!.duration.toInt())
                         }
-
+                        //tsitsani
+                        //Temporary way
                         if((circle["title"] as String) == "jewish"){
                             characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.play_and_learn_little_girl)
 
-                        }else{
+                        }
+                        else if((circle["title"] as String) == "tsitsani"){
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1).setImageResource(R.drawable.tsi)
+
+                        }
+
+                        else{
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1).setImageResource(R.drawable.play_and_learn_asclepius)
                             characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.kara)
                         }
 
@@ -1401,7 +1423,7 @@ class GameSceneInitializer(
     private fun setupAROrNot(){
         if (arSceneView!=null)
         {
-            arSceneView!!.arSession?.resume()
+            //arSceneView!!.arSession?.resume()
         }
         else{
 
@@ -1411,6 +1433,8 @@ class GameSceneInitializer(
     private fun addArChilds(arSceneView: ArSceneView){
         //arSceneView
 
+        //VIDEO STUFF IMPORTANT
+        /*
         arSceneView.addChild(
             AugmentedImageNodeF(
                 engine = arSceneView.engine,
@@ -1424,33 +1448,33 @@ class GameSceneInitializer(
                     //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
 
                     if(node.isTracking){
-                        Toast.makeText(applicationContext, "TRACKING: "+arvideoNode.player.isPlaying.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "TRACKING: "+ arvideoNode?.player?.isPlaying.toString(),Toast.LENGTH_SHORT).show()
 
                         val imagePose = node.pose
 
-                        arvideoNode.worldPosition = Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
+                        arvideoNode?.worldPosition =  Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
 
-                        val currentQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        val currentQuaternion = Quaternion(imagePose!!.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
 
                         // Create a quaternion that represents a 180 degrees rotation around the x-axis
                         val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
 
                         // Combine the current orientation with the rotation
 
-                        arvideoNode.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
-                        arvideoNode.worldQuaternion = currentQuaternion * rotationQuaternion
+                        arvideoNode!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        arvideoNode!!.worldQuaternion =  currentQuaternion * rotationQuaternion
                         //arvideoNode.worldQuaternion.fromAxisAngle()
                         //arvideoNode.wo
-                        if(!arvideoNode.player.isPlaying)
+                        if(!arvideoNode!!.player.isPlaying!!)
                         {
                             //arvideoNode.quaternion= node.augmentedImage!!.
 
-                            arvideoNode.player.start()
+                            arvideoNode?.player?.start()
                         }
                         else{
-                            if(arvideoNode.player.isPlaying)
+                            if(arvideoNode?.player?.isPlaying == true)
                             {
-                                arvideoNode.player.pause()
+                                arvideoNode!!.player.pause()
                             }
                         }
                     }
@@ -1470,13 +1494,13 @@ class GameSceneInitializer(
                     val videoRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
                     Toast.makeText(applicationContext, "NA3",Toast.LENGTH_SHORT).show()
                     setOnPreparedListener{
-                        if((arvideoNode.parent as? AugmentedImageNode)?.isTracking == true){
+                        if((arvideoNode?.parent as? AugmentedImageNode)?.isTracking == true){
                             Toast.makeText(applicationContext, "ZAWARUDO",Toast.LENGTH_SHORT).show()
                             start()
                         }
                         //arvideoNode.rotation = Rotation(x=180.0f,y=0.0f, z = 0.0f)
                         val rotation = videoRotation!!.toFloatOrNull() ?: 0f
-                        arvideoNode.rotation = Rotation(x=-90.0f, y=0.0f, z = 0.0f)
+                        arvideoNode?.rotation = Rotation(x=-90.0f, y=0.0f, z = 0.0f)
                         //arvideoNode.quaternion = dev.romainguy.kotlin.math.Quaternion.fromAxisAngle(
                         //    Float3(-1.0f, 0.0f, 0.0f),
                         //   videoRotation.toFloat()
@@ -1485,7 +1509,7 @@ class GameSceneInitializer(
 
 
 
-                        Toast.makeText(applicationContext, "ZAWARUDO1 "+(arvideoNode.parent as? AugmentedImageNode)?.isTracking.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "ZAWARUDO1 "+(arvideoNode?.parent as? AugmentedImageNode)?.isTracking.toString(),Toast.LENGTH_SHORT).show()
 
 
                     }
@@ -1501,10 +1525,12 @@ class GameSceneInitializer(
                 //anchor = An
                 arvideoNode = VideoNode(arSceneView.engine, mdPlayerV, scaleToUnits = 0.2f, centerOrigin = Position(x=0.0f,y=0.0f,z=0.0f), glbFileLocation = "ImageDatabase/plane.glb", )
 
-                addChild(arvideoNode)
+                addChild(arvideoNode!!)
             }
 
         )
+        */
+
 
         var modelTest: ModelNode? = null
 
@@ -1513,7 +1539,7 @@ class GameSceneInitializer(
             AugmentedImageNodeF(
                 engine = arSceneView.engine,
                 imageName = "test",
-                bitmap = applicationContext.assets.open("ImageDatabase/qrcode.png")
+                bitmap = applicationContext.assets.open("ImageDatabase/star.png")
                     .use(BitmapFactory::decodeStream),
                 onError = {exception ->
                     //exception.printStackTrace()
@@ -1525,9 +1551,18 @@ class GameSceneInitializer(
                         node, _ ->
                     //arvideoNode. node.worldPosition
                     //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
-                    Toast.makeText(applicationContext, "TRACKING: ",Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, "TRACKING: ",Toast.LENGTH_SHORT).show()
+
+                    if(AR1_c)
+                    {
+                        AR1_c=false
+                        soundeffectsPlayerList[0].start()
+                        points += 100
+                    }
 
                     if(node.isTracking){
+                        //node.setCastShadows(false)
+                        node.setReceiveShadows(false)
 
 
                         val imagePose = node.pose
@@ -1547,8 +1582,71 @@ class GameSceneInitializer(
                     }
                 }
             ).apply {
-                Toast.makeText(applicationContext, "IN it", Toast.LENGTH_LONG).show()
+                //Toast.makeText(applicationContext, "IN it", Toast.LENGTH_LONG).show()
                 modelTest = loadModelGlbAsync(
+
+                    glbFileLocation = "ImageDatabase/Spoons.glb",
+                    // Place the model origin at the bottom center
+                    //centerOrigin = Position(y = -1.0f)
+                    scaleToUnits = 0.2f,
+
+
+                    )
+            }
+        )
+
+        var modelTest1: ModelNode? = null
+
+        arSceneView.addChild(
+            AugmentedImageNodeF(
+                engine = arSceneView.engine,
+                imageName = "test",
+                bitmap = applicationContext.assets.open("ImageDatabase/pin.png")
+                    .use(BitmapFactory::decodeStream),
+                onError = {exception ->
+                    //exception.printStackTrace()
+                    Log.e("ERRORIMAGE", exception.toString())
+
+
+                },
+                onUpdate = {
+                        node, _ ->
+                    //arvideoNode. node.worldPosition
+                    //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, "TRACKING: ",Toast.LENGTH_SHORT).show()
+
+                    if(AR2_c)
+                    {
+                        AR2_c=false
+                        soundeffectsPlayerList[0].start()
+                        points += 100
+                    }
+
+                    if(node.isTracking){
+                        //node.setCastShadows(false)
+                        node.setReceiveShadows(false)
+                        node.setScreenSpaceContactShadows(false)
+
+
+                        val imagePose = node.pose
+
+                        modelTest1!!.worldPosition = Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
+
+                        val currentQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+
+                        // Create a quaternion that represents a 180 degrees rotation around the x-axis
+                        //val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
+
+                        // Combine the current orientation with the rotation
+
+                        modelTest1!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        modelTest1!!.worldQuaternion = currentQuaternion //* rotationQuaternion
+
+                    }
+                }
+            ).apply {
+                //Toast.makeText(applicationContext, "IN it", Toast.LENGTH_LONG).show()
+                modelTest1 = loadModelGlbAsync(
                     glbFileLocation = "ImageDatabase/tsitsanis.glb",
                     // Place the model origin at the bottom center
                     //centerOrigin = Position(y = -1.0f)
@@ -1559,7 +1657,7 @@ class GameSceneInitializer(
             }
         )
 
-        arSceneView.arSession?.pause()
+        //arSceneView.arSession?.pause()
     }
 
     private fun toggleCharacterLayoutVisibility()
@@ -2028,7 +2126,7 @@ class GameSceneInitializer(
             cameraSource.stop()
         }
 
-        arvideoNode.player.stop()
+        arvideoNode?.player?.stop()
 
 
     }

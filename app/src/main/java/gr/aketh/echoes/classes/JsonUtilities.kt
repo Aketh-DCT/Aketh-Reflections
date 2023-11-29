@@ -20,7 +20,7 @@ object JsonUtilities
         try
         {
             //Choose the correct json file
-            var inStream: InputStream = context.assets.open("Content/mainContent_2.json")
+            var inStream: InputStream = context.assets.open("Content/mainContent.json")
             var size: Int = inStream.available()
             var buffer: ByteArray = ByteArray(size)
             inStream.read(buffer)
