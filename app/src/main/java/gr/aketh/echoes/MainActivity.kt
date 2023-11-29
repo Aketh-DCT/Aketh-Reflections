@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -51,6 +52,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
+        //On back Dispatcher
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+
 
 
 
@@ -62,17 +67,35 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var switchActivity: Intent = Intent(this@MainActivity,GameTemplate::class.java)
     }
 
-    override fun onBackPressed() {
+    private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            showAppClosingDialog()
+        }
+    }
+
+    private fun showAppClosingDialog() {
         if(drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
         }
         else
         {
-            super.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
 
         }
     }
+
+    /*override fun onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START))
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            onBackPressedDispatcher.onBackPressed()
+
+        }
+    }*/
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId)

@@ -12,6 +12,8 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +27,6 @@ import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.viewbinding.ViewBinding
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -37,7 +38,6 @@ import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
 import gr.aketh.echoes.classes.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import gr.aketh.echoes.databinding.ActivityGameTemplateBinding
-import gr.aketh.echoes.databinding.ActivityMainBinding
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -99,7 +99,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         //Loads all the stuff
         this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext)!!),applicationContext,
-            findViewById<RelativeLayout>(R.id.activity_game_layout), this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,this,this
+            findViewById<RelativeLayout>(R.id.activity_game_layout), this.getSystemService(
+                LAYOUT_INFLATER_SERVICE
+            ) as LayoutInflater,this,this
 
         )
 
@@ -119,8 +121,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         //Location Update Stuff
-        mLocationRequest = LocationRequest.create().setInterval(5000)
-            .setFastestInterval(5000)
+        mLocationRequest = LocationRequest.create().setInterval(1000)
+            .setFastestInterval(1000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setMaxWaitTime(100).setSmallestDisplacement(3F);
 
@@ -137,6 +139,30 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             }
         }
 
+        //For qr code
+        if (ContextCompat.checkSelfPermission(
+                this@GameTemplate, Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            askForCameraPermission()
+        }
+
+
+
+        val aniSlide: Animation =
+            AnimationUtils.loadAnimation(this@GameTemplate, R.anim.scanner_animation)
+        //viewBinding.barcodeLine.startAnimation(aniSlide)
+
+    }
+
+
+
+    private fun askForCameraPermission() {
+        ActivityCompat.requestPermissions(
+            this@GameTemplate,
+            arrayOf(android.Manifest.permission.CAMERA),
+            requestCodeCameraPermission
+        )
     }
 
 
@@ -271,7 +297,21 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             }
         }
 
+        if(requestCode == REQUEST_CAMERA_PERMISSION)
+        {
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                //Do something
+            }
+            else{
+                Toast.makeText(applicationContext, "Permissions Denied!", Toast.LENGTH_SHORT)
+            }
+        }
+
     }
+
+
+
+
 
     override fun onResumeFragments() {
         super.onResumeFragments()
@@ -414,6 +454,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+        gameSceneObject.onDestroy()
     }
 
     override fun onPause() {
@@ -423,8 +464,16 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        //Onresume first check if still inside circle
 
 
+    }
+
+    fun onGameCompleted(points: Int) {
+        this.gameSceneObject.onGameCompleted(points)
+    }
 
 
     companion object {
@@ -438,6 +487,13 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
+        private const val REQUEST_CAMERA_PERMISSION = 200
+        private const val CAMERA_REQUEST = 101
+        private const val TAG2 = "API123"
+        private const val SAVED_INSTANCE_URI = "uri"
+        private const val SAVED_INSTANCE_RESULT = "result"
+
+        private const val requestCodeCameraPermission = 1001
         private val REQUIRED_PERMISSIONS =
             mutableListOf (
                 Manifest.permission.CAMERA,

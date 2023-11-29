@@ -1,6 +1,7 @@
 package gr.aketh.echoes
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
@@ -26,6 +27,11 @@ class GameDescFragment : Fragment() {
         binding.buttonStart.setOnClickListener {
             startActivity()
         }
+
+
+        var sound: MediaPlayer = MediaPlayer.create(this.context, R.raw.test_intro)
+
+        sound.start()
 
         //Add scrollability to the textTest2
         binding.textTest2.movementMethod = ScrollingMovementMethod()

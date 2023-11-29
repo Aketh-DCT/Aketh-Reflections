@@ -1,5 +1,7 @@
 package gr.aketh.echoes.classes
 
+import GameInterface
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -11,21 +13,47 @@ import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
-import android.widget.*
+import android.webkit.ConsoleMessage
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Button
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.MediaController
+import android.widget.PopupWindow
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.VideoView
+import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.vision.CameraSource
+import com.google.android.gms.vision.Detector
+import com.google.android.gms.vision.barcode.Barcode
+import com.google.android.gms.vision.barcode.BarcodeDetector
 import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
 import gr.aketh.echoes.classes.Const.SWIPETHRESHOLD
 import gr.aketh.echoes.classes.JsonUtilities.jsonArrayToMutableMap
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
+import java.lang.Error
 import kotlin.math.abs
 
 
@@ -53,6 +81,21 @@ class GameSceneInitializer(
     private lateinit var buttonArray: MutableList<MutableList<Float>>
     private lateinit var buttonLayoutArray: MutableList<CustomButton>
     private lateinit var correctLayout : RelativeLayout
+    private lateinit var characterLayout: ConstraintLayout
+    private lateinit var qrCodeLayout: ConstraintLayout
+    private lateinit var webViewLayoutC: ConstraintLayout
+    private lateinit var completedActivityLayout: LinearLayout
+    private var webviewLayout: WebView
+
+    private lateinit var btnTakePicture: Button
+    private lateinit var btnScanBarcode: Button
+    private lateinit var barcodeDetector: BarcodeDetector
+    private lateinit var cameraSource: CameraSource
+
+    private lateinit var detector: BarcodeDetector
+    private var scannedValueQr = ""
+
+
 
     var isSwipeEnabled = true
 
@@ -60,10 +103,12 @@ class GameSceneInitializer(
     private var points = 0
 
     //Sound Stuff
-    private var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var mediaPlayerList: MutableMap<String, MediaPlayer>
     private lateinit var soundeffectsPlayerList: MutableList<MediaPlayer>
     private var hasStarted = false
+
+    private lateinit var allCirclesDebug: MutableList<Circle>
 
 
     private val VIDEO_SAMPLE = "v1"
@@ -93,6 +138,7 @@ class GameSceneInitializer(
 
         mediaPlayerList = mutableMapOf()
         soundeffectsPlayerList = mutableListOf()
+        allCirclesDebug = mutableListOf()
 
         Log.d("jsonList", jsonList.toString())
         this.applicationContext = applicationContext
@@ -124,6 +170,16 @@ class GameSceneInitializer(
         mediaPlayerList["treno"] =
             MediaPlayer.create(applicationContext, getMedia(R.raw.treno))
 
+        mediaPlayerList["voice_1_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_1))
+        mediaPlayerList["voice_2_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_2))
+        mediaPlayerList["voice_3_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_3))
+        mediaPlayerList["voice_4_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_4))
+        mediaPlayerList["voice_5_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_5))
+        mediaPlayerList["voice_6_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_6))
+        mediaPlayerList["voice_7_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_7))
+        mediaPlayerList["voice_8_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_8))
+        mediaPlayerList["voice_9_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_9))
+
 
         //Add sound effect
         soundeffectsPlayerList.add(MediaPlayer.create(applicationContext, getMedia(R.raw.points)))
@@ -137,7 +193,7 @@ class GameSceneInitializer(
 
         linearLayout1 = linearLayout
 
-        mediaPlayer = MediaPlayer.create(applicationContext, getMedia(R.raw.s1))
+        val mediaPlayerP = MediaPlayer.create(applicationContext, getMedia(R.raw.s1))
 
         //Points text
         pointsTextView = this.activity.findViewById<TextView>(R.id.points)
@@ -174,6 +230,91 @@ class GameSceneInitializer(
             arrayOf(4, 3, 6),
             arrayOf(7, 8, -1)
         )
+
+        //Character Layout
+
+        characterLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_character_layout)
+        var imageCharacter1 = characterLayout.findViewById<ImageView>(R.id.character_iv_ch1)
+        var imageCharacter2 = characterLayout.findViewById<ImageView>(R.id.character_iv_ch2)
+
+        /*
+                val characterSheet = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.character_sheet)
+                val x = 1880
+                val y = 1020
+                val width = 715
+                val height = 2177
+
+                val croppedBitmap = Bitmap.createBitmap(characterSheet, x, y, width, height)
+
+                val imageViewWidth = imageCharacter1.width // or any desired width for scaling
+                val imageViewHeight = imageCharacter1.height // or any desired height for scaling
+
+                val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, imageViewWidth, imageViewHeight, true)
+
+                imageCharacter1.setImageBitmap(scaledBitmap)
+                imageCharacter2.setImageBitmap(scaledBitmap)
+                */
+
+        webViewLayoutC = this.activity.findViewById<ConstraintLayout>(R.id.include_webview_layout)
+        webviewLayout = webViewLayoutC.findViewById<WebView>(R.id.webview_web)
+        var btX = webViewLayoutC.findViewById<Button>(R.id.webview_bt_x)
+
+
+
+        qrCodeLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_qrcode_layout)
+
+        completedActivityLayout = this.activity.findViewById<LinearLayout>(R.id.include_completedActivity_layout)
+        var btnCompleteActivity = completedActivityLayout.findViewById<Button>(R.id.completedActivity_bt_answer)
+
+        btnCompleteActivity.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                completedActivityLayout.visibility = View.INVISIBLE
+            }
+        })
+
+        //Btn for qr
+        //btnScanBarcode = this.activity.findViewById<Button>(R.id.btnScanBarcode)
+        //btnTakePicture = this.activity.findViewById<Button>(R.id.btnTakePicture)
+
+
+        //Qr code detector
+        //detector = BarcodeDetector.Builder(applicationContext)
+        //    .setBarcodeFormats(Barcode.DATA_MATRIX or Barcode.QR_CODE)
+        //    .build()
+
+        //if (!detector.isOperational) {
+            //txtResultBody.setText("Detector initialisation failed");
+           // return;
+        //}
+
+
+        //This starts the QR CODE
+        //setupControls()
+
+        /*
+
+        var debugButton = this.activity.findViewById<Button>(R.id.debugButton)
+        var cRNEW = jsonList[3]["circle_radius"]
+        debugButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if(cRNEW == jsonList[3]["circle_radius"])
+                {
+                    jsonList[3]["circle_radius"] = 3
+                    allCirclesDebug[3].radius = 1.0;
+                }
+                else
+                {
+                    jsonList[3]["circle_radius"] = cRNEW
+                    allCirclesDebug[3].radius = cRNEW as Double
+                }
+
+            }
+        })
+        */
+
+
+
+
         for (x in 1..8) {
             //Finds and loads all the buttons
             val buttonNameId = applicationContext.resources.getIdentifier(
@@ -1260,6 +1401,25 @@ class GameSceneInitializer(
         })
 
 
+
+
+        btX.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?)
+            {
+                webViewLayoutC.visibility = View.GONE
+                correctLayout.visibility = View.VISIBLE
+            }
+        })
+
+
+
+        //btnTakePicture = this.activity.findViewById<Button>(R.id.btnTakePicture)
+
+
+
+
+
+
         /*
         var inflater: LayoutInflater = layoutInflaterSum
         var customView: View = inflater.inflate(R.layout.popup_main,null);
@@ -1281,7 +1441,7 @@ class GameSceneInitializer(
         //Iterate through the list of circles
         for (circle in jsonList) {
             try {
-                Log.d("helloWorld", "Workes")
+                Log.d("hello World", "Workes")
                 val currentCircle = googleMap.addCircle(
                     CircleOptions().clickable(true).center(
                         LatLng(
@@ -1292,6 +1452,8 @@ class GameSceneInitializer(
                         .strokeColor(Color.parseColor(circle["circle_color"] as String))
                         .fillColor(Color.parseColor(circle["circle_color"] as String))
                 );
+
+                //allCirclesDebug.add(currentCircle)
 
                 //currentCircle.isClickable = true
 
@@ -1329,58 +1491,129 @@ class GameSceneInitializer(
 
 
                 //Here everything is executed
-                if (distance[0] > circle["circle_radius"] as Double) {
-                    if (circle["running"] as Boolean) {
 
-                        this.mediaPlayerList[circle["sound"]]?.stop()
+                //If outside the radius it stops the music
+                if(!(circle["finished"] as Boolean))
+                {
+                    if (distance[0] > circle["circle_radius"] as Double) {
+                        if (circle["running"] as Boolean) {
+
+                            this.mediaPlayerList[circle["sound"]]?.pause()
+                            disableCharacterLayoutVisibility()
+
+                            //handler case
+                            val handlerC = circle["handler"] as Handler
+                            HandlerManager.pauseHandler(handlerC)
+
+                            circle["running"] = false
+
+                            disableCharacterLayoutVisibility()
+
+                        }
+
+
                     }
+                    else if (!(circle["running"] as Boolean)) {
+
+                        this.mediaPlayerList[circle["sound"]]?.start()
+                        enableCharacterLayoutVisibility()
+
+                        if((circle["title"] as String) == "jewish"){
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.play_and_learn_little_girl)
+
+                        }else{
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.kara)
+                        }
+
+                        //Adds a listener to end the sound only if
+                        this.mediaPlayerList[circle["sound"]]?.apply {
+                            // Check if the OnCompletionListener is already set
+                            if (circle["onCompletionListenerSet"] as? Boolean != true) {
+                                setOnCompletionListener {
+                                    // Set circle["finished"] to true when the playback ends
+                                    circle["finished"] = true
+                                }
+                                // Mark the OnCompletionListener as set
+                                circle["onCompletionListenerSet"] = true
+                            }
+                        }
 
 
-                } else if (!(circle["running"] as Boolean)) {
-
-                    this.mediaPlayerList[circle["sound"]]?.start()
 
 
-                    //Read the quiz layout and display it
-                    if (circle["type"] == "quiz" && !(circle["running"] as Boolean)) {
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            // Your Code
-                            this.quizLayout.visibility = View.VISIBLE
-                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
+                        //Read the quiz layout and display it
+                        if (circle["type"] == "quiz" && !(circle["running"] as Boolean)) {
+                            val handlerC = circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
+                            val mediaPlayer = this.mediaPlayerList[circle["sound"]]
+                            if(!(circle["started"] as Boolean)){
+                                circle["handler"] = handlerC
+
+                                HandlerManager.subscribeHandler(handlerC, {
+                                    this.quizLayout.visibility = View.VISIBLE
+                                    disableCharacterLayoutVisibility()
+                                    this.showCorrectLayoutWithContent(circle)
+                                }, mediaPlayer)
+
+                                val durationC = this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
+
+                                circle["started"] = true
+                            }
+                            HandlerManager.resumeHandler(handlerC, mediaPlayer)
 
 
 
-                        //Show layout and do calculation
-                        this.showCorrectLayoutWithContent(circle)
-                    } else if (circle["type"] == "camera" && !(circle["running"] as Boolean)) {
-                        //Show layout and do calculation
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            // Your Code
-                            this.showCorrectLayoutWithContent(circle)
-                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
 
-                    } else if (circle["type"] == "slidingPuzzle") {
-                        //Show layout and do calculation
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            // Your Code
-                            this.showCorrectLayoutWithContent(circle)
-                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
+                        }
+                        else if ((circle["type"] == "slidingPuzzle") or (circle["type"] == "puzzleV2")
+                            or (circle["type"] == "wordSearch")
+                            or (circle["type"] == "justAnswer")
+                            or (circle["type"] == "camera") or (circle["type"] == "matchPairs")
+                            or (circle["type"] == "qrCode")) {
+
+                            val handlerC = circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
+                            val mediaPlayer = this.mediaPlayerList[circle["sound"]]
+                            if(!(circle["started"] as Boolean)) {
+                                circle["handler"] = handlerC
+
+                                val mediaPlayer = this.mediaPlayerList[circle["sound"]]
+                                HandlerManager.subscribeHandler(handlerC, {
+                                    disableCharacterLayoutVisibility()
+                                    this.showCorrectLayoutWithContent(circle)
+                                }, mediaPlayer)
+
+                                Log.d("SOUND NAME", circle["sound"] as String)
+                                val durationC =
+
+                                    this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
+
+                                circle["started"] = true
+                            }
+
+                            var tdurationC = this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
+                            var tTotal = mediaPlayer?.currentPosition
+                            var messageA = "tDuration: $tdurationC\ntTotal: $tTotal"
+                            Toast.makeText(applicationContext,messageA,Toast.LENGTH_LONG).show();
+                            HandlerManager.resumeHandler(handlerC, mediaPlayer)
+
+
+                        }
+
+                        circle["running"] = true
+
+
+
                     }
-                    else if (circle["type"] == "justAnswer") {
-                        //Show layout and do calculation
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            // Your Code
-                            this.showCorrectLayoutWithContent(circle)
-                        }, this.mediaPlayerList[circle["sound"]]!!.duration.toLong())
-                    }
-
-                    circle["running"] = true
-
-
+                }
+                else if((distance[0] <= (circle["circle_radius"] as Double)) and circle["finished"] as Boolean){
+                    //Show that it has finished
+                    showCorrectLayoutWithContent(mutableMapOf<String,Any?>().apply { put("type", "finished") })
                 }
 
+
+
             } catch (e: Exception) {
-                //Log.d("FPPP",e.printStackTrace().toString())
+                Log.d("FPPP", "Exception occurred: ${e.message}")
+                Log.d("FPPP", Log.getStackTraceString(e))
             }
 
 
@@ -1417,7 +1650,7 @@ class GameSceneInitializer(
                 questionTv.text = tmpMap["question"] as String
 
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
-                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
 
 
 
@@ -1444,6 +1677,7 @@ class GameSceneInitializer(
                 }
 
             }
+
             "slidingPuzzle" -> {
                 slidingPuzzleLayout.visibility = View.VISIBLE
                 //qrPuzzle =
@@ -1453,6 +1687,7 @@ class GameSceneInitializer(
                 bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
 
             }
+
             "justAnswer" -> {
                 //slidingPuzzleLayout.visibility = View.VISIBLE
                 //qrPuzzle =
@@ -1463,9 +1698,164 @@ class GameSceneInitializer(
                 correctLayout.visibility = View.VISIBLE
 
             }
+
+            "puzzleV2", "wordSearch", "matchPairs" -> {
+                webViewLayoutC.visibility = View.VISIBLE
+                webviewLayout.visibility = View.VISIBLE
+                webviewLayout.settings.javaScriptEnabled = true
+                webviewLayout.addJavascriptInterface(GameInterface(activity as GameTemplate), "AndroidGameInterface")
+                webviewLayout.webViewClient = WebViewClient()
+                webviewLayout.webChromeClient = WebChromeClient()
+
+
+
+                //webviewLayout.settings.loadWithOverviewMode = true
+               // webviewLayout.settings.useWideViewPort = true
+                //webviewLayout.settings.setSupportZoom(true)
+                //webviewLayout.settings.builtInZoomControls = true
+                //webviewLayout.settings.displayZoomControls = false
+                //webviewLayout.setInitialScale(140); // Example: Set initial scale to 100%
+
+
+                webviewLayout.webChromeClient = object : WebChromeClient() {
+                    override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+                        Log.d("WebViewConsole", consoleMessage.message())
+                        return true
+                    }
+                }
+
+
+
+
+                WebView.setWebContentsDebuggingEnabled(true)
+
+
+                // Enable loading local content
+                webviewLayout.settings.allowFileAccess = true
+                webviewLayout.settings.allowFileAccessFromFileURLs = true
+                webviewLayout.settings.allowUniversalAccessFromFileURLs = true
+
+                Log.d("gameUrl", circle["gameUrl"] as String)
+                webviewLayout.loadUrl(circle["gameUrl"] as String)
+                //webviewLayout.loadUrl("file:///android_asset/Content/WordSearch/index.html")
+
+            }
+
+            "qrCode" ->{
+                qrCodeLayout.visibility = View.VISIBLE
+                setupControls()
+            }
+
+            "finished" ->{
+                completedActivityLayout.visibility = View.VISIBLE
+            }
         }
     }
 
+    private fun setupControls() {
+
+        val aniSlide: Animation =
+            AnimationUtils.loadAnimation(applicationContext, R.anim.scanner_animation)
+        val barcodeLineP = this.activity.findViewById<ConstraintLayout>(R.id.include_qrcode_layout)
+        val barcodeLine = barcodeLineP.findViewById<View>(R.id.barcode_line)
+
+        barcodeDetector =
+            BarcodeDetector.Builder(applicationContext).setBarcodeFormats(Barcode.ALL_FORMATS).build()
+
+        barcodeLine.startAnimation(aniSlide)
+
+        cameraSource = CameraSource.Builder(applicationContext, barcodeDetector)
+            .setRequestedPreviewSize(1920, 1080)
+            .setAutoFocusEnabled(true) //you should add this feature
+            .build()
+
+        var cameraSurfaceView = this.activity.findViewById<SurfaceView>(R.id.cameraSurfaceView)
+
+        cameraSurfaceView.holder.addCallback(object : SurfaceHolder.Callback {
+            @SuppressLint("MissingPermission")
+            override fun surfaceCreated(holder: SurfaceHolder) {
+                try {
+                    //Start preview after 1s delay
+                    cameraSource.start(holder)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+
+            @SuppressLint("MissingPermission")
+            override fun surfaceChanged(
+                holder: SurfaceHolder,
+                format: Int,
+                width: Int,
+                height: Int
+            ) {
+                try {
+                    cameraSource.start(holder)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                cameraSource.stop()
+            }
+        })
+
+
+        barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
+            override fun release() {
+                Toast.makeText(applicationContext, "Scanner has been closed", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun receiveDetections(detections: Detector.Detections<Barcode>) {
+                val barcodes = detections.detectedItems
+                if (barcodes.size() == 1) {
+                    scannedValueQr = barcodes.valueAt(0).rawValue
+
+
+                    //Don't forget to add this line printing value or finishing activity must run on main thread
+                    parentClass.runOnUiThread {
+                        cameraSource.stop()
+                        Toast.makeText(applicationContext, "value- $scannedValueQr", Toast.LENGTH_SHORT).show()
+
+                        qrCodeLayout.visibility = View.GONE
+                        //parentClass.finish()
+
+
+                    }
+                }else
+                {
+                    Toast.makeText(applicationContext
+                        , "value- else", Toast.LENGTH_SHORT).show()
+
+                }
+            }
+        })
+    }
+
+    private fun toggleCharacterLayoutVisibility()
+    {
+        if(this.characterLayout.visibility == View.VISIBLE)
+        {
+            this.characterLayout.visibility = View.INVISIBLE
+        }
+        else
+        {
+            this.characterLayout.visibility = View.VISIBLE
+        }
+
+    }
+
+    private fun enableCharacterLayoutVisibility()
+    {
+        this.characterLayout.visibility = View.VISIBLE
+    }
+
+    private fun disableCharacterLayoutVisibility()
+    {
+        this.characterLayout.visibility = View.GONE
+    }
     private fun slidingDone()
     {
         slidingPuzzleLayout.visibility = View.INVISIBLE
@@ -1678,11 +2068,100 @@ class GameSceneInitializer(
         //mediaPlayerList.clear()
     }
 
+    fun onResume()
+    {
+        //On resume, check if any of them paused with no reason
 
+    }
+
+    fun onDestroy()
+    {
+        if (::cameraSource.isInitialized) {
+            cameraSource.stop()
+        }
+
+
+    }
+
+    fun onGameCompleted(points: Int) {
+        Log.d("POINTS", points.toString())
+        this.points += points
+        this.pointsTextView.text = "Points: " + this.points
+        soundeffectsPlayerList[0].start()
+
+        this.webViewLayoutC.visibility = View.GONE
+    }
 
 
 }
 
 object Const {
     const val SWIPETHRESHOLD: Int = 50
+
+    const val REQUEST_CAMERA_PERMISSION = 200
+    const val CAMERA_REQUEST = 101
+    const val TAG = "API123"
+    const val SAVED_INSTANCE_URI = "uri"
+    const val SAVED_INSTANCE_RESULT = "result"
+}
+
+object HandlerManager {
+    private data class DelayedRunnable(val handler: Handler, val runnable: Runnable)
+
+    private val subscribedHandlers = mutableListOf<DelayedRunnable>()
+    private val pausedHandlers = mutableSetOf<Handler>()
+
+    fun subscribeHandler(handler: Handler, runnable: Runnable) {
+        subscribeHandler(handler, runnable, null)
+    }
+
+    fun subscribeHandler(handler: Handler, runnable: Runnable, mediaPlayer: MediaPlayer?) {
+        subscribedHandlers.add(DelayedRunnable(handler, runnable))
+        mediaPlayer?.let {
+            pausedHandlers.add(handler)
+            it.pause()
+        }
+    }
+
+    fun unsubscribeHandler(handler: Handler) {
+        subscribedHandlers.removeAll { it.handler == handler }
+        pausedHandlers.remove(handler)
+    }
+
+    internal fun pauseHandler(handler: Handler) {
+        val delayedRunnable = subscribedHandlers.find { it.handler == handler }
+        if (delayedRunnable != null) {
+            pausedHandlers.add(handler)
+            handler.removeCallbacks(delayedRunnable.runnable)
+        }
+    }
+
+    internal fun resumeHandler(handler: Handler, mediaPlayer: MediaPlayer?) {
+        val delayedRunnable = subscribedHandlers.find { it.handler == handler }
+        if (delayedRunnable != null && pausedHandlers.contains(handler)) {
+            pausedHandlers.remove(handler)
+
+            Log.d("TIMER",
+                mediaPlayer?.duration?.toLong()?.minus(mediaPlayer.currentPosition).toString()
+            )
+            val remainingDuration = mediaPlayer?.duration?.toLong()?.minus(mediaPlayer.currentPosition) ?: 4000
+            handler.postDelayed(delayedRunnable.runnable, remainingDuration)
+            mediaPlayer?.start()
+
+
+        }
+    }
+
+
+    fun pauseAllHandlers() {
+        for (delayedRunnable in subscribedHandlers) {
+            pauseHandler(delayedRunnable.handler)
+        }
+    }
+
+    fun resumeAllHandlers() {
+        for (delayedRunnable in subscribedHandlers) {
+            resumeHandler(delayedRunnable.handler, null)
+        }
+    }
 }

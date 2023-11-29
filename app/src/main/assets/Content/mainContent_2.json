@@ -1,146 +1,325 @@
 {
-    "data": [
-        {
-            "circleProperties": {
-                "properties": {
-                    "circle_center": {
-                        "lat": 39.5454264,
-                        "lon": 21.7582944
-
-
-
-                    },
-                    "circle_radius": 15,
-                    "circle_color": "#FF00FF",
-                    "id": 4
-                },
-                "content": {
-                    "local_img_url": "aa",
-                    "title": "Συναγωγή",
-                    "description": "",
-                    "sound": "fotosinthesi",
-                    "type": "justAnswer",
-                    "data":
-                    {
-                        "question": "QR CODE",
-                        "answers": ["39.5454264","21.7582944"],
-                        "correct_answer": 0,
-                        "points": 100,
-                        "letters": "Χ, O"
-                    }
-                }
-
-            }
+  "data": [
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55082945541312,
+            "lon":  21.77018562880516
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 4
         },
-        {
-            "circleProperties": {
-                "properties": {
-                    "circle_center": {
-                        "lat": 39.5463137,
-                        "lon": 21.7585114
-                    },
-                    "circle_radius": 15,
-                    "circle_color": "#FF00FF",
-                    "id": 4
-                },
-                "content": {
-                    "local_img_url": "bb",
-                    "title": "Didimo Othomaniko Loutro",
-                    "description": "Loutro",
-                    "sound": "milos",
-                    "type": "quiz",
-                    "data":
-                    {
-                        "question": "Τί αγαθά παρήγαγε ο Μύλος όταν λειτουργούσε;",
-                        "answers": ["Ψωμί","Αλεύρι και Ζυμαρικά","Ζυμαρικά","Τροφές για ζώα"],
-                        "correct_answer": 1,
-                        "points": 100,
-                        "letters": "Τ, Γ"
-                    }
-                }
-
-            }
-        },
-        {
-            "circleProperties": {
-                "properties": {
-                    "circle_center": {
-                        "lat": 39.5460970,
-                        "lon": 21.7579662
-                    },
-                    "circle_radius": 15,
-                    "circle_color": "#FF00FF",
-                    "id": 1
-                },
-                "content": {
-                    "local_img_url": "bb",
-                    "title": "Tzami",
-                    "description": "Tzami",
-                    "sound": "energeia",
-                    "type": "slidingPuzzle",
-                    "data":
-                    {
-                        "pieces" : [[4,7,3],[2,6,8],[5,1,-1]],
-                        "imgs" : "Notthing right now",
-                        "letters": "Λ, Ο"
-                    }
-                }
-            }
-        },
-        {
-            "circleProperties": {
-                "properties": {
-                    "circle_center": {
-                        "lat": 39.5457927,
-                        "lon": 21.7586800
-                    },
-                    "circle_radius": 14,
-                    "circle_color": "#FF00FF",
-                    "id": 2
-                },
-                "content": {
-                    "local_img_url": "bb",
-                    "title": "central_bridge_of_trikala",
-                    "description": "bb",
-                    "sound": "cinema",
-                    "type": "justAnswer",
-                    "data":
-                    {
-                        "question": "AR",
-                        "answers": ["",""],
-                        "correct_answer": 0,
-                        "points": 100,
-                        "letters": "Α, Ε"
-                    }
-
-                }
-
-            }
-        },
-        {
-            "circleProperties": {
-                "properties": {
-                    "circle_center": {
-                        "lat": 39.5465065,
-                        "lon": 21.7576326
-                    },
-                    "circle_radius": 14,
-                    "circle_color": "#FF00FF",
-                    "id": 3
-                },
-                "content": {
-                    "local_img_url": "bb",
-                    "title": "Treno Trikala",
-                    "description": "bb",
-                    "sound": "treno",
-                    "type": "camera",
-                    "data":
-                    {
-                        "letters": "Ι Ν"
-                    }
-                }
-
-            }
+        "content": {
+          "local_img_url": "aa",
+          "title": "Τσιτσάνη",
+          "description": "",
+          "sound": "voice_2_test",
+          "type": "justAnswer",
+          "data": {
+            "question": "QR CODE",
+            "answers": [
+              "39.5454264",
+              "21.7582944"
+            ],
+            "correct_answer": 0,
+            "points": 100,
+            "letters": "Χ, O"
+          }
         }
-    ]
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55020694580428,
+            "lon":  21.77098658744251
+          },
+          "circle_radius": 10,
+          "circle_color": "#FF00FF",
+          "id": 4
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Τζαμι",
+          "description": "Loutro",
+          "sound": "voice_1_test",
+          "type": "quiz",
+          "data": {
+            "question": "Τί αγαθά παρήγαγε ο Μύλος όταν λειτουργούσε;",
+            "answers": [
+              "Ψωμί",
+              "Αλεύρι και Ζυμαρικά",
+              "Ζυμαρικά",
+              "Τροφές για ζώα"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": "Τ, Γ"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55537469854134,
+            "lon": 21.76992645325066
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Νομαρχια",
+          "description": "Έξω απο το ακεθ 3",
+          "sound": "voice_3_test",
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55633106760214,
+            "lon": 21.76928250734672
+          },
+          "circle_radius": 5,
+          "circle_color": "#FF00FF",
+          "id": 2
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "jewish",
+          "description": "bb",
+          "sound": "voice_4_test",
+          "type": "qrCode",
+          "data": {
+            "question": "AR",
+            "answers": [
+              "",
+              ""
+            ],
+            "correct_answer": 0,
+            "points": 100,
+            "letters": "Α, Ε"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55542141970912,
+            "lon": 21.767696491472222
+          },
+          "circle_radius": 7  ,
+          "circle_color": "#FF00FF",
+          "id": 3
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Κεντρική γέφυρα",
+          "description": "bb",
+          "sound": "voice_5_test",
+          "type": "camera",
+          "data": {
+            "letters": "Ι Ν"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.555387367656074,
+            "lon": 21.76688890290859
+          },
+          "circle_radius": 5,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Ασκληπιός",
+          "description": "Έξω απο το ακεθ 5",
+          "sound": "voice_6_test",
+          "type": "wordSearch",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55662635701729,
+            "lon": 21.764783167430238
+          },
+          "circle_radius": 6,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+          "content": {
+          "local_img_url": "bb",
+          "title": "Αρχαία Τρίκκη",
+          "description": "Έξω απο το ακεθ 6",
+          "sound": "voice_7_test",
+          "type": "matchPairs",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.556482522309715,
+            "lon": 21.763873008836672
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Άγιος Νικόλαος",
+          "description": "Άγιος Νικόλαος",
+          "sound": "voice_9_test",
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 39.55737531709299,
+            "lon": 21.762965724611004
+          },
+          "circle_radius": 8,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Ρολόι",
+          "description": "Ρολόι",
+          "sound": "voice_8_test",
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    }
+
+  ]
 }
