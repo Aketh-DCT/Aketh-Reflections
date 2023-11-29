@@ -1,4 +1,4 @@
-var rows = 6;
+    var rows = 6;
 var columns = 6;
 
 function touchCallback(td, locations, array) {
@@ -138,6 +138,34 @@ document.addEventListener("DOMContentLoaded", function () {
     return locations;
   };
 
-  locations = putWordIn("πετρ".toUpperCase(), arrayTable);
+  locations = putWordIn("ΥΓΕΙΑ".toUpperCase(), arrayTable);
   console.log(locations);
 });
+
+function adjustTableSize() {
+  // Get viewport width and height
+  var viewportWidth = window.innerWidth;
+  var viewportHeight = window.innerHeight;
+
+  // Calculate the smaller dimension
+  var size = Math.min(viewportWidth, viewportHeight);
+
+  // Get the table and table cells
+  var table = document.querySelector('table');
+  var cells = document.querySelectorAll('td');
+
+  // Set the size of the table and cells
+  table.style.width = size + 'px';
+  table.style.height = size + 'px';
+  cells.forEach(function(cell) {
+    cell.style.width = (size / 6) + 'px';
+    cell.style.height = (size / 6) + 'px';
+    cell.style.fontSize = (size / 36) + 'px';
+  });
+}
+
+// Adjust the table size when the page loads
+adjustTableSize();
+
+// Adjust the table size when the window is resized
+window.addEventListener('resize', adjustTableSize);

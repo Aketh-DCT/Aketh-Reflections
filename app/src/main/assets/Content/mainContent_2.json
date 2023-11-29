@@ -5,7 +5,7 @@
         "properties": {
           "circle_center": {
             "lat": 39.55082945541312,
-            "lon":  21.77018562880516
+            "lon": 21.77018562880516
           },
           "circle_radius": 7,
           "circle_color": "#FF00FF",
@@ -16,16 +16,20 @@
           "title": "Τσιτσάνη",
           "description": "",
           "sound": "voice_2_test",
-          "type": "justAnswer",
+          "characters": ["ch1","ch2", "ch3"],
+          "type": "AR",
           "data": {
-            "question": "QR CODE",
+            "img_src": "ImageDatabase/tsitsanis.png",
+            "obj_src": "ImageDatabase/tsitsanis.glb",
+            "question": "Who is Basil Tsitsanis",
             "answers": [
-              "39.5454264",
-              "21.7582944"
+              "Ο Βασίλης Τσιτσάνης",
+              "Ο Οσμάν Σαx",
+              "Ο Ιούλιος Καίσαρας"
             ],
-            "correct_answer": 0,
+            "correct_answer": 1,
             "points": 100,
-            "letters": "Χ, O"
+            "letters": "Α, Ε"
           }
         }
       }
@@ -35,7 +39,7 @@
         "properties": {
           "circle_center": {
             "lat": 39.55020694580428,
-            "lon":  21.77098658744251
+            "lon": 21.77098658744251
           },
           "circle_radius": 10,
           "circle_color": "#FF00FF",
@@ -44,20 +48,20 @@
         "content": {
           "local_img_url": "bb",
           "title": "Τζαμι",
-          "description": "Loutro",
+          "description": "Tzami",
           "sound": "voice_1_test",
+          "characters": ["ch1","ch2"],
           "type": "quiz",
           "data": {
-            "question": "Τί αγαθά παρήγαγε ο Μύλος όταν λειτουργούσε;",
+            "question": "Ποιός ίδρυσε το Κουρσούμ Τζαμί;",
             "answers": [
-              "Ψωμί",
-              "Αλεύρι και Ζυμαρικά",
-              "Ζυμαρικά",
-              "Τροφές για ζώα"
+              "Ο Βασίλης Τσιτσάνης",
+              "Ο Οσμάν Σαx",
+              "Ο Ιούλιος Καίσαρας"
             ],
             "correct_answer": 1,
             "points": 100,
-            "letters": "Τ, Γ"
+            "letters": ""
           }
         }
       }
@@ -78,6 +82,7 @@
           "title": "Νομαρχια",
           "description": "Έξω απο το ακεθ 3",
           "sound": "voice_3_test",
+          "characters": ["ch1","ch2"],
           "type": "puzzleV2",
           "data": {
             "pieces": [
@@ -119,14 +124,17 @@
           "title": "jewish",
           "description": "bb",
           "sound": "voice_4_test",
-          "type": "qrCode",
+          "characters": ["ch1","ch2","ch4"],
+          "type": "AR",
           "data": {
-            "question": "AR",
+            "img_src": "ImageDatabase/tsitsanis.png",
+            "obj_src": "ImageDatabase/tsitsanis.glb",
+            "question": "Is this Jewish;",
             "answers": [
-              "",
-              ""
+              "True",
+              "False"
             ],
-            "correct_answer": 0,
+            "correct_answer": 1,
             "points": 100,
             "letters": "Α, Ε"
           }
@@ -137,35 +145,12 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 39.55542141970912,
-            "lon": 21.767696491472222
+            "lat": 39.55540154699199,
+            "lon": 21.766874373532332
           },
-          "circle_radius": 7  ,
+          "circle_radius": 7,
           "circle_color": "#FF00FF",
           "id": 3
-        },
-        "content": {
-          "local_img_url": "bb",
-          "title": "Κεντρική γέφυρα",
-          "description": "bb",
-          "sound": "voice_5_test",
-          "type": "camera",
-          "data": {
-            "letters": "Ι Ν"
-          }
-        }
-      }
-    },
-    {
-      "circleProperties": {
-        "properties": {
-          "circle_center": {
-            "lat": 39.555387367656074,
-            "lon": 21.76688890290859
-          },
-          "circle_radius": 5,
-          "circle_color": "#FF00FF",
-          "id": 1
         },
         "content": {
           "local_img_url": "bb",
@@ -201,6 +186,47 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
+            "lat": 39.55542721947203,
+            "lon": 21.7676959945856
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 3
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Kentriki Gefyra",
+          "description": "Έξω απο το ακεθ 5",
+          "sound": "voice_6_test",
+          "type": "camera",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
             "lat": 39.55662635701729,
             "lon": 21.764783167430238
           },
@@ -208,7 +234,7 @@
           "circle_color": "#FF00FF",
           "id": 1
         },
-          "content": {
+        "content": {
           "local_img_url": "bb",
           "title": "Αρχαία Τρίκκη",
           "description": "Έξω απο το ακεθ 6",
@@ -254,7 +280,7 @@
           "title": "Άγιος Νικόλαος",
           "description": "Άγιος Νικόλαος",
           "sound": "voice_9_test",
-          "type": "puzzleV2",
+          "type": "camera",
           "data": {
             "pieces": [
               [
@@ -295,31 +321,20 @@
           "title": "Ρολόι",
           "description": "Ρολόι",
           "sound": "voice_8_test",
-          "type": "puzzleV2",
+          "type": "quiz",
           "data": {
-            "pieces": [
-              [
-                4,
-                7,
-                3
-              ],
-              [
-                2,
-                6,
-                8
-              ],
-              [
-                5,
-                1,
-                -1
-              ]
+            "question": "Πότε κατασκευάστηκε το Ρολόι;",
+            "answers": [
+              "Τον 20ο αιώνα",
+              "Στα μέσα του 17ο αιώνα",
+              "Τον πρώτο αιώνα π.χ."
             ],
-            "imgs": "Notthing right now",
-            "letters": "Λ, Ο"
+            "correct_answer": 1,
+            "points": 100,
+            "letters": ""
           }
         }
       }
     }
-
   ]
 }
