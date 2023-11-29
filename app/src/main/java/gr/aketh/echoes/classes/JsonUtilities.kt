@@ -230,6 +230,43 @@ object JsonUtilities
                 dict["data"] = dict_quiz_data
                 //dict["gameUrl"] = url
             }
+            else if(content_data_type=="AR"){
+
+                //I DO NOT PASS THIS INFO LATER, TODO
+                val typeData = content.getJSONObject("data")
+
+                val detection_image = typeData["img_src"]
+                val detection_obj = typeData["obj_src"]
+
+
+                //Quiz stuff just in case
+
+                val quiz_question = typeData.getString("question")
+                val quiz_answers = arrayOf<String>()
+                val quiz_correct_answers = typeData.getInt("correct_answer")
+                val quiz_points = typeData.getInt("points")
+                val quiz_answers_temp = typeData.getJSONArray("answers")
+                val quiz_letters = typeData.getString("letters")
+
+                //Load all of them into the dict data for cleaner look
+                val dict_quiz_data = mutableMapOf<String,Any?>()
+
+                dict_quiz_data["question"] = quiz_question
+                dict_quiz_data["answers"] = quiz_answers_temp
+                dict_quiz_data["correct_answer"] = quiz_correct_answers
+                dict_quiz_data["points"] = quiz_points
+                dict_quiz_data["letters"] = quiz_letters
+
+                val sliding_puzzle_letters = typeData.getString("letters")
+
+
+
+                dict["img_src"] = detection_image
+                dict["obj_src"] = detection_obj
+
+                dict["data"] = dict_quiz_data
+
+            }
 
             //Combining to one
             dict["circle_center_lat"] = circle_center_lat

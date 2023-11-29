@@ -4,34 +4,45 @@
   <head>
     <meta charset="UTF-8" />
     <style>
-      html,
-      body {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+     html, body {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 100vh;
+     margin: 0;
+}
 
-      table {
-        width: 80%;
-        min-width: 60%;
-        max-width: 80%;
-        height: 20%;
-        border-collapse: collapse;
-      }
+table {
+ width: calc(100vw - 20px);
+ height: calc(100vh - 20px);
+ border-collapse: collapse;
+ margin: auto;
+}
 
-      td {
-        padding: 5px;
-        font-size: 3vw;
-        text-align: center;
-        border-style: solid;
-        border-width: 1px;
-        border-color: #bbb;
-      }
+td {
+ width: calc((100vw - 20px) / 6);
+ height: calc((100vh - 20px) / 6);
+ font-size: 5vh;
+ text-align: center;
+ border-style: solid;
+ border-width: 2px;
+ border-color: #bbb;
+ box-sizing: border-box;
+}
 
-      .highlighted {
-        color: #aaa !important;
-      }
+.highlighted {
+ color: #aaa !important;
+}
+
+
+
+@media only screen and (min-width: 600px) {
+  body {
+    
+    align-items: initial;
+    justify-content: initial;
+  }
+}
     </style>
 
     <script type="text/javascript" src="Scripts/main.js"></script>

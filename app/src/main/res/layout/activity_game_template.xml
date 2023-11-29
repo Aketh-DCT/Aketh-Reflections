@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,15 +9,15 @@
     android:id="@+id/activity_game_layout"
    >
 
-    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+    <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:theme="@style/Theme.Echoes_Aketh.NoActionBar2"
         map:cameraTilt="30"
         map:uiRotateGestures="true"
-        map:uiZoomControls="true"
-        android:theme="@style/Theme.Echoes_Aketh.NoActionBar2"/>
+        map:uiZoomControls="true" />
 
     <include
         android:id="@+id/include_quiz_layout"
@@ -44,6 +45,19 @@
         android:layout_marginBottom="60dp"
         android:layout_centerInParent="true"
         android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/include_no_ar_layout"
+        layout="@layout/no_ar_layout"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
         />
 
     <include
@@ -146,31 +160,46 @@
         android:layout_marginBottom="60dp"
         android:visibility="gone"/>
 
+    <!--
+        <include
+
+            android:id="@+id/include_ar_layout"
+            layout="@layout/ar_layout"
+
+            android:layout_width="10dp"
+            android:layout_height="600dp"
+
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="60dp"
+            android:visibility="gone"/>
+-->
 
 
-    <Button
-        android:id="@+id/debugButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignEnd="@+id/map"
-        android:layout_alignBottom="@+id/map"
-        android:layout_marginEnd="30sp"
-        android:layout_marginBottom="30sp"
-        android:contentDescription="Random Text"/>
+        <Button
+            android:id="@+id/debugButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignEnd="@+id/map"
+            android:layout_alignBottom="@+id/map"
+            android:layout_marginEnd="30sp"
+            android:layout_marginBottom="30sp"
+            android:contentDescription="Random Text"/>
 
     <TextView
         android:id="@+id/points"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="113dp"
+        android:layout_height="81dp"
         android:layout_alignStart="@+id/map"
-        android:layout_alignBottom="@+id/map"
-        android:layout_marginStart="30sp"
-        android:layout_marginBottom="30sp"
-        android:textSize="15sp"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:text="Points: 0"
         android:textColor="@color/black"
-        android:text="Points: 0"/>
 
-
+        android:textSize="20sp" />
 
 
 </RelativeLayout>

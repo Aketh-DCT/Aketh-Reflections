@@ -3,15 +3,16 @@ package gr.aketh.echoes
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import gr.aketh.echoes.classes.CameraPermissionHelper
 import gr.aketh.echoes.classes.GameSceneInitializer
 import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
@@ -77,11 +79,15 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     private lateinit var cameraExecutor: ExecutorService
 
+    private var doubleBackToExitPressedOnce = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityGameTemplateBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+        //This does not let the screen sleep
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
 
@@ -94,14 +100,16 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         setTheme(R.style.Theme_Echoes_Aketh_NoActionBar2);
         supportActionBar?.hide();
 
-
-
+        if (!CameraPermissionHelper.hasCameraPermission(this))
+        {
+            CameraPermissionHelper.requestCameraPermission(this)
+        }
 
         //Loads all the stuff
         this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext)!!),applicationContext,
             findViewById<RelativeLayout>(R.id.activity_game_layout), this.getSystemService(
                 LAYOUT_INFLATER_SERVICE
-            ) as LayoutInflater,this,this
+            ) as LayoutInflater,this,this, supportFragmentManager
 
         )
 
@@ -112,7 +120,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
 
         // Set up the listeners for take photo and video capture buttons
-        viewBinding.includeCameraLayout.imageCaptureButton.setOnClickListener { takePhoto() }
+        //viewBinding.includeCameraLayout.imageCaptureButton.setOnClickListener { takePhoto() }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -153,6 +161,12 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             AnimationUtils.loadAnimation(this@GameTemplate, R.anim.scanner_animation)
         //viewBinding.barcodeLine.startAnimation(aniSlide)
 
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            CameraPermissionHelper.requestCameraPermission(this)
+        } else {
+            // Camera permission granted, continue with your AR logic.
+        }
+
     }
 
 
@@ -180,7 +194,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         this.gameSceneObject.addCirclesToMap(googleMap)
         //Circle stuff
         //googleMap.addCircle(CircleOptions().center(
-          //  LatLng(39.550598, 21.769916)).
+        //  LatLng(39.550598, 21.769916)).
         //    radius(1000.0).
         //    strokeColor(Color.RED).
         //    fillColor(Color.BLUE));
@@ -307,6 +321,18 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             }
         }
 
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            Toast.makeText(this, "Camera permission is needed to run this application", Toast.LENGTH_LONG)
+                .show()
+            if (!CameraPermissionHelper. shouldShowRequestPermissionRationale(this)) {
+                // Permission denied with checking "Do not ask again".
+                CameraPermissionHelper.launchPermissionSettings(this)
+            }
+            finish()
+        }
+
+
+
     }
 
 
@@ -408,7 +434,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     private fun captureVideo() {}
 
-    public fun startCamera() {
+    public fun startCamera(){
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
@@ -428,6 +454,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
 
 
+
+
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -444,6 +472,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             }
 
         }, ContextCompat.getMainExecutor(this))
+
+
+
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -466,7 +497,13 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     override fun onResume() {
         super.onResume()
+        this.gameSceneObject.onResume()
         //Onresume first check if still inside circle
+        // ARCore requires camera permission to operate.
+        if (!CameraPermissionHelper.hasCameraPermission(this)) {
+            CameraPermissionHelper.requestCameraPermission(this)
+            return
+        }
 
 
     }
@@ -504,6 +541,23 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 }
             }.toTypedArray()
     }
+
+
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            doubleBackToExitPressedOnce = false
+        }, 2000)
+    }
+
 
 
 }

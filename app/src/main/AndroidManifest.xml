@@ -33,6 +33,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Echoes_Aketh">
 
+        <!-- "AR Optional" app, contains non-AR features that can be used when
+         "Google Play Services for AR" (ARCore) is not available. -->
+        <meta-data android:name="com.google.ar.core" android:value="optional" />
+
 
 
 
@@ -51,7 +55,8 @@
 
         <activity
             android:name=".GameTemplate"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity2"
             android:exported="false"
