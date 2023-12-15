@@ -7,12 +7,14 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import gr.aketh.echoes.databinding.FragmentGameDescriptionBinding
 
 
 class GameDescFragment : Fragment() {
     private lateinit var binding: FragmentGameDescriptionBinding
+    private var sound: MediaPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,15 +25,25 @@ class GameDescFragment : Fragment() {
         binding = FragmentGameDescriptionBinding.bind(view)
 
 
+        val jsonFile = arguments?.getString("jsonFile")
+
+        Toast.makeText(context, jsonFile, Toast.LENGTH_SHORT).show()
+
+
+
         //Starts activity when you click the button
         binding.buttonStart.setOnClickListener {
-            startActivity()
+            val intent= Intent(context, GameTemplate::class.java)
+            intent.putExtra("jsonFile", jsonFile)
+
+            startActivity(intent)
+
         }
 
 
-        var sound: MediaPlayer = MediaPlayer.create(this.context, R.raw.eng_intro)
+        sound = MediaPlayer.create(this.context, R.raw.eng_intro)
 
-        sound.start()
+        sound?.start()
 
         //Add scrollability to the textTest2
         binding.textTest2.movementMethod = ScrollingMovementMethod()
@@ -50,6 +62,18 @@ class GameDescFragment : Fragment() {
         activity?.startActivity(intent)
 
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sound?.stop()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sound?.stop()
+        sound?.release()
     }
 
 }

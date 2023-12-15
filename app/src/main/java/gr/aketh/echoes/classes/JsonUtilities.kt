@@ -3,6 +3,11 @@ package gr.aketh.echoes.classes
 import android.content.Context
 import android.util.Log
 import androidx.collection.arrayMapOf
+import androidx.lifecycle.LifecycleCoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -13,14 +18,14 @@ object JsonUtilities
 {
     //Object structure that contains things i need for reading Json
     lateinit var json: JSONObject
-    fun loadJSONFromAsset(context: Context): String?
+    fun loadJSONFromAsset(context: Context, jsonFile: String): String?
     {//Loads a json file
         var jsonString: String
 
         try
         {
             //Choose the correct json file
-            var inStream: InputStream = context.assets.open("Content/mainContent.json")
+            var inStream: InputStream = context.assets.open("Content/$jsonFile")
             var size: Int = inStream.available()
             var buffer: ByteArray = ByteArray(size)
             inStream.read(buffer)
@@ -294,6 +299,7 @@ object JsonUtilities
 
         return dictList
     }
+
 
     //Convert json to usable functions and stuff
 }

@@ -3,6 +3,7 @@ package gr.aketh.echoes
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -17,6 +18,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -29,6 +33,7 @@ import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -40,6 +45,7 @@ import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
 import gr.aketh.echoes.classes.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
 import gr.aketh.echoes.databinding.ActivityGameTemplateBinding
+import gr.aketh.echoes.databinding.ActivityMainBinding
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -47,6 +53,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
 
 
 typealias LumaListener = (luma: Double) -> Unit
@@ -56,16 +63,17 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     GoogleMap.OnMyLocationButtonClickListener {
 
     private val PERMISSION_ID = 42
-    lateinit var mFusedLocationClient: FusedLocationProviderClient
-    lateinit var mMap: GoogleMap
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+    private lateinit var mMap: GoogleMap
     private var permissionDenied = false
+    private var jsonFileName: String = ""
 
     private lateinit var mLocationRequest: LocationRequest
 
     private lateinit var locationCallback: LocationCallback
 
     //Game object
-    lateinit var gameSceneObject: GameSceneInitializer
+    var gameSceneObject: GameSceneInitializer? = null
 
     //Current location (set to aketh)
     var currentLocation: LatLng = LatLng(39.542678, 21.775136)
@@ -81,16 +89,125 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     private var doubleBackToExitPressedOnce = false
 
+    private lateinit var permissionList: ArrayList<String>
+
+    private var gameObjectInitialised = false
+
+
+    //Permission stuff
+    val permissionsStr = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.CAMERA,
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.INTERNET
+    )
+
+    var permissionsCount = 0
+    var permissionsList: ArrayList<String> = ArrayList()
+
+
+
+    //This was a tough one. To ask multiple permissions
+    //You need to first request them, and handle each case
+    //When you don't get it etc. This one handles it
+    //Do Not touch. Literally, if you touch it dies
+    //It is quite complex, i understand 38% of it
+    //So don't try please!
+    val permissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+        object : ActivityResultCallback<Map<String, Boolean>> {
+            override fun onActivityResult(result: Map<String, Boolean>) {
+                val list: ArrayList<Any?> = ArrayList(result.values)
+                var rejList = arrayListOf<String>()
+                permissionsList.clear()
+                permissionsCount = 0
+                for (i in list.indices) {
+                    if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
+                        permissionsList.add(permissionsStr[i])
+                    } else if (!hasPermission(applicationContext, permissionsStr[i])) {
+                        Toast.makeText(applicationContext, permissionsStr[i], Toast.LENGTH_SHORT)
+                            .show()
+                        permissionsCount++
+                        Log.d("PERMISSION", permissionsStr[i])
+                        rejList.add(permissionsStr[i])
+                    }
+                }
+                if (permissionsList.size > 0) {
+                    //Some permissions are denied and can be asked again.
+                    askForPermissions(permissionsList)
+                } else if (permissionsCount > 0) {
+                    //Show alert dialog
+                    if(rejList.contains("android.permission.WRITE_EXTERNAL_STORAGE")){
+                        //Start Game update
+                        initGameCodeAfterPermissions()
+                    }
+                    else{
+                        showPermissionDialog()
+                    }
+
+
+                } else {
+                    //All permissions granted. Do your stuff 🤞
+                    Toast.makeText(applicationContext, "All Permissions granted", Toast.LENGTH_SHORT)
+                        .show()
+                    initGameCodeAfterPermissions()
+                }
+            }
+
+
+        })
+
+    //Create the array to ask for the above function
+    private fun askForPermissions(permissionsList: ArrayList<String>) {
+        //val newPermissionStr = arrayOfNulls<String>(permissionsList.size)
+
+        val newPermissionStr = permissionsList.toTypedArray()
+
+        if (newPermissionStr.isNotEmpty()) {
+            permissionsLauncher.launch(newPermissionStr)
+        } else {
+            /* User has pressed 'Deny & Don't ask again' so we have to show the enable permissions dialog
+        which will lead them to app details page to enable permissions from there. */
+            showPermissionDialog()
+        }
+    }
+
+    private fun hasPermission(context: Context, permissionStr: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            permissionStr
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private var alertDialog: AlertDialog? = null
+    private fun showPermissionDialog() {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Permission required")
+            .setMessage("Some permissions are need to be allowed to use this app without any problems.")
+            .setPositiveButton("Settings") { dialog, which -> dialog.dismiss() }
+        if (alertDialog == null) {
+            alertDialog = builder.create()
+            if (!alertDialog!!.isShowing) {
+                alertDialog!!.show()
+            }
+        }
+    }
+    //End of permission stuff
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Needed stuff
         super.onCreate(savedInstanceState)
         viewBinding = ActivityGameTemplateBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        jsonFileName = intent.getStringExtra("jsonFile").toString()
         //This does not let the screen sleep
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
-
 
         //Map fragment, basically find and load it
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -100,23 +217,34 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         setTheme(R.style.Theme_Echoes_Aketh_NoActionBar2);
         supportActionBar?.hide();
 
-        if (!CameraPermissionHelper.hasCameraPermission(this))
-        {
-            CameraPermissionHelper.requestCameraPermission(this)
-        }
+        //End of needed stuff for basic functionality
+
+    }
+
+
+
+
+
+    private fun askForCameraPermission() {
+        ActivityCompat.requestPermissions(
+            this@GameTemplate,
+            arrayOf(android.Manifest.permission.CAMERA),
+            requestCodeCameraPermission
+        )
+    }
+
+    private fun initGameCodeAfterPermissions(){
 
         //Loads all the stuff
-        this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext)!!),applicationContext,
+        this.gameSceneObject = GameSceneInitializer(jsonParser(loadJSONFromAsset(applicationContext, jsonFileName)!!),applicationContext,
             findViewById<RelativeLayout>(R.id.activity_game_layout), this.getSystemService(
                 LAYOUT_INFLATER_SERVICE
             ) as LayoutInflater,this,this, supportFragmentManager
 
         )
 
+        this.gameSceneObject!!.cameraPermissionsDone()
 
-
-        //Camera
-        this.requestCameraXPermissions()
 
 
         // Set up the listeners for take photo and video capture buttons
@@ -124,7 +252,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        loadJSONFromAsset(applicationContext)?.let { jsonParser(it) }
+        //loadJSONFromAsset(applicationContext)?.let { jsonParser(it) }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -143,41 +271,29 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 }
                 //passes arguments so code is clearer
                 Log.d( "woccc","ussss")
-                gameSceneObject.locationCallbackFunc(locationResult)
+                gameSceneObject!!.locationCallbackFunc(locationResult)
             }
         }
-
-        //For qr code
-        if (ContextCompat.checkSelfPermission(
-                this@GameTemplate, Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            askForCameraPermission()
-        }
-
-
 
         val aniSlide: Animation =
             AnimationUtils.loadAnimation(this@GameTemplate, R.anim.scanner_animation)
         //viewBinding.barcodeLine.startAnimation(aniSlide)
 
-        if (!CameraPermissionHelper.hasCameraPermission(this)) {
-            CameraPermissionHelper.requestCameraPermission(this)
-        } else {
-            // Camera permission granted, continue with your AR logic.
+        if(::mMap.isInitialized and !gameObjectInitialised)
+        {
+            this.gameSceneObject!!.addCirclesToMap(mMap)
+
+
+            startLocationUpdates()
+
+            gameObjectInitialised = true
         }
-
     }
 
 
 
-    private fun askForCameraPermission() {
-        ActivityCompat.requestPermissions(
-            this@GameTemplate,
-            arrayOf(android.Manifest.permission.CAMERA),
-            requestCodeCameraPermission
-        )
-    }
+
+
 
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -191,7 +307,6 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         val tsitsanisMuseum = LatLng(39.550598, 21.769916)
 
 
-        this.gameSceneObject.addCirclesToMap(googleMap)
         //Circle stuff
         //googleMap.addCircle(CircleOptions().center(
         //  LatLng(39.550598, 21.769916)).
@@ -204,9 +319,41 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 .position(tsitsanisMuseum)
                 .title("Tsitsanis Museum")
         )
+        var fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            // Move the camera to the location of the device
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                LatLng(location.latitude, location.longitude), 20f))
+        }
 
+        /*
 
-        startLocationUpdates()
+        if(this.gameSceneObject!=null && !gameObjectInitialised)
+        {
+            this.gameSceneObject!!.addCirclesToMap(googleMap)
+            startLocationUpdates()
+
+            gameObjectInitialised = true
+        }
+        
+         */
+
+        //Permission Array
+
+        permissionsList.addAll(permissionsStr.toList())
+        askForPermissions(permissionsList)
+
     }
 
     //enable location layer if fine location permissions been granted
@@ -272,6 +419,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
     //Permission result
+    /*
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -336,6 +484,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
 
+     */
+
+
 
 
 
@@ -376,19 +527,10 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             return
         }
 
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest,locationCallback, Looper.getMainLooper())
+        mFusedLocationClient?.requestLocationUpdates(mLocationRequest,locationCallback, Looper.getMainLooper())
     }
     //CameraX
-    private fun requestCameraXPermissions()
-    {
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            this.gameSceneObject.cameraPermissionsDone()
-        } else {
-            ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        }
-    }
+
 
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
@@ -485,19 +627,19 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
-        gameSceneObject.onDestroy()
+        gameSceneObject?.onDestroy()
     }
 
     override fun onPause() {
         super.onPause()
         //OnPause do things
-        gameSceneObject.onPause()
+        gameSceneObject?.onPause()
     }
 
 
     override fun onResume() {
         super.onResume()
-        this.gameSceneObject.onResume()
+        //this.gameSceneObject.onResume()
         //Onresume first check if still inside circle
         // ARCore requires camera permission to operate.
         if (!CameraPermissionHelper.hasCameraPermission(this)) {
@@ -509,7 +651,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
     fun onGameCompleted(points: Int) {
-        this.gameSceneObject.onGameCompleted(points)
+        this.gameSceneObject?.onGameCompleted(points)
     }
 
 

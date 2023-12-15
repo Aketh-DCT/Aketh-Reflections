@@ -61,6 +61,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
@@ -74,7 +75,6 @@ import dev.romainguy.kotlin.math.Float3
 import dev.romainguy.kotlin.math.Quaternion
 import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
-import gr.aketh.echoes.classes.Const.SWIPETHRESHOLD
 import gr.aketh.echoes.classes.JsonUtilities.jsonArrayToMutableMap
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.AugmentedImageNode
@@ -117,32 +117,35 @@ class GameSceneInitializer(
     private lateinit var pointsTextView: TextView
     private lateinit var buttonArray: MutableList<MutableList<Float>>
     private lateinit var buttonLayoutArray: MutableList<CustomButton>
-    private lateinit var correctLayout : RelativeLayout
+    private lateinit var correctLayout: RelativeLayout
     private lateinit var characterLayout: ConstraintLayout
     private lateinit var qrCodeLayout: ConstraintLayout
     private lateinit var webViewLayoutC: ConstraintLayout
     private lateinit var completedActivityLayout: LinearLayout
 
     //private lateinit var arSceneLayout: ConstraintLayout
-    private  var arSceneView: ArSceneView? = null
+    private var arSceneView: ArSceneView? = null
     private var arvideoNode: VideoNode? = null
+
     //lateinit var modelTest: ModelNode
     lateinit var arOrNotLayout: ViewGroup
+
     //private lateinit var arSceneFragment: ArFragment
     private var webviewLayout: WebView
 
 
     private var imageCapture: ImageCapture? = null
     private lateinit var btnTakePicture: Button
+
     //private lateinit var btnScanBarcode: Button
     private lateinit var barcodeDetector: BarcodeDetector
     private lateinit var cameraSource: CameraSource
+
     //private lateinit var arCoreObj: ArCoreClass
     private lateinit var arOrNotBtn: Button
 
     //private lateinit var detector: BarcodeDetector
     private var scannedValueQr = ""
-
 
 
     var isSwipeEnabled = true
@@ -226,15 +229,24 @@ class GameSceneInitializer(
         mediaPlayerList["treno"] =
             MediaPlayer.create(applicationContext, getMedia(R.raw.treno))
 
-        mediaPlayerList["voice_1_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_1))
-        mediaPlayerList["voice_2_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_2))
-        mediaPlayerList["voice_3_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_3))
-        mediaPlayerList["voice_4_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_4))
-        mediaPlayerList["voice_5_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_5))
-        mediaPlayerList["voice_6_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_6))
-        mediaPlayerList["voice_7_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_7))
-        mediaPlayerList["voice_8_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_8))
-        mediaPlayerList["voice_9_test"] = MediaPlayer.create(applicationContext, getMedia(R.raw.test_9))
+        mediaPlayerList["voice_1_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_1))
+        mediaPlayerList["voice_2_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_2))
+        mediaPlayerList["voice_3_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_3))
+        mediaPlayerList["voice_4_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_4))
+        mediaPlayerList["voice_5_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_5))
+        mediaPlayerList["voice_6_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_6))
+        mediaPlayerList["voice_7_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_7))
+        mediaPlayerList["voice_8_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_8))
+        mediaPlayerList["voice_9_test"] =
+            MediaPlayer.create(applicationContext, getMedia(R.raw.test_9))
 
         mediaPlayerList["eng_1"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_1))
         mediaPlayerList["eng_2"] = MediaPlayer.create(applicationContext, getMedia(R.raw.eng_2))
@@ -303,7 +315,8 @@ class GameSceneInitializer(
 
         //Character Layout
 
-        characterLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_character_layout)
+        characterLayout =
+            this.activity.findViewById<ConstraintLayout>(R.id.include_character_layout)
         var imageCharacter1 = characterLayout.findViewById<ImageView>(R.id.character_iv_ch1)
         var imageCharacter2 = characterLayout.findViewById<ImageView>(R.id.character_iv_ch2)
 
@@ -333,8 +346,10 @@ class GameSceneInitializer(
 
         qrCodeLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_qrcode_layout)
 
-        completedActivityLayout = this.activity.findViewById<LinearLayout>(R.id.include_completedActivity_layout)
-        var btnCompleteActivity = completedActivityLayout.findViewById<Button>(R.id.completedActivity_bt_answer)
+        completedActivityLayout =
+            this.activity.findViewById<LinearLayout>(R.id.include_completedActivity_layout)
+        var btnCompleteActivity =
+            completedActivityLayout.findViewById<Button>(R.id.completedActivity_bt_answer)
 
         btnCompleteActivity.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -344,8 +359,8 @@ class GameSceneInitializer(
         })
 
 
-
-        val inflater = this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater =
+            this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         arOrNotLayout = activity.findViewById<ConstraintLayout>(R.id.include_no_ar_layout)
         //This checks if the ArCore is supported and stuff like that
         if (ArCoreApk.getInstance()
@@ -372,43 +387,55 @@ class GameSceneInitializer(
             addArChilds(arSceneView!!)
 
             arOrNotBtn = arOrNotLayout.findViewById<Button>(R.id.no_ar_bt_close)
-            arOrNotBtn.setOnClickListener { arOrNotLayout.visibility = View.INVISIBLE
-                if(arSceneView!=null){
-                    //arSceneView?.arSession?.pause()
-                    //arSceneView?.arSession?.destroy()
-                }}
+            arOrNotBtn.setOnClickListener {
+                arOrNotLayout.visibility = View.INVISIBLE
 
-            //arSceneView!!.arSession?.pause()
+                //throw RuntimeException("Test Crash") // Force a crash
+                //if(arSceneView!=null){
+                //arSceneView?.arSession?.pause()
+                //arSceneView?.arSession?.destroy()
+                //}}
 
+                //arSceneView!!.arSession?.pause()
+
+            }
         } else {
             // ARCore is not supported on this device, handle this case
             //var notarSceneView = inflater.inflate(R.layout)
             //val layout: RelativeLayout = this.activity.findViewById<RelativeLayout>(R.id.activity_game_layout)
+            arOrNotBtn = arOrNotLayout.findViewById<Button>(R.id.no_ar_bt_close)
+            arOrNotBtn.setOnClickListener {
+                //arOrNotLayout.visibility = View.INVISIBLE
 
-            Toast.makeText(applicationContext,"OOPS NO AR",Toast.LENGTH_SHORT).show()
+                throw RuntimeException("Test Crash") // Force a crash
+                //if(arSceneView!=null){
+                //arSceneView?.arSession?.pause()
+                //arSceneView?.arSession?.destroy()
+                //}}
+
+                //arSceneView!!.arSession?.pause()
+
+            }
+
+            Toast.makeText(applicationContext, "OOPS NO AR", Toast.LENGTH_SHORT).show()
 
             arOrNotLayout = quizLayout
 
         }
 
 
-
         //arSceneView --------------------------
         /*
-        arSceneLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_ar_layout)
+    arSceneLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_ar_layout)
 
-        arSceneView = arSceneLayout.findViewById<ArSceneView>(R.id.ar_sceneView)
+    arSceneView = arSceneLayout.findViewById<ArSceneView>(R.id.ar_sceneView)
 
-        Log.d("Frame", "test1")
-
-
-
-
-         */
+    Log.d("Frame", "test1")
 
 
 
 
+     */
 
 
         //---------------------------------------
@@ -424,8 +451,8 @@ class GameSceneInitializer(
         //    .build()
 
         //if (!detector.isOperational) {
-            //txtResultBody.setText("Detector initialisation failed");
-           // return;
+        //txtResultBody.setText("Detector initialisation failed");
+        // return;
         //}
 
 
@@ -433,415 +460,413 @@ class GameSceneInitializer(
         //setupControls()
 
 
-
         var debugButton = this.activity.findViewById<Button>(R.id.debugButton)
         debugButton.setOnClickListener { skipVoice = true }
 
 
         /*var cRNEW = jsonList[3]["circle_radius"]
-        debugButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                if(cRNEW == jsonList[3]["circle_radius"])
-                {
-                    jsonList[3]["circle_radius"] = 3
-                    allCirclesDebug[3].radius = 1.0;
-                }
-                else
-                {
-                    jsonList[3]["circle_radius"] = cRNEW
-                    allCirclesDebug[3].radius = cRNEW as Double
-                }
-
+    debugButton.setOnClickListener(object : View.OnClickListener {
+        override fun onClick(v: View?) {
+            if(cRNEW == jsonList[3]["circle_radius"])
+            {
+                jsonList[3]["circle_radius"] = 3
+                allCirclesDebug[3].radius = 1.0;
             }
-        })
-        */
+            else
+            {
+                jsonList[3]["circle_radius"] = cRNEW
+                allCirclesDebug[3].radius = cRNEW as Double
+            }
 
+        }
+    })
+    */
 
 
         /*
-        for (x in 1..8) {
-            //Finds and loads all the buttons
-            val buttonNameId = applicationContext.resources.getIdentifier(
-                "slidingPuzzle_bt_$x",
-                "id",
-                applicationContext.packageName
-            )
-            val button = slidingPuzzleLayout.findViewById<CustomButton>(buttonNameId)
-            val tempBP = button.layoutParams as GridLayout.LayoutParams
-            tempBP.rowSpec = tempBP.rowSpec
-            tempBP.columnSpec = tempBP.columnSpec
-            button.requestLayout()
-
-            button.setOnTouchListener(object : View.OnTouchListener {
-                    override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
-                        var currentNumberInside = x
-                        if (isSwipeEnabled) {
-
-
-                            when (event?.action) {
-                                MotionEvent.ACTION_DOWN -> {
-                                    //Temporary solution
-                                    buttonArray[0][0] = event.x
-                                    buttonArray[0][1] = event.y
-                                }
-
-                                MotionEvent.ACTION_MOVE -> {
-                                    val dx = event.x - buttonArray[0][0]
-                                    val dy = event.y - buttonArray[0][1]
-                                    var minusPosition = getCurrentPosition(arraySlid, -1)
-
-                                    if (abs(dx) > SWIPETHRESHOLD || abs(dy) > SWIPETHRESHOLD) {
-                                        //Calculate direction
-
-                                        if (abs(dx) > abs(dy)) {
-                                            //Left right
-
-                                            if (dx > 0) {
-
-                                                if (findRelativePosition(arraySlid,
-                                                     currentNumberInside, -1 ) ==
-                                                    RelativePosition.RIGHT && isAdjacentToValue(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    ))
-                                                 {
-                                                    //Calculate new position for the button based on the invisible one
-                                                    val clickedButtonParams =
-                                                        p0!!.layoutParams as GridLayout.LayoutParams
-                                                    val emtpyButtonParams =
-                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
-                                                    val animation = TranslateAnimation(
-                                                        Animation.RELATIVE_TO_SELF, 0f,
-                                                        Animation.RELATIVE_TO_SELF, 5F,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, 0F
-
-                                                    )
-
-                                                    val tmpS = minusPosition!![0]
-                                                    val tmpN = minusPosition[1]
-
-                                                    val oldS = getCurrentPosition(
-                                                        arraySlid,
-                                                        currentNumberInside
-                                                    )
-
-                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
-
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
-                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
-                                                    //Button 1
-
-                                                    clickedButtonParams.rowSpec = GridLayout.spec(minusPosition[0], 1.0F)
-                                                    clickedButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1],1.0F)
-
-
-                                                    //Button 2
-                                                    emtpyButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition[0], 1.0F)
-                                                    emtpyButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1] - 1, 1.0F)
-
-                                                    //val tempRow = clickedButtonParams.rowSpec
-                                                    //val tempColumn = clickedButtonParams.columnSpec
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
-                                                    //emtpyButtonParams.rowSpec = tempRow
-                                                    //emtpyButtonParams.columnSpec = tempColumn
-
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec.also { emtpyButtonParams.rowSpec = clickedButtonParams.rowSpec }
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec.also { emtpyButtonParams.columnSpec = clickedButtonParams.columnSpec }
-
-                                                    Log.d("Button $x", "New button position position col:${minusPosition[0]} row:${minusPosition[1]}")
-                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0]} row:${minusPosition[1]-1}")
-
-                                                    arraySlid = swapAdjacentValues(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-
-                                                    animation.duration = 300
-                                                    //p0!!.startAnimation(animation)
-
-
-                                                    // Request a layout pass to apply the updated layout parameters
-                                                    p0!!.requestLayout()
-                                                    buttonPuzzleEmpty.requestLayout()
-                                                    //updateLayoutAll()
-
-                                                    isSwipeEnabled = false
-
-
-
-                                                    p0?.postDelayed({
-                                                        isSwipeEnabled = true
-                                                    }, animation.duration)
-
-
-
-
-                                                }
-                                            } else {
-                                                //minuspositon
-                                                // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
-                                                //Swipe Left
-                                                //var minusPosition = getCurrentPosition(arraySlid, -1)
-                                                if (findRelativePosition(arraySlid, currentNumberInside ,-1) ==
-                                                    RelativePosition.LEFT && isAdjacentToValue(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-                                                ) {
-                                                    //Calculate new position for the button based on the invisible one
-                                                    val clickedButtonParams =
-                                                        p0!!.layoutParams as GridLayout.LayoutParams
-                                                    val emtpyButtonParams =
-                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
-                                                    val animation = TranslateAnimation(
-                                                        Animation.RELATIVE_TO_SELF, 0f,
-                                                        Animation.RELATIVE_TO_SELF, -5F,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, 0F
-
-                                                    )
-
-                                                    //val tmpS = tempPos
-                                                    val tmpN = clickedButtonParams.columnSpec
-
-                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
-
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
-                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
-
-                                                    //Button 1
-                                                    clickedButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition!![0], 1.0F)
-                                                    clickedButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1], 1.0F)
-
-
-                                                    //Button 2
-                                                    emtpyButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition[0], 1.0F)
-                                                    emtpyButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1] + 1, 1.0F)
-
-                                                    Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
-                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] } row:${minusPosition[1] +1}")
-
-                                                    arraySlid = swapAdjacentValues(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-
-                                                    animation.duration = 300
-                                                    //p0!!.startAnimation(animation)
-
-
-                                                    // Request a layout pass to apply the updated layout parameters
-
-                                                    p0!!.requestLayout()
-                                                    buttonPuzzleEmpty.requestLayout()
-                                                    //updateLayoutAll()
-
-                                                    isSwipeEnabled = false
-
-
-
-                                                    p0?.postDelayed({
-                                                        isSwipeEnabled = true
-                                                    }, animation.duration)
-
-
-                                                }
-                                            }
-                                        } else {
-                                            //top down
-
-                                            if (dy > 0) {
-                                                //down
-                                                if (findRelativePosition(arraySlid,currentNumberInside ,-1) ==
-                                                    RelativePosition.BELOW && isAdjacentToValue(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-                                                ) {
-                                                    //Calculate new position for the button based on the invisible one
-                                                    val clickedButtonParams =
-                                                        p0!!.layoutParams as GridLayout.LayoutParams
-                                                    val emtpyButtonParams =
-                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
-                                                    val animation = TranslateAnimation(
-                                                        Animation.RELATIVE_TO_SELF, 0f,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, 5F
-
-                                                    )
-
-                                                    val tmpS = clickedButtonParams.rowSpec
-                                                    val tmpN = clickedButtonParams.columnSpec
-
-                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
-
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
-                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
-                                                    //Button 1
-                                                    clickedButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition!![0], 1.0F)
-                                                    clickedButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1], 1.0F)
-
-
-                                                    //Button 2
-                                                    emtpyButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition[0] - 1, 1.0F)
-                                                    emtpyButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1], 1.0F)
-
-
-                                                    Log.d("Button $x", "New button position col:${minusPosition[0] } row:${minusPosition[1]}")
-                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] - 1} row:${minusPosition[1]}")
-
-                                                    arraySlid = swapAdjacentValues(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-
-                                                    animation.duration = 300
-                                                    //p0!!.startAnimation(animation)
-
-
-                                                    // Request a layout pass to apply the updated layout parameters
-                                                    p0!!.requestLayout()
-                                                    buttonPuzzleEmpty.requestLayout()
-                                                    //updateLayoutAll()
-
-                                                    isSwipeEnabled = false
-
-
-
-                                                    p0?.postDelayed({
-                                                        isSwipeEnabled = true
-                                                    }, animation.duration)
-
-
-                                                }
-                                            } else {
-                                                //minuspositon
-                                                // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
-                                                //Swipe Up-----------
-                                                //var minusPosition = getCurrentPosition(arraySlid, -1)
-                                                if (findRelativePosition(arraySlid,currentNumberInside ,-1 ) ==
-                                                    RelativePosition.ABOVE && isAdjacentToValue(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-                                                ) {
-                                                    //Calculate new position for the button based on the invisible one
-                                                    val clickedButtonParams =
-                                                        p0!!.layoutParams as GridLayout.LayoutParams
-                                                    val emtpyButtonParams =
-                                                        buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
-                                                    val animation = TranslateAnimation(
-                                                        Animation.RELATIVE_TO_SELF, 0f,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, 0F,
-                                                        Animation.RELATIVE_TO_SELF, -5F
-
-                                                    )
-
-                                                    val tmpS = clickedButtonParams.rowSpec
-                                                    val tmpN = clickedButtonParams.columnSpec
-
-                                                    //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
-
-                                                    //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
-                                                    //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
-                                                    //var tmpArr: IntArray = calculateNumToRC(tempPos)
-                                                    //Button 1
-                                                    clickedButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition!![0], 1.0F)
-                                                    clickedButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1], 1.0F)
-
-                                                   // slidingPuzzleLayout.removeView(p0)
-
-
-                                                    //Button 2
-                                                    //val emptyButtonIndex = slidingPuzzleLayout.indexOfChild(buttonPuzzleEmpty)
-                                                    emtpyButtonParams.rowSpec =
-                                                        GridLayout.spec(minusPosition[0] + 1, 1.0F)
-                                                    emtpyButtonParams.columnSpec =
-                                                        GridLayout.spec(minusPosition[1], 1.0F)
-
-
-                                                   // slidingPuzzleLayout.addView(p0,emptyButtonIndex)
-
-                                                    Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
-                                                    Log.d("Button empty", "Emtpy position col:${minusPosition[0] + 1} row:${minusPosition[1]}")
-
-                                                    arraySlid = swapAdjacentValues(
-                                                        arraySlid,
-                                                        currentNumberInside,
-                                                        -1
-                                                    )
-
-                                                    animation.duration = 300
-                                                    //p0!!.startAnimation(animation)
-
-
-                                                    // Request a layout pass to apply the updated layout parameters
-                                                    p0!!.requestLayout()
-                                                    buttonPuzzleEmpty.requestLayout()
-                                                    //updateLayoutAll()
-
-                                                    isSwipeEnabled = false
-
-
-
-                                                    p0?.postDelayed({
-                                                        isSwipeEnabled = true
-                                                    }, animation.duration)
-
-
-                                                }
-                                            }
-                                        }
-
-                                        if(isArrayEqual(arraySlid))
-                                        {
-                                            //call some function to win
-                                            slidingDone()
-                                        }
-                                    }
-                                }
-
+    for (x in 1..8) {
+        //Finds and loads all the buttons
+        val buttonNameId = applicationContext.resources.getIdentifier(
+            "slidingPuzzle_bt_$x",
+            "id",
+            applicationContext.packageName
+        )
+        val button = slidingPuzzleLayout.findViewById<CustomButton>(buttonNameId)
+        val tempBP = button.layoutParams as GridLayout.LayoutParams
+        tempBP.rowSpec = tempBP.rowSpec
+        tempBP.columnSpec = tempBP.columnSpec
+        button.requestLayout()
+
+        button.setOnTouchListener(object : View.OnTouchListener {
+                override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
+                    var currentNumberInside = x
+                    if (isSwipeEnabled) {
+
+
+                        when (event?.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                //Temporary solution
+                                buttonArray[0][0] = event.x
+                                buttonArray[0][1] = event.y
                             }
 
+                            MotionEvent.ACTION_MOVE -> {
+                                val dx = event.x - buttonArray[0][0]
+                                val dy = event.y - buttonArray[0][1]
+                                var minusPosition = getCurrentPosition(arraySlid, -1)
+
+                                if (abs(dx) > SWIPETHRESHOLD || abs(dy) > SWIPETHRESHOLD) {
+                                    //Calculate direction
+
+                                    if (abs(dx) > abs(dy)) {
+                                        //Left right
+
+                                        if (dx > 0) {
+
+                                            if (findRelativePosition(arraySlid,
+                                                 currentNumberInside, -1 ) ==
+                                                RelativePosition.RIGHT && isAdjacentToValue(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                ))
+                                             {
+                                                //Calculate new position for the button based on the invisible one
+                                                val clickedButtonParams =
+                                                    p0!!.layoutParams as GridLayout.LayoutParams
+                                                val emtpyButtonParams =
+                                                    buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                val animation = TranslateAnimation(
+                                                    Animation.RELATIVE_TO_SELF, 0f,
+                                                    Animation.RELATIVE_TO_SELF, 5F,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, 0F
+
+                                                )
+
+                                                val tmpS = minusPosition!![0]
+                                                val tmpN = minusPosition[1]
+
+                                                val oldS = getCurrentPosition(
+                                                    arraySlid,
+                                                    currentNumberInside
+                                                )
+
+                                                //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                //Button 1
+
+                                                clickedButtonParams.rowSpec = GridLayout.spec(minusPosition[0], 1.0F)
+                                                clickedButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1],1.0F)
+
+
+                                                //Button 2
+                                                emtpyButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition[0], 1.0F)
+                                                emtpyButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1] - 1, 1.0F)
+
+                                                //val tempRow = clickedButtonParams.rowSpec
+                                                //val tempColumn = clickedButtonParams.columnSpec
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                //emtpyButtonParams.rowSpec = tempRow
+                                                //emtpyButtonParams.columnSpec = tempColumn
+
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec.also { emtpyButtonParams.rowSpec = clickedButtonParams.rowSpec }
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec.also { emtpyButtonParams.columnSpec = clickedButtonParams.columnSpec }
+
+                                                Log.d("Button $x", "New button position position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                Log.d("Button empty", "Emtpy position col:${minusPosition[0]} row:${minusPosition[1]-1}")
+
+                                                arraySlid = swapAdjacentValues(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+
+                                                animation.duration = 300
+                                                //p0!!.startAnimation(animation)
+
+
+                                                // Request a layout pass to apply the updated layout parameters
+                                                p0!!.requestLayout()
+                                                buttonPuzzleEmpty.requestLayout()
+                                                //updateLayoutAll()
+
+                                                isSwipeEnabled = false
+
+
+
+                                                p0?.postDelayed({
+                                                    isSwipeEnabled = true
+                                                }, animation.duration)
+
+
+
+
+                                            }
+                                        } else {
+                                            //minuspositon
+                                            // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
+                                            //Swipe Left
+                                            //var minusPosition = getCurrentPosition(arraySlid, -1)
+                                            if (findRelativePosition(arraySlid, currentNumberInside ,-1) ==
+                                                RelativePosition.LEFT && isAdjacentToValue(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+                                            ) {
+                                                //Calculate new position for the button based on the invisible one
+                                                val clickedButtonParams =
+                                                    p0!!.layoutParams as GridLayout.LayoutParams
+                                                val emtpyButtonParams =
+                                                    buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                val animation = TranslateAnimation(
+                                                    Animation.RELATIVE_TO_SELF, 0f,
+                                                    Animation.RELATIVE_TO_SELF, -5F,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, 0F
+
+                                                )
+
+                                                //val tmpS = tempPos
+                                                val tmpN = clickedButtonParams.columnSpec
+
+                                                //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                //var tmpArr: IntArray = calculateNumToRC(tempPos)
+
+                                                //Button 1
+                                                clickedButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition!![0], 1.0F)
+                                                clickedButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                //Button 2
+                                                emtpyButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition[0], 1.0F)
+                                                emtpyButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1] + 1, 1.0F)
+
+                                                Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                Log.d("Button empty", "Emtpy position col:${minusPosition[0] } row:${minusPosition[1] +1}")
+
+                                                arraySlid = swapAdjacentValues(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+
+                                                animation.duration = 300
+                                                //p0!!.startAnimation(animation)
+
+
+                                                // Request a layout pass to apply the updated layout parameters
+
+                                                p0!!.requestLayout()
+                                                buttonPuzzleEmpty.requestLayout()
+                                                //updateLayoutAll()
+
+                                                isSwipeEnabled = false
+
+
+
+                                                p0?.postDelayed({
+                                                    isSwipeEnabled = true
+                                                }, animation.duration)
+
+
+                                            }
+                                        }
+                                    } else {
+                                        //top down
+
+                                        if (dy > 0) {
+                                            //down
+                                            if (findRelativePosition(arraySlid,currentNumberInside ,-1) ==
+                                                RelativePosition.BELOW && isAdjacentToValue(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+                                            ) {
+                                                //Calculate new position for the button based on the invisible one
+                                                val clickedButtonParams =
+                                                    p0!!.layoutParams as GridLayout.LayoutParams
+                                                val emtpyButtonParams =
+                                                    buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                val animation = TranslateAnimation(
+                                                    Animation.RELATIVE_TO_SELF, 0f,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, 5F
+
+                                                )
+
+                                                val tmpS = clickedButtonParams.rowSpec
+                                                val tmpN = clickedButtonParams.columnSpec
+
+                                                //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                //Button 1
+                                                clickedButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition!![0], 1.0F)
+                                                clickedButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                //Button 2
+                                                emtpyButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition[0] - 1, 1.0F)
+                                                emtpyButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                                Log.d("Button $x", "New button position col:${minusPosition[0] } row:${minusPosition[1]}")
+                                                Log.d("Button empty", "Emtpy position col:${minusPosition[0] - 1} row:${minusPosition[1]}")
+
+                                                arraySlid = swapAdjacentValues(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+
+                                                animation.duration = 300
+                                                //p0!!.startAnimation(animation)
+
+
+                                                // Request a layout pass to apply the updated layout parameters
+                                                p0!!.requestLayout()
+                                                buttonPuzzleEmpty.requestLayout()
+                                                //updateLayoutAll()
+
+                                                isSwipeEnabled = false
+
+
+
+                                                p0?.postDelayed({
+                                                    isSwipeEnabled = true
+                                                }, animation.duration)
+
+
+                                            }
+                                        } else {
+                                            //minuspositon
+                                            // if(calculateRCtoNum(minusPosition[0],minusPosition[1] % 3!=2 && isAdjacentToValue(arraySlid, currentNumberInside, -1))
+                                            //Swipe Up-----------
+                                            //var minusPosition = getCurrentPosition(arraySlid, -1)
+                                            if (findRelativePosition(arraySlid,currentNumberInside ,-1 ) ==
+                                                RelativePosition.ABOVE && isAdjacentToValue(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+                                            ) {
+                                                //Calculate new position for the button based on the invisible one
+                                                val clickedButtonParams =
+                                                    p0!!.layoutParams as GridLayout.LayoutParams
+                                                val emtpyButtonParams =
+                                                    buttonPuzzleEmpty.layoutParams as GridLayout.LayoutParams
+                                                val animation = TranslateAnimation(
+                                                    Animation.RELATIVE_TO_SELF, 0f,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, 0F,
+                                                    Animation.RELATIVE_TO_SELF, -5F
+
+                                                )
+
+                                                val tmpS = clickedButtonParams.rowSpec
+                                                val tmpN = clickedButtonParams.columnSpec
+
+                                                //val spec = GridLayout.spec(clickedButtonParams., clickedButtonParams.rowSpec.size)
+
+                                                //clickedButtonParams.rowSpec = emtpyButtonParams.rowSpec
+                                                //clickedButtonParams.columnSpec = emtpyButtonParams.columnSpec
+                                                //var tmpArr: IntArray = calculateNumToRC(tempPos)
+                                                //Button 1
+                                                clickedButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition!![0], 1.0F)
+                                                clickedButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1], 1.0F)
+
+                                               // slidingPuzzleLayout.removeView(p0)
+
+
+                                                //Button 2
+                                                //val emptyButtonIndex = slidingPuzzleLayout.indexOfChild(buttonPuzzleEmpty)
+                                                emtpyButtonParams.rowSpec =
+                                                    GridLayout.spec(minusPosition[0] + 1, 1.0F)
+                                                emtpyButtonParams.columnSpec =
+                                                    GridLayout.spec(minusPosition[1], 1.0F)
+
+
+                                               // slidingPuzzleLayout.addView(p0,emptyButtonIndex)
+
+                                                Log.d("Button $x", "New button position col:${minusPosition[0]} row:${minusPosition[1]}")
+                                                Log.d("Button empty", "Emtpy position col:${minusPosition[0] + 1} row:${minusPosition[1]}")
+
+                                                arraySlid = swapAdjacentValues(
+                                                    arraySlid,
+                                                    currentNumberInside,
+                                                    -1
+                                                )
+
+                                                animation.duration = 300
+                                                //p0!!.startAnimation(animation)
+
+
+                                                // Request a layout pass to apply the updated layout parameters
+                                                p0!!.requestLayout()
+                                                buttonPuzzleEmpty.requestLayout()
+                                                //updateLayoutAll()
+
+                                                isSwipeEnabled = false
+
+
+
+                                                p0?.postDelayed({
+                                                    isSwipeEnabled = true
+                                                }, animation.duration)
+
+
+                                            }
+                                        }
+                                    }
+
+                                    if(isArrayEqual(arraySlid))
+                                    {
+                                        //call some function to win
+                                        slidingDone()
+                                    }
+                                }
+                            }
 
                         }
 
-                        return true
+
                     }
 
+                    return true
+                }
 
-                })
-            buttonLayoutArray.add(button)
-        }
 
-         */
+            })
+        buttonLayoutArray.add(button)
+    }
+
+     */
         //Testing the arrays to see if movement works
         buttonArray = mutableListOf()
         buttonArray.add(mutableListOf(0.0F, 0.0F))
@@ -849,8 +874,6 @@ class GameSceneInitializer(
         buttonArray[0][0] = 0.0F
         buttonArray[0][1] = 0.0F
         var tempPos: IntArray = intArrayOf(2, 2);
-
-
 
 
         //When i click it dissapears
@@ -911,53 +934,45 @@ class GameSceneInitializer(
                 soundeffectsPlayerList[0].start()
                 points += 100
                 pointsTextView.text = "Points: " + points
-                correctLayout.visibility = View.VISIBLE//Sets the new visibility so it works correctly
+                correctLayout.visibility =
+                    View.VISIBLE//Sets the new visibility so it works correctly
             }
         })
-        btnTakePicture.setOnClickListener( object : View.OnClickListener{
+        btnTakePicture.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                Toast.makeText(applicationContext,"Yes",Toast.LENGTH_LONG).show();
+                Toast.makeText(applicationContext, "Yes", Toast.LENGTH_LONG).show();
                 takePhoto()
             }
         })
 
 
-
         //Become invisible when clicked
-        btX.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?)
-            {
+        btX.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
                 webViewLayoutC.visibility = View.GONE
                 correctLayout.visibility = View.VISIBLE
             }
         })
 
 
-
         //btnTakePicture = this.activity.findViewById<Button>(R.id.btnTakePicture)
 
 
-
-
-
-
         /*
-        var inflater: LayoutInflater = layoutInflaterSum
-        var customView: View = inflater.inflate(R.layout.popup_main,null);
+    var inflater: LayoutInflater = layoutInflaterSum
+    var customView: View = inflater.inflate(R.layout.popup_main,null);
 
-        //Instanciate popup window
-        popupWindow = PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+    //Instanciate popup window
+    popupWindow = PopupWindow(customView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 
-        //Finally display it
-        Log.d("Popup", popupWindow.toString())
-        Log.d("Popup", linearLayout1.toString())
-        popupWindow!!.showAtLocation(linearLayout1, Gravity.CENTER, 0, 0)
-        */
+    //Finally display it
+    Log.d("Popup", popupWindow.toString())
+    Log.d("Popup", linearLayout1.toString())
+    popupWindow!!.showAtLocation(linearLayout1, Gravity.CENTER, 0, 0)
+    */
 
 
     }
-
-
 
 
     fun addCirclesToMap(googleMap: GoogleMap) {
@@ -999,6 +1014,7 @@ class GameSceneInitializer(
     }
 
     fun locationCallbackFunc(locationResult: LocationResult) {
+
         //Activates any activities or sounds as per the parameters
 
         for (circle in jsonList) {
@@ -1017,8 +1033,7 @@ class GameSceneInitializer(
                 //Here everything is executed
 
                 //If outside the radius it stops the music
-                if(!(circle["finished"] as Boolean))
-                {
+                if (!(circle["finished"] as Boolean)) {
                     if (distance[0] > circle["circle_radius"] as Double) {
                         if (circle["running"] as Boolean) {
 
@@ -1036,31 +1051,31 @@ class GameSceneInitializer(
                         }
 
 
-                    }
-                    else if (!(circle["running"] as Boolean)) {
+                    } else if (!(circle["running"] as Boolean)) {
 
 
                         this.mediaPlayerList[circle["sound"]]?.start()
                         enableCharacterLayoutVisibility()
 
-                        if(skipVoice){
-                            skipVoice=false
+                        if (skipVoice) {
+                            skipVoice = false
                             this.mediaPlayerList[circle["sound"]]?.seekTo(this.mediaPlayerList[circle["sound"]]!!.duration.toInt())
                         }
                         //tsitsani
                         //Temporary way
-                        if((circle["title"] as String) == "jewish"){
-                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.play_and_learn_little_girl)
+                        if ((circle["title"] as String) == "jewish") {
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2)
+                                .setImageResource(R.drawable.play_and_learn_little_girl)
 
-                        }
-                        else if((circle["title"] as String) == "tsitsani"){
-                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1).setImageResource(R.drawable.tsi)
+                        } else if ((circle["title"] as String) == "tsitsani") {
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1)
+                                .setImageResource(R.drawable.tsi)
 
-                        }
-
-                        else{
-                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1).setImageResource(R.drawable.play_and_learn_asclepius)
-                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(R.drawable.kara)
+                        } else {
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1)
+                                .setImageResource(R.drawable.play_and_learn_asclepius)
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2)
+                                .setImageResource(R.drawable.kara)
                         }
 
                         //Adds a listener to end the sound only if
@@ -1077,13 +1092,12 @@ class GameSceneInitializer(
                         }
 
 
-
-
                         //Read the quiz layout and display it
                         if (circle["type"] == "quiz" && !(circle["running"] as Boolean)) {
-                            val handlerC = circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
+                            val handlerC =
+                                circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
                             val mediaPlayer = this.mediaPlayerList[circle["sound"]]
-                            if(!(circle["started"] as Boolean)){
+                            if (!(circle["started"] as Boolean)) {
                                 circle["handler"] = handlerC
 
                                 HandlerManager.subscribeHandler(handlerC, {
@@ -1092,26 +1106,26 @@ class GameSceneInitializer(
                                     this.showCorrectLayoutWithContent(circle)
                                 }, mediaPlayer)
 
-                                val durationC = this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
+                                val durationC =
+                                    this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
 
                                 circle["started"] = true
                             }
                             HandlerManager.resumeHandler(handlerC, mediaPlayer)
 
 
-
-
-                        }
-                        else if ((circle["type"] == "slidingPuzzle") or (circle["type"] == "puzzleV2")
+                        } else if ((circle["type"] == "slidingPuzzle") or (circle["type"] == "puzzleV2")
                             or (circle["type"] == "wordSearch")
                             or (circle["type"] == "justAnswer")
                             or (circle["type"] == "camera") or (circle["type"] == "matchPairs")
                             or (circle["type"] == "qrCode")
-                            or (circle["type"] == "AR")) {
+                            or (circle["type"] == "AR")
+                        ) {
 
-                            val handlerC = circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
+                            val handlerC =
+                                circle["handler"] as? Handler ?: Handler(Looper.getMainLooper())
                             val mediaPlayer = this.mediaPlayerList[circle["sound"]]
-                            if(!(circle["started"] as Boolean)) {
+                            if (!(circle["started"] as Boolean)) {
                                 circle["handler"] = handlerC
 
                                 val mediaPlayer = this.mediaPlayerList[circle["sound"]]
@@ -1128,10 +1142,12 @@ class GameSceneInitializer(
                                 circle["started"] = true
                             }
 
-                            var tdurationC = this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
+                            var tdurationC =
+                                this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
                             var tTotal = mediaPlayer?.currentPosition
                             var messageA = "tDuration: $tdurationC\ntTotal: $tTotal"
-                            Toast.makeText(applicationContext,messageA,Toast.LENGTH_LONG).show();
+                            Toast.makeText(applicationContext, messageA, Toast.LENGTH_LONG)
+                                .show();
                             HandlerManager.resumeHandler(handlerC, mediaPlayer)
 
 
@@ -1140,14 +1156,16 @@ class GameSceneInitializer(
                         circle["running"] = true
 
 
-
                     }
-                }
-                else if((distance[0] <= (circle["circle_radius"] as Double)) and circle["finished"] as Boolean){
+                } else if ((distance[0] <= (circle["circle_radius"] as Double)) and circle["finished"] as Boolean) {
                     //Show that it has finished
-                    showCorrectLayoutWithContent(mutableMapOf<String,Any?>().apply { put("type", "finished") })
+                    showCorrectLayoutWithContent(mutableMapOf<String, Any?>().apply {
+                        put(
+                            "type",
+                            "finished"
+                        )
+                    })
                 }
-
 
 
             } catch (e: Exception) {
@@ -1178,7 +1196,8 @@ class GameSceneInitializer(
                 val hiddenAnswer = quizLayout.findViewById<TextView>(R.id.quiz_hiddenVariable)
 
 
-                val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
+                val tmpMap: MutableMap<String, Any?> =
+                    circle["data"] as MutableMap<String, Any?>
                 val tmpArray: JSONArray = tmpMap["answers"] as JSONArray
 
                 for (index in 0 until answersRb.size) {//Loop everything and make them invisible. For now..
@@ -1205,13 +1224,15 @@ class GameSceneInitializer(
 
 
             }
+
             "camera" -> {
                 if (this.cameraEnabled) {
                     startCamera()
                     cameraLayout.visibility = View.VISIBLE
                     var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
-                    val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
-                    bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+                    val tmpMap: MutableMap<String, Any?> =
+                        circle["data"] as MutableMap<String, Any?>
+                    bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
 
                 }
 
@@ -1222,8 +1243,9 @@ class GameSceneInitializer(
                 //qrPuzzle =
 
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
-                val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
-                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+                val tmpMap: MutableMap<String, Any?> =
+                    circle["data"] as MutableMap<String, Any?>
+                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
 
             }
 
@@ -1232,8 +1254,9 @@ class GameSceneInitializer(
                 //qrPuzzle =
 
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
-                val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
-                bt.text = "Τα γράμματα σου είναι: "+ tmpMap["letters"]
+                val tmpMap: MutableMap<String, Any?> =
+                    circle["data"] as MutableMap<String, Any?>
+                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
                 correctLayout.visibility = View.VISIBLE
 
             }
@@ -1242,14 +1265,16 @@ class GameSceneInitializer(
                 webViewLayoutC.visibility = View.VISIBLE
                 webviewLayout.visibility = View.VISIBLE
                 webviewLayout.settings.javaScriptEnabled = true
-                webviewLayout.addJavascriptInterface(GameInterface(activity as GameTemplate), "AndroidGameInterface")
+                webviewLayout.addJavascriptInterface(
+                    GameInterface(activity as GameTemplate),
+                    "AndroidGameInterface"
+                )
                 webviewLayout.webViewClient = WebViewClient()
                 webviewLayout.webChromeClient = WebChromeClient()
 
 
-
                 //webviewLayout.settings.loadWithOverviewMode = true
-               // webviewLayout.settings.useWideViewPort = true
+                // webviewLayout.settings.useWideViewPort = true
                 //webviewLayout.settings.setSupportZoom(true)
                 //webviewLayout.settings.builtInZoomControls = true
                 //webviewLayout.settings.displayZoomControls = false
@@ -1266,7 +1291,7 @@ class GameSceneInitializer(
 
 
 
-                WebView.setWebContentsDebuggingEnabled(true)
+                //WebView.setWebContentsDebuggingEnabled(true)
 
 
                 // Enable loading local content
@@ -1280,18 +1305,17 @@ class GameSceneInitializer(
 
             }
 
-            "qrCode" ->{
+            "qrCode" -> {
                 qrCodeLayout.visibility = View.VISIBLE
                 setupControls()
             }
 
-            "AR" ->{
-                if(arSceneView!=null){
+            "AR" -> {
+                if (arSceneView != null) {
                     //Needs to change a bit
                     arOrNotLayout.visibility = View.VISIBLE
                     setupAROrNot()
-                }
-                else{
+                } else {
                     this.quizLayout.visibility = View.VISIBLE
                     val questionTv = quizLayout.findViewById<TextView>(R.id.quiz_tv_title)
                     var answersRb = arrayOf(
@@ -1300,10 +1324,12 @@ class GameSceneInitializer(
                         quizLayout.findViewById<RadioButton>(R.id.quiz_rb_3),
                         quizLayout.findViewById<RadioButton>(R.id.quiz_rb_4)
                     )
-                    val hiddenAnswer = quizLayout.findViewById<TextView>(R.id.quiz_hiddenVariable)
+                    val hiddenAnswer =
+                        quizLayout.findViewById<TextView>(R.id.quiz_hiddenVariable)
 
 
-                    val tmpMap: MutableMap<String, Any?> = circle["data"] as MutableMap<String, Any?>
+                    val tmpMap: MutableMap<String, Any?> =
+                        circle["data"] as MutableMap<String, Any?>
                     val tmpArray: JSONArray = tmpMap["answers"] as JSONArray
 
                     for (index in 0 until answersRb.size) {//Loop everything and make them invisible. For now..
@@ -1331,7 +1357,7 @@ class GameSceneInitializer(
 
             }
 
-            "finished" ->{
+            "finished" -> {
                 completedActivityLayout.visibility = View.VISIBLE
             }
         }
@@ -1342,11 +1368,13 @@ class GameSceneInitializer(
 
         val aniSlide: Animation =
             AnimationUtils.loadAnimation(applicationContext, R.anim.scanner_animation)
-        val barcodeLineP = this.activity.findViewById<ConstraintLayout>(R.id.include_qrcode_layout)
+        val barcodeLineP =
+            this.activity.findViewById<ConstraintLayout>(R.id.include_qrcode_layout)
         val barcodeLine = barcodeLineP.findViewById<View>(R.id.barcode_line)
 
         barcodeDetector =
-            BarcodeDetector.Builder(applicationContext).setBarcodeFormats(Barcode.ALL_FORMATS).build()
+            BarcodeDetector.Builder(applicationContext).setBarcodeFormats(Barcode.ALL_FORMATS)
+                .build()
 
         barcodeLine.startAnimation(aniSlide)
 
@@ -1390,7 +1418,11 @@ class GameSceneInitializer(
 
         barcodeDetector.setProcessor(object : Detector.Processor<Barcode> {
             override fun release() {
-                Toast.makeText(applicationContext, "Scanner has been closed", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    applicationContext,
+                    "Scanner has been closed",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
 
@@ -1403,133 +1435,135 @@ class GameSceneInitializer(
                     //Don't forget to add this line printing value or finishing activity must run on main thread
                     parentClass.runOnUiThread {
                         cameraSource.stop()
-                        Toast.makeText(applicationContext, "value- $scannedValueQr", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "value- $scannedValueQr",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                         qrCodeLayout.visibility = View.GONE
                         //parentClass.finish()
 
 
                     }
-                }else
-                {
-                    Toast.makeText(applicationContext
-                        , "value- else", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        applicationContext, "value- else", Toast.LENGTH_SHORT
+                    ).show()
 
                 }
             }
         })
     }
 
-    private fun setupAROrNot(){
-        if (arSceneView!=null)
-        {
+    private fun setupAROrNot() {
+        if (arSceneView != null) {
             //arSceneView!!.arSession?.resume()
-        }
-        else{
+        } else {
 
         }
     }
 
-    private fun addArChilds(arSceneView: ArSceneView){
+    private fun addArChilds(arSceneView: ArSceneView) {
         //arSceneView
 
         //VIDEO STUFF IMPORTANT
         /*
-        arSceneView.addChild(
-            AugmentedImageNodeF(
-                engine = arSceneView.engine,
-                imageName = "2b",
-                bitmap = applicationContext.assets.open("ImageDatabase/star.png")
-                    .use(BitmapFactory::decodeStream),
-                onUpdate = {node, _->
+    arSceneView.addChild(
+        AugmentedImageNodeF(
+            engine = arSceneView.engine,
+            imageName = "2b",
+            bitmap = applicationContext.assets.open("ImageDatabase/star.png")
+                .use(BitmapFactory::decodeStream),
+            onUpdate = {node, _->
 
 
-                    //arvideoNode. node.worldPosition
-                    //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
+                //arvideoNode. node.worldPosition
+                //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
 
-                    if(node.isTracking){
-                        Toast.makeText(applicationContext, "TRACKING: "+ arvideoNode?.player?.isPlaying.toString(),Toast.LENGTH_SHORT).show()
+                if(node.isTracking){
+                    Toast.makeText(applicationContext, "TRACKING: "+ arvideoNode?.player?.isPlaying.toString(),Toast.LENGTH_SHORT).show()
 
-                        val imagePose = node.pose
+                    val imagePose = node.pose
 
-                        arvideoNode?.worldPosition =  Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
+                    arvideoNode?.worldPosition =  Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
 
-                        val currentQuaternion = Quaternion(imagePose!!.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                    val currentQuaternion = Quaternion(imagePose!!.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
 
-                        // Create a quaternion that represents a 180 degrees rotation around the x-axis
-                        val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
+                    // Create a quaternion that represents a 180 degrees rotation around the x-axis
+                    val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
 
-                        // Combine the current orientation with the rotation
+                    // Combine the current orientation with the rotation
 
-                        arvideoNode!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
-                        arvideoNode!!.worldQuaternion =  currentQuaternion * rotationQuaternion
-                        //arvideoNode.worldQuaternion.fromAxisAngle()
-                        //arvideoNode.wo
-                        if(!arvideoNode!!.player.isPlaying!!)
+                    arvideoNode!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                    arvideoNode!!.worldQuaternion =  currentQuaternion * rotationQuaternion
+                    //arvideoNode.worldQuaternion.fromAxisAngle()
+                    //arvideoNode.wo
+                    if(!arvideoNode!!.player.isPlaying!!)
+                    {
+                        //arvideoNode.quaternion= node.augmentedImage!!.
+
+                        arvideoNode?.player?.start()
+                    }
+                    else{
+                        if(arvideoNode?.player?.isPlaying == true)
                         {
-                            //arvideoNode.quaternion= node.augmentedImage!!.
-
-                            arvideoNode?.player?.start()
-                        }
-                        else{
-                            if(arvideoNode?.player?.isPlaying == true)
-                            {
-                                arvideoNode!!.player.pause()
-                            }
+                            arvideoNode!!.player.pause()
                         }
                     }
-                },
-                onError = {
-                        exception ->
-                    Toast.makeText(applicationContext,exception.message,Toast.LENGTH_LONG).show()
                 }
-            ).apply {
-                var mdPlayerV = MediaPlayer().apply {
-                    val retriever = MediaMetadataRetriever()
-                    val afd = applicationContext.assets.openFd("ImageDatabase/videoplayback.mp4")
-                    //setDataSource(applicationContext, Uri.parse("https://www.aketh.gr/images/robotics/wedo-advanced-handbrake.mp4"))
-                    setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-                    isLooping = true
-                    retriever.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-                    val videoRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
-                    Toast.makeText(applicationContext, "NA3",Toast.LENGTH_SHORT).show()
-                    setOnPreparedListener{
-                        if((arvideoNode?.parent as? AugmentedImageNode)?.isTracking == true){
-                            Toast.makeText(applicationContext, "ZAWARUDO",Toast.LENGTH_SHORT).show()
-                            start()
-                        }
-                        //arvideoNode.rotation = Rotation(x=180.0f,y=0.0f, z = 0.0f)
-                        val rotation = videoRotation!!.toFloatOrNull() ?: 0f
-                        arvideoNode?.rotation = Rotation(x=-90.0f, y=0.0f, z = 0.0f)
-                        //arvideoNode.quaternion = dev.romainguy.kotlin.math.Quaternion.fromAxisAngle(
-                        //    Float3(-1.0f, 0.0f, 0.0f),
-                        //   videoRotation.toFloat()
-                        //)
-                        //arvideoNode.quaternion.w // (arvideoNode.parent as? AugmentedImageNode)?.
-
-
-
-                        Toast.makeText(applicationContext, "ZAWARUDO1 "+(arvideoNode?.parent as? AugmentedImageNode)?.isTracking.toString(),Toast.LENGTH_SHORT).show()
-
-
-                    }
-
-                    prepareAsync()
-                    setOnErrorListener { mp, what, extra ->
-                        //Toast.makeText(applicationContext, "Error occurred:"+ what.on, Extra code: $extra", Toast.LENGTH_LONG).show()
-                        Log.d("ERROR PREPARE","Error occurred: $what, Extra code: $extra")
-                        true
-                    }
-
-                }
-                //anchor = An
-                arvideoNode = VideoNode(arSceneView.engine, mdPlayerV, scaleToUnits = 0.2f, centerOrigin = Position(x=0.0f,y=0.0f,z=0.0f), glbFileLocation = "ImageDatabase/plane.glb", )
-
-                addChild(arvideoNode!!)
+            },
+            onError = {
+                    exception ->
+                Toast.makeText(applicationContext,exception.message,Toast.LENGTH_LONG).show()
             }
+        ).apply {
+            var mdPlayerV = MediaPlayer().apply {
+                val retriever = MediaMetadataRetriever()
+                val afd = applicationContext.assets.openFd("ImageDatabase/videoplayback.mp4")
+                //setDataSource(applicationContext, Uri.parse("https://www.aketh.gr/images/robotics/wedo-advanced-handbrake.mp4"))
+                setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                isLooping = true
+                retriever.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                val videoRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+                Toast.makeText(applicationContext, "NA3",Toast.LENGTH_SHORT).show()
+                setOnPreparedListener{
+                    if((arvideoNode?.parent as? AugmentedImageNode)?.isTracking == true){
+                        Toast.makeText(applicationContext, "ZAWARUDO",Toast.LENGTH_SHORT).show()
+                        start()
+                    }
+                    //arvideoNode.rotation = Rotation(x=180.0f,y=0.0f, z = 0.0f)
+                    val rotation = videoRotation!!.toFloatOrNull() ?: 0f
+                    arvideoNode?.rotation = Rotation(x=-90.0f, y=0.0f, z = 0.0f)
+                    //arvideoNode.quaternion = dev.romainguy.kotlin.math.Quaternion.fromAxisAngle(
+                    //    Float3(-1.0f, 0.0f, 0.0f),
+                    //   videoRotation.toFloat()
+                    //)
+                    //arvideoNode.quaternion.w // (arvideoNode.parent as? AugmentedImageNode)?.
 
-        )
-        */
+
+
+                    Toast.makeText(applicationContext, "ZAWARUDO1 "+(arvideoNode?.parent as? AugmentedImageNode)?.isTracking.toString(),Toast.LENGTH_SHORT).show()
+
+
+                }
+
+                prepareAsync()
+                setOnErrorListener { mp, what, extra ->
+                    //Toast.makeText(applicationContext, "Error occurred:"+ what.on, Extra code: $extra", Toast.LENGTH_LONG).show()
+                    Log.d("ERROR PREPARE","Error occurred: $what, Extra code: $extra")
+                    true
+                }
+
+            }
+            //anchor = An
+            arvideoNode = VideoNode(arSceneView.engine, mdPlayerV, scaleToUnits = 0.2f, centerOrigin = Position(x=0.0f,y=0.0f,z=0.0f), glbFileLocation = "ImageDatabase/plane.glb", )
+
+            addChild(arvideoNode!!)
+        }
+
+    )
+    */
 
 
         var modelTest: ModelNode? = null
@@ -1541,42 +1575,51 @@ class GameSceneInitializer(
                 imageName = "test",
                 bitmap = applicationContext.assets.open("ImageDatabase/star.png")
                     .use(BitmapFactory::decodeStream),
-                onError = {exception ->
+                onError = { exception ->
                     //exception.printStackTrace()
                     Log.e("ERRORIMAGE", exception.toString())
 
 
                 },
-                onUpdate = {
-                        node, _ ->
+                onUpdate = { node, _ ->
                     //arvideoNode. node.worldPosition
                     //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
                     //Toast.makeText(applicationContext, "TRACKING: ",Toast.LENGTH_SHORT).show()
 
-                    if(AR1_c)
-                    {
-                        AR1_c=false
+                    if (AR1_c) {
+                        AR1_c = false
                         soundeffectsPlayerList[0].start()
                         points += 100
                     }
 
-                    if(node.isTracking){
+                    if (node.isTracking) {
                         //node.setCastShadows(false)
                         node.setReceiveShadows(false)
 
 
                         val imagePose = node.pose
 
-                        modelTest!!.worldPosition = Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
+                        modelTest!!.worldPosition =
+                            Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
 
-                        val currentQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        val currentQuaternion = Quaternion(
+                            imagePose.qx(),
+                            imagePose.qy(),
+                            imagePose.qz(),
+                            imagePose.qw()
+                        )
 
                         // Create a quaternion that represents a 180 degrees rotation around the x-axis
                         //val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
 
                         // Combine the current orientation with the rotation
 
-                        modelTest!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        modelTest!!.worldQuaternion = Quaternion(
+                            imagePose.qx(),
+                            imagePose.qy(),
+                            imagePose.qz(),
+                            imagePose.qw()
+                        )
                         modelTest!!.worldQuaternion = currentQuaternion //* rotationQuaternion
 
                     }
@@ -1603,26 +1646,24 @@ class GameSceneInitializer(
                 imageName = "test",
                 bitmap = applicationContext.assets.open("ImageDatabase/pin.png")
                     .use(BitmapFactory::decodeStream),
-                onError = {exception ->
+                onError = { exception ->
                     //exception.printStackTrace()
                     Log.e("ERRORIMAGE", exception.toString())
 
 
                 },
-                onUpdate = {
-                        node, _ ->
+                onUpdate = { node, _ ->
                     //arvideoNode. node.worldPosition
                     //Toast.makeText(applicationContext, "NAII2",Toast.LENGTH_SHORT).show()
                     //Toast.makeText(applicationContext, "TRACKING: ",Toast.LENGTH_SHORT).show()
 
-                    if(AR2_c)
-                    {
-                        AR2_c=false
+                    if (AR2_c) {
+                        AR2_c = false
                         soundeffectsPlayerList[0].start()
                         points += 100
                     }
 
-                    if(node.isTracking){
+                    if (node.isTracking) {
                         //node.setCastShadows(false)
                         node.setReceiveShadows(false)
                         node.setScreenSpaceContactShadows(false)
@@ -1630,16 +1671,27 @@ class GameSceneInitializer(
 
                         val imagePose = node.pose
 
-                        modelTest1!!.worldPosition = Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
+                        modelTest1!!.worldPosition =
+                            Position(imagePose!!.tx(), imagePose!!.ty(), imagePose!!.tz())
 
-                        val currentQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        val currentQuaternion = Quaternion(
+                            imagePose.qx(),
+                            imagePose.qy(),
+                            imagePose.qz(),
+                            imagePose.qw()
+                        )
 
                         // Create a quaternion that represents a 180 degrees rotation around the x-axis
                         //val rotationQuaternion = Quaternion.fromAxisAngle(Float3(1.0f, 0.0f, 0.0f), 180.0f)
 
                         // Combine the current orientation with the rotation
 
-                        modelTest1!!.worldQuaternion = Quaternion(imagePose.qx(), imagePose.qy(), imagePose.qz(), imagePose.qw())
+                        modelTest1!!.worldQuaternion = Quaternion(
+                            imagePose.qx(),
+                            imagePose.qy(),
+                            imagePose.qz(),
+                            imagePose.qw()
+                        )
                         modelTest1!!.worldQuaternion = currentQuaternion //* rotationQuaternion
 
                     }
@@ -1660,30 +1712,24 @@ class GameSceneInitializer(
         //arSceneView.arSession?.pause()
     }
 
-    private fun toggleCharacterLayoutVisibility()
-    {
-        if(this.characterLayout.visibility == View.VISIBLE)
-        {
+    private fun toggleCharacterLayoutVisibility() {
+        if (this.characterLayout.visibility == View.VISIBLE) {
             this.characterLayout.visibility = View.INVISIBLE
-        }
-        else
-        {
+        } else {
             this.characterLayout.visibility = View.VISIBLE
         }
 
     }
 
-    private fun enableCharacterLayoutVisibility()
-    {
+    private fun enableCharacterLayoutVisibility() {
         this.characterLayout.visibility = View.VISIBLE
     }
 
-    private fun disableCharacterLayoutVisibility()
-    {
+    private fun disableCharacterLayoutVisibility() {
         this.characterLayout.visibility = View.GONE
     }
-    private fun slidingDone()
-    {
+
+    private fun slidingDone() {
         slidingPuzzleLayout.visibility = View.INVISIBLE
         correctLayout.visibility = View.VISIBLE
     }
@@ -1719,7 +1765,6 @@ class GameSceneInitializer(
         }
         return -1
     }
-
 
 
     fun isAdjacentToValue(
@@ -1781,21 +1826,23 @@ class GameSceneInitializer(
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
             }
         }
 
         // Create output options object which contains file + metadata
         val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(applicationContext.contentResolver,
+            .Builder(
+                applicationContext.contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
+                contentValues
+            )
             .build()
 
         // Set up image capture listener, which is triggered after photo has
         // been taken
-        var bitmap:Bitmap
+        var bitmap: Bitmap
         imageCapture?.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(applicationContext),
@@ -1805,7 +1852,7 @@ class GameSceneInitializer(
                 }
 
                 override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
+                        onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
                     Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(CameraXR.TAG, msg)
@@ -1814,63 +1861,90 @@ class GameSceneInitializer(
                     bitmap = BitmapFactory.decodeStream(inputStream)
 
 
-                    activity.runOnUiThread{
-                        try{
-                            if(uri!=null){
+                    activity.runOnUiThread {
+                        try {
+                            if (uri != null) {
                                 val sepiaBitmap = applySepiaFilter(bitmap)
 
-                                val exifInterface = inputStream?.let { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    ExifInterface(it)
-                                } else {
-                                    TODO("VERSION.SDK_INT < N")
+                                val exifInterface = inputStream?.let {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        ExifInterface(it)
+                                    } else {
+                                        TODO("VERSION.SDK_INT < N")
+                                    }
                                 }
-                                }
-                                val orientation = exifInterface?.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+                                val orientation = exifInterface?.getAttributeInt(
+                                    ExifInterface.TAG_ORIENTATION,
+                                    ExifInterface.ORIENTATION_NORMAL
+                                )
 
                                 val matrix = Matrix()
                                 when (orientation) {
                                     ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
-                                    ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
-                                    ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+                                    ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(
+                                        180f
+                                    )
+
+                                    ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(
+                                        270f
+                                    )
                                 }
-                                val rotatedBitmap = Bitmap.createBitmap(sepiaBitmap, 0, 0, sepiaBitmap.width, sepiaBitmap.height, matrix, true)
+                                val rotatedBitmap = Bitmap.createBitmap(
+                                    sepiaBitmap,
+                                    0,
+                                    0,
+                                    sepiaBitmap.width,
+                                    sepiaBitmap.height,
+                                    matrix,
+                                    true
+                                )
 
                                 //-------------------------
 
 
-
-
-                                val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN)
+                                val dateFormat =
+                                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.GERMAN)
                                 val timestamp = dateFormat.format(System.currentTimeMillis())
-                                val sName = timestamp +"_sepia"
+                                val sName = timestamp + "_sepia"
 
                                 val contentValuesR = ContentValues().apply {
                                     put(MediaStore.MediaColumns.DISPLAY_NAME, sName)
                                     put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-                                    if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                                        put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+                                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                                        put(
+                                            MediaStore.Images.Media.RELATIVE_PATH,
+                                            "Pictures/CameraX-Image"
+                                        )
                                     }
                                 }
 
                                 val outputOptionsR = ImageCapture.OutputFileOptions
-                                    .Builder(applicationContext.contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                    .Builder(
+                                        applicationContext.contentResolver,
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                        contentValues
+                                    )
                                     .build()
                                 //--------------------------
 
 
-
-
-
                                 //val bitmap1 = BitmapFactory.decodeStream(sepiaBitmap.)
-                                var tmpView = cameraLayout.findViewById<ImageView>(R.id.imageViewTest)
+                                var tmpView =
+                                    cameraLayout.findViewById<ImageView>(R.id.imageViewTest)
                                 tmpView.setImageBitmap(sepiaBitmap);
-                                tmpView.visibility=View.VISIBLE
+                                tmpView.visibility = View.VISIBLE
 
-                                val imageUri = applicationContext.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                val imageUri = applicationContext.contentResolver.insert(
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    contentValues
+                                )
 
-                                val outputStream = imageUri?.let { applicationContext.contentResolver.openOutputStream(it) }
+                                val outputStream = imageUri?.let {
+                                    applicationContext.contentResolver.openOutputStream(it)
+                                }
                                 outputStream.use { stream ->
-                                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+                                    rotatedBitmap.compress(
+                                        Bitmap.CompressFormat.JPEG, 100,
                                         stream!!
                                     )
                                 }
@@ -1880,7 +1954,7 @@ class GameSceneInitializer(
                                 //val originalFile = File(uri.path)
 
 
-                                val sepiaFileName = timestamp +"_sepia"+".jpg"
+                                val sepiaFileName = timestamp + "_sepia" + ".jpg"
                                 //val newFile = File(newFileName)
                                 val folder = File(applicationContext.filesDir, "CameraX-Image")
                                 if (!folder.exists()) {
@@ -1891,13 +1965,12 @@ class GameSceneInitializer(
                                 //val sepiaFile = File(Environment.getExternalStorageDirectory() + "Pictures/CameraX-Image"+sepiaFileName)
                                 //val sepiaFile = File(uri.path!!.replace(".jpg","_sepia.jpg"))
                                 val fos = FileOutputStream(sepiaFile)
-                                Log.d("FOS",fos.toString())
+                                Log.d("FOS", fos.toString())
                                 sepiaBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
                                 fos.close()
                             }
-                        }
-                        catch (e: java.lang.Exception){
-                            Log.e("ERROR", uri.path!!+" "+e.message.toString())
+                        } catch (e: java.lang.Exception) {
+                            Log.e("ERROR", uri.path!! + " " + e.message.toString())
                         }
 
                     }
@@ -1910,7 +1983,7 @@ class GameSceneInitializer(
         //Change here for different effect
     }
 
-    public fun startCamera(){
+    public fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(applicationContext)
 
         cameraProviderFuture.addListener({
@@ -1930,9 +2003,6 @@ class GameSceneInitializer(
             imageCapture = ImageCapture.Builder().build()
 
 
-
-
-
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -1943,22 +2013,22 @@ class GameSceneInitializer(
                 // Bind use cases to camera
                 var lifeB: LifecycleOwner = this.activity as LifecycleOwner
                 cameraProvider.bindToLifecycle(
-                    lifeB, cameraSelector, preview, imageCapture)
+                    lifeB, cameraSelector, preview, imageCapture
+                )
 
-            } catch(exc: Exception) {
+            } catch (exc: Exception) {
                 Log.e(CameraXR.TAG, "Use case binding failed", exc)
             }
 
         }, ContextCompat.getMainExecutor(applicationContext))
 
 
-
     }
 
     //Applies bitmap, adds sepia tranformation and adds a rotation so that it has no problems when displaying it.
-    fun applySepiaFilter(bitmap: Bitmap): Bitmap{
+    fun applySepiaFilter(bitmap: Bitmap): Bitmap {
         val width = bitmap.width
-        Log.d("WIDTH",bitmap.width.toString())
+        Log.d("WIDTH", bitmap.width.toString())
         val height = bitmap.height
 
         val size = Math.hypot(width.toDouble(), height.toDouble()).toInt() // D
@@ -1969,7 +2039,7 @@ class GameSceneInitializer(
         colorMatrix.setSaturation(0f)
 
         val colorScale = ColorMatrix(colorMatrix)
-        colorScale.setScale(1f,0.95f,0.82f,1f)
+        colorScale.setScale(1f, 0.95f, 0.82f, 1f)
         colorMatrix.postConcat(colorScale)
 
         paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
@@ -1981,14 +2051,19 @@ class GameSceneInitializer(
         matrix.postTranslate((size - width) / 2f, (size - height) / 2f) // Center the bitmap
         //matrix.postScale(size.toFloat() / width, size.toFloat() / height)
         // rotate 90 degrees
-        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        val rotatedBitmap =
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 
 
-        canvas.drawBitmap(rotatedBitmap,0f,0f,paint)
-        return  sepiaBitmap
+        canvas.drawBitmap(rotatedBitmap, 0f, 0f, paint)
+        return sepiaBitmap
     }
 
-    fun swapAdjacentValues(matrix: Array<Array<Int>>, value1: Int, value2: Int): Array<Array<Int>> {
+    fun swapAdjacentValues(
+        matrix: Array<Array<Int>>,
+        value1: Int,
+        value2: Int
+    ): Array<Array<Int>> {
         val rows = matrix.size
         val cols = matrix[0].size
 
@@ -2034,7 +2109,11 @@ class GameSceneInitializer(
 
     enum class RelativePosition { ABOVE, BELOW, LEFT, RIGHT, NONE }
 
-    fun findRelativePosition(arr: Array<Array<Int>>, value1: Int, value2: Int): RelativePosition {
+    fun findRelativePosition(
+        arr: Array<Array<Int>>,
+        value1: Int,
+        value2: Int
+    ): RelativePosition {
         var value1Row = -1
         var value1Col = -1
         var value2Row = -1
@@ -2101,7 +2180,6 @@ class GameSceneInitializer(
     }
 
 
-
     fun onPause() {
 
         // Release all the MediaPlayer instances
@@ -2113,15 +2191,13 @@ class GameSceneInitializer(
         //mediaPlayerList.clear()
     }
 
-    fun onResume()
-    {
+    fun onResume() {
         //On resume, check if any of them paused with no reason
         //this.arCoreObj.checkGoogleServicesArInstalled()
         //this.arCoreObj.isARCoreSupportedAndUpToDate()
     }
 
-    fun onDestroy()
-    {
+    fun onDestroy() {
         if (::cameraSource.isInitialized) {
             cameraSource.stop()
         }
@@ -2191,10 +2267,12 @@ object HandlerManager {
         if (delayedRunnable != null && pausedHandlers.contains(handler)) {
             pausedHandlers.remove(handler)
 
-            Log.d("TIMER",
+            Log.d(
+                "TIMER",
                 mediaPlayer?.duration?.toLong()?.minus(mediaPlayer.currentPosition).toString()
             )
-            val remainingDuration = mediaPlayer?.duration?.toLong()?.minus(mediaPlayer.currentPosition) ?: 4000
+            val remainingDuration =
+                mediaPlayer?.duration?.toLong()?.minus(mediaPlayer.currentPosition) ?: 4000
             handler.postDelayed(delayedRunnable.runnable, remainingDuration)
             mediaPlayer?.start()
 
@@ -2216,7 +2294,7 @@ object HandlerManager {
     }
 }
 
-object CameraXR{
+object CameraXR {
     /**
      * Request code for location permission request.
      *
@@ -2235,7 +2313,7 @@ object CameraXR{
 
     private const val requestCodeCameraPermission = 1001
     private val REQUIRED_PERMISSIONS =
-        mutableListOf (
+        mutableListOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
         ).apply {
