@@ -81,24 +81,23 @@ class Start : ComponentActivity() {
 
             //Set content is default. It's a lambda function
             setContent {
-                Box(modifier = Modifier
-                    .fillMaxSize()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
                     Games.Carousel(
                         nameAndjsonFiles = nameAndjsonFiles!!,
-                        onButtonClick = {
-                            jsonFile->
-                                val intent= Intent(applicationContext, GameInfoActivity::class.java)
-                                intent.putExtra("jsonFile", jsonFile)
+                        onButtonClick = { jsonFile ->
+                            val intent = Intent(applicationContext, GameInfoActivity::class.java)
+                            intent.putExtra("jsonFile", jsonFile)
 
-                                startActivity(intent)
+                            startActivity(intent)
                         }
                     )
                 }
 
-                AppNavigation(nameAndjsonFiles = nameAndjsonFiles,onButtonClick = {
-                        jsonFile->
-                    val intent= Intent(applicationContext, GameInfoActivity::class.java)
+                AppNavigation(nameAndjsonFiles = nameAndjsonFiles, onButtonClick = { jsonFile ->
+                    val intent = Intent(applicationContext, GameInfoActivity::class.java)
                     intent.putExtra("jsonFile", jsonFile)
 
                     startActivity(intent)
@@ -107,29 +106,30 @@ class Start : ComponentActivity() {
             }
         }
     }
-    private suspend fun loadJsonFilesFromAssets(): List<Pair<String,JSONObject>> {
+
+    private suspend fun loadJsonFilesFromAssets(): List<Pair<String, JSONObject>> {
         val jsonFiles = mutableListOf<JSONObject>()
-        val nameAndjsonFiles = mutableListOf<Pair<String,JSONObject>>()
+        val nameAndjsonFiles = mutableListOf<Pair<String, JSONObject>>()
 
 
-            withContext(Dispatchers.IO) {
-                val files = assets.list("Content") ?: emptyArray()
+        withContext(Dispatchers.IO) {
+            val files = assets.list("Content") ?: emptyArray()
 
 
-                //Find all files in folder Content
-                for (filename in files) {
-                    if (filename.endsWith(".json")) {
-                        val inputStream: InputStream = assets.open("Content/$filename")
-                        val size: Int = inputStream.available()
-                        val buffer = ByteArray(size)
-                        inputStream.read(buffer)
-                        inputStream.close()
-                        val json = String(buffer, Charset.defaultCharset())
-                        val jsonObject = JSONObject(json)
-                        nameAndjsonFiles.add(Pair(filename,jsonObject))
-                    }
+            //Find all files in folder Content
+            for (filename in files) {
+                if (filename.endsWith(".json")) {
+                    val inputStream: InputStream = assets.open("Content/$filename")
+                    val size: Int = inputStream.available()
+                    val buffer = ByteArray(size)
+                    inputStream.read(buffer)
+                    inputStream.close()
+                    val json = String(buffer, Charset.defaultCharset())
+                    val jsonObject = JSONObject(json)
+                    nameAndjsonFiles.add(Pair(filename, jsonObject))
                 }
             }
+        }
         return nameAndjsonFiles
     }
 }
@@ -167,8 +167,10 @@ fun GreetingPreview() {
 
 
 @Composable
-fun AppNavigation(nameAndjsonFiles: List<Pair<String, JSONObject>>?, onButtonClick: (String) -> Unit)
-{
+fun AppNavigation(
+    nameAndjsonFiles: List<Pair<String, JSONObject>>?,
+    onButtonClick: (String) -> Unit
+) {
     val navController = rememberNavController()
     val currentRoute by remember {
         mutableStateOf(Screen.Games.route)
@@ -210,9 +212,12 @@ fun AppNavigation(nameAndjsonFiles: List<Pair<String, JSONObject>>?, onButtonCli
                 }
             }
         }
-    ) {
-            innerPadding ->
-        NavHost(navController, startDestination = Screen.Games.route, Modifier.padding(innerPadding)) {
+    ) { innerPadding ->
+        NavHost(
+            navController,
+            startDestination = Screen.Games.route,
+            Modifier.padding(innerPadding)
+        ) {
             composable(Screen.Games.route) {
                 if (nameAndjsonFiles != null) {
                     Games.Carousel(
@@ -222,7 +227,7 @@ fun AppNavigation(nameAndjsonFiles: List<Pair<String, JSONObject>>?, onButtonCli
                 }
             }
             composable(Screen.Language.route) { Language.test(navController) }
-            composable(Screen.ContactUs.route) { ContactUs.test(navController)}
+            composable(Screen.ContactUs.route) { ContactUs.test(navController) }
         }
     }
 }
