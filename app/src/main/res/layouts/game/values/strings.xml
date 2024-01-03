@@ -5,20 +5,20 @@
     <string name="open_camera" translatable="false">Open Camera</string>
     <string name="title_activity_start" translatable="false">Start</string>
     <string name="title_activity_intro" translatable="false">Intro</string>
-    <string name="tooltip_text">The game is available in the following locations!</string>
-    <string name="contact_us">Contact Us</string>
-    <string name="contact_us_desc">Let\'s talk about our project</string>
-    <string name="contact_us_directorate">Directorate of Primary Education Trikala</string>
+    <string name="tooltip_text" translatable="false">The game is available in the following locations!</string>
+    <string name="contact_us" translatable="false">Contact Us</string>
+    <string name="contact_us_desc" translatable="false">Let\'s talk about our project</string>
+    <string name="contact_us_directorate" translatable="false">Directorate of Primary Education Trikala</string>
     <string name="contact_us_coordinators_details">Coordinators contact details</string>
-    <string name="contact_us_project_website_link">playandlearnproject.eu</string>
-    <string name="contact_us_project_website">Project Website:</string>
-    <string name="contact_us_facebook_website">https://www.facebook.com/playingandlearningfromthepast?locale=el_GR</string>
-    <string name="contact_us_email">email: </string>
-    <string name="contact_us_email_dipe">mail@dipe.tri.sch.gr</string>
-    <string name="contact_us_website">http://dipe.tri.sch.gr/</string>
-    <string name="contact_us_website_prefix">website:</string>
-    <string name="contact_us_phone">0030 2431046475</string>
-    <string name="contact_us_phone_prefix">tel:</string>
-    <string name="photo_tooltip">Take a group photo</string>
-    <string name="ar_tooltip">Find and Scan this image, to discover more details</string>
+    <string name="contact_us_project_website_link" translatable="false">playandlearnproject.eu</string>
+    <string name="contact_us_project_website" translatable="false">Project Website:</string>
+    <string name="contact_us_facebook_website" translatable="false">https://www.facebook.com/playingandlearningfromthepast?locale=el_GR</string>
+    <string name="contact_us_email" translatable="false">email: </string>
+    <string name="contact_us_email_dipe" translatable="false">mail@dipe.tri.sch.gr</string>
+    <string name="contact_us_website" translatable="false">http://dipe.tri.sch.gr/</string>
+    <string name="contact_us_website_prefix" translatable="false">website:</string>
+    <string name="contact_us_phone" translatable="false">0030 2431046475</string>
+    <string name="contact_us_phone_prefix" translatable="false">tel:</string>
+    <string name="photo_tooltip" translatable="false">Take a group photo</string>
+    <string name="ar_tooltip" translatable="false">Find and Scan this image, to discover more details</string>
 </resources>
