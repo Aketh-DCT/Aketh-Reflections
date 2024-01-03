@@ -1,0 +1,278 @@
+{
+  "data": [
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.157431471636066,
+            "lon": 27.58702723034173
+          },
+          "circle_radius": 20,
+          "circle_color": "#FF00FF",
+          "id": 4
+        },
+        "content": {
+          "local_img_url": "aa",
+          "title": "1. The Palace of Culture",
+          "description": "",
+          "sound": "voice_2_test",
+          "characters": ["ch1","ch2"],
+          "type": "AR",
+          "data": {
+            "img_src": "ImageDatabase/tsitsanis.png",
+            "obj_src": "ImageDatabase/tsitsanis.glb",
+            "question": "Who is Basil Tsitsanis",
+            "answers": [
+              "Ο Βασίλης Τσιτσάνης",
+              "Ο Οσμάν Σαx",
+              "Ο Ιούλιος Καίσαρας"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": "Α, Ε"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.1590412466505,
+            "lon": 27.586725647928443
+          },
+          "circle_radius": 10,
+          "circle_color": "#FF00FF",
+          "id": 4
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "2. Museum of Metropolit Dosoftei",
+          "description": "Tzami",
+          "sound": "voice_1_test",
+          "characters": ["ch1","ch2"],
+          "type": "quiz",
+          "data": {
+            "question": "Ποιός ίδρυσε το Κουρσούμ Τζαμί;",
+            "answers": [
+              "Ο Βασίλης Τσιτσάνης",
+              "Ο Οσμάν Σαx",
+              "Ο Ιούλιος Καίσαρας"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": ""
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.16498813112366,
+            "lon": 27.58920441276285
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Trei Ierarhi Monastery",
+          "description": "Έξω απο το ακεθ 3",
+          "sound": "voice_3_test",
+          "characters": ["ch1","ch2"],
+          "type": "puzzleV2",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.16040827651142,
+            "lon": 27.582901405006307
+          },
+          "circle_radius": 5,
+          "circle_color": "#FF00FF",
+          "id": 2
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Catholic Episcopal Cathedral ”Saint Virgin Mary Queen”",
+          "description": "bb",
+          "sound": "voice_4_test",
+          "characters": ["ch1","ch2"],
+          "type": "AR",
+          "data": {
+            "img_src": "ImageDatabase/tsitsanis.png",
+            "obj_src": "ImageDatabase/tsitsanis.glb",
+            "question": "Is this Jewish;",
+            "answers": [
+              "True",
+              "False"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": "Α, Ε"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.161681864957316,
+            "lon": 27.581963361647436
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 3
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Metropolitan Cathedral of Moldavia and Bucovina: ",
+          "description": "Έξω απο το ακεθ 5",
+          "sound": "voice_6_test",
+          "type": "wordSearch",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.16498813112366,
+            "lon": 27.58920441276285
+          },
+          "circle_radius": 7,
+          "circle_color": "#FF00FF",
+          "id": 3
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "National Theater of Iasi,”Vasile Alecsandri’’",
+          "description": "Έξω απο το ακεθ 5",
+          "sound": "voice_6_test",
+          "type": "camera",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.16632838817202,
+            "lon": 27.57933555807713
+          },
+          "circle_radius": 6,
+          "circle_color": "#FF00FF",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Grand Hotel Traian",
+          "description": "Έξω απο το ακεθ 6",
+          "sound": "voice_7_test",
+          "type": "matchPairs",
+          "data": {
+            "pieces": [
+              [
+                4,
+                7,
+                3
+              ],
+              [
+                2,
+                6,
+                8
+              ],
+              [
+                5,
+                1,
+                -1
+              ]
+            ],
+            "imgs": "Notthing right now",
+            "letters": "Λ, Ο"
+          }
+        }
+      }
+    }
+  ],
+  "game_info": {
+    "title": "Romania EN",
+    "description": "Enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Malesuada fames ac turpis egestas sed. At tellus at urna condimentum mattis. Pretium aenean pharetra magna ac placerat vestibulum. Sed cras ornare arcu dui vivamus arcu. Egestas egestas fringilla phasellus faucibus. Sagittis eu volutpat odio facilisis mauris sit amet. Massa tempor nec feugiat nisl. Tempus iaculis urna id volutpat lacus laoreet. Ultricies integer quis auctor elit sed vulputate mi sit amet. Adipiscing tristique risus nec feugiat in fermentum posuere urna. Adipiscing vitae proin sagittis nisl. Iaculis at erat pellentesque adipiscing commodo. Orci nulla pellentesque dignissim enim.",
+    "image": "test2",
+    "character_images" : {
+      "ch1": "agori_ro",
+      "ch2": "girl_ro"
+    },
+    "language": "en"
+  }
+}

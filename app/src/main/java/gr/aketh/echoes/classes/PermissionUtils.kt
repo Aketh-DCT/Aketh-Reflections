@@ -89,10 +89,10 @@ object PermissionUtils {
         override fun onDismiss(dialog: DialogInterface) {
             super.onDismiss(dialog)
             if (finishActivity) {
-                Toast.makeText(
-                    activity, "yolo",
-                    Toast.LENGTH_SHORT
-                ).show()
+                //Toast.makeText(
+                //    activity, "yolo",
+                //    Toast.LENGTH_SHORT
+                //).show()
                 activity?.finish()
             }
         }
@@ -153,11 +153,11 @@ object PermissionUtils {
         override fun onDismiss(dialog: DialogInterface) {
             super.onDismiss(dialog)
             if (finishActivity) {
-                Toast.makeText(
-                    activity,
-                    "R.string.permission_required_toast",
-                    Toast.LENGTH_SHORT
-                ).show()
+                //Toast.makeText(
+                //    activity,
+                 //   "R.string.permission_required_toast",
+                 //   Toast.LENGTH_SHORT
+                //).show()
                 activity?.finish()
             }
         }

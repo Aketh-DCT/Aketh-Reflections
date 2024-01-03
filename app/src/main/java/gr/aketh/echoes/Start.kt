@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,78 +13,38 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.cardview.widget.CardView
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import gr.aketh.echoes.classes.FtpClientConnect
-import gr.aketh.echoes.composables.ContactUs
 import gr.aketh.echoes.composables.ContactUs.FormM
 import gr.aketh.echoes.composables.Games
-import gr.aketh.echoes.composables.Language
 import gr.aketh.echoes.composables.Screen
-import gr.aketh.echoes.ui.theme.Echoes_AkethTheme
 import gr.aketh.echoes.ui.theme.Main_Theme
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -128,8 +86,8 @@ class Start : ComponentActivity() {
                     if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
                         permissionsList.add(permissionsStr[i])
                     } else if (!hasPermission(applicationContext, permissionsStr[i])) {
-                        Toast.makeText(applicationContext, permissionsStr[i], Toast.LENGTH_SHORT)
-                            .show()
+                        //Toast.makeText(applicationContext, permissionsStr[i], Toast.LENGTH_SHORT)
+                         //   .show()
                         permissionsCount++
                         Log.d("PERMISSION", permissionsStr[i])
                         rejList.add(permissionsStr[i])
@@ -151,8 +109,8 @@ class Start : ComponentActivity() {
 
                 } else {
                     //All permissions granted. Do your stuff 🤞
-                    Toast.makeText(applicationContext, "All Permissions granted", Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(applicationContext, "All Permissions granted", Toast.LENGTH_SHORT)
+                    //    .show()
                     initGameCodeAfterPermissions()
                 }
             }
@@ -265,6 +223,7 @@ class Start : ComponentActivity() {
         super.attachBaseContext(context)
     }
 
+    //Loads the files from Content
     private suspend fun loadJsonFilesFromAssets(): List<Pair<String, JSONObject>> {
         val jsonFiles = mutableListOf<JSONObject>()
         val nameAndjsonFiles = mutableListOf<Pair<String, JSONObject>>()
@@ -272,7 +231,7 @@ class Start : ComponentActivity() {
 
         withContext(Dispatchers.IO) {
             val files = assets.list("Content") ?: emptyArray()
-
+            val currentLanguage = Locale.getDefault().language
 
             //Find all files in folder Content
             for (filename in files) {
@@ -284,7 +243,27 @@ class Start : ComponentActivity() {
                     inputStream.close()
                     val json = String(buffer, Charset.defaultCharset())
                     val jsonObject = JSONObject(json)
-                    nameAndjsonFiles.add(Pair(filename, jsonObject))
+
+                    val gameInfoTmp = jsonObject.getJSONObject("game_info")
+
+                    //Checks if there is language set
+                    try {
+                        val language = gameInfoTmp.getString("language")
+                        //if it is, good
+                        if(currentLanguage == language){
+                            nameAndjsonFiles.add(Pair(filename, jsonObject))
+                        }
+
+                    }catch (_: JSONException){
+                        //if not assume it's english
+                        if(currentLanguage=="en"){
+                            nameAndjsonFiles.add(Pair(filename, jsonObject))
+                        }
+                        //nameAndjsonFiles.add(Pair(filename, jsonObject))
+                    }
+
+
+
                 }
             }
         }

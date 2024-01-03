@@ -281,7 +281,7 @@ class Intro : ComponentActivity() {
                         onLanguageSelected(language_selected)
                         //recreate()
 
-                        Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
 
                     })
 
@@ -308,6 +308,32 @@ class Intro : ComponentActivity() {
                     },
                     onClick = { language = "Italian"
                         language_selected = "it"
+                        isExpanded = false
+                        saveLanguage(context, language_selected)
+                        setLocale(language_selected)
+                        onLanguageSelected(language_selected)
+
+                    })
+
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "Romanian")
+                    },
+                    onClick = { language = "Romanian"
+                        language_selected = "ro"
+                        isExpanded = false
+                        saveLanguage(context, language_selected)
+                        setLocale(language_selected)
+                        onLanguageSelected(language_selected)
+
+                    })
+
+                DropdownMenuItem(
+                    text = {
+                        Text(text = "Turkish")
+                    },
+                    onClick = { language = "Turkish"
+                        language_selected = "tr"
                         isExpanded = false
                         saveLanguage(context, language_selected)
                         setLocale(language_selected)

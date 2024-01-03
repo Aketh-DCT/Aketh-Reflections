@@ -144,8 +144,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                     if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
                         permissionsList.add(permissionsStr[i])
                     } else if (!hasPermission(applicationContext, permissionsStr[i])) {
-                        Toast.makeText(applicationContext, permissionsStr[i], Toast.LENGTH_SHORT)
-                            .show()
+                        //Toast.makeText(applicationContext, permissionsStr[i], Toast.LENGTH_SHORT)
+                           // .show()
                         permissionsCount++
                         Log.d("PERMISSION", permissionsStr[i])
                         rejList.add(permissionsStr[i])
@@ -167,8 +167,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
                 } else {
                     //All permissions granted. Do your stuff 🤞
-                    Toast.makeText(applicationContext, "All Permissions granted", Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(applicationContext, "All Permissions granted", Toast.LENGTH_SHORT)
+                    //    .show()
                     initGameCodeAfterPermissions()
                 }
             }
@@ -430,16 +430,16 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
     override fun onMyLocationButtonClick(): Boolean {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT)
-            .show()
+        //Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT)
+        //    .show()
 
         //Return false so we dont consume event
         return false
     }
 
     override fun onMyLocationClick(p0: Location) {
-        Toast.makeText(this, "Current location:\n$p0", Toast.LENGTH_LONG)
-            .show()
+        //Toast.makeText(this, "Current location:\n$p0", Toast.LENGTH_LONG)
+         //   .show()
     }
 
     //Permission result
@@ -588,7 +588,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults){
                     val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
                 }
             }
@@ -714,7 +714,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         }
 
         this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
 
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             doubleBackToExitPressedOnce = false

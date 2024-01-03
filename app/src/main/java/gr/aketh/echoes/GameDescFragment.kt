@@ -28,7 +28,7 @@ class GameDescFragment : Fragment() {
 
         val jsonFile = arguments?.getString("jsonFile")
 
-        Toast.makeText(context, jsonFile, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, jsonFile, Toast.LENGTH_SHORT).show()
 
 
 

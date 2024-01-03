@@ -184,7 +184,8 @@
             android:layout_alignBottom="@+id/map"
             android:layout_marginEnd="30sp"
             android:layout_marginBottom="30sp"
-            android:contentDescription="Random Text"/>
+            android:contentDescription="Random Text"
+            android:visibility="gone"/>
 
     <TextView
         android:id="@+id/points"

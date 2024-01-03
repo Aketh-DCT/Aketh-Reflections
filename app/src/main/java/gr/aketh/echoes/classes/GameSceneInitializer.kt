@@ -431,7 +431,7 @@ class GameSceneInitializer(
 
             }
 
-            Toast.makeText(applicationContext, "OOPS NO AR", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(applicationContext, "OOPS NO AR", Toast.LENGTH_SHORT).show()
 
             arOrNotLayout = quizLayout
 
@@ -956,7 +956,7 @@ class GameSceneInitializer(
         })
         btnTakePicture.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                Toast.makeText(applicationContext, "Yes", Toast.LENGTH_LONG).show();
+                //Toast.makeText(applicationContext, "Yes", Toast.LENGTH_LONG).show();
                 takePhoto()
             }
         })
@@ -1319,8 +1319,8 @@ class GameSceneInitializer(
                                 this.mediaPlayerList[circle["sound"]]!!.duration.toLong()
                             var tTotal = mediaPlayer?.currentPosition
                             var messageA = "tDuration: $tdurationC\ntTotal: $tTotal"
-                            Toast.makeText(applicationContext, messageA, Toast.LENGTH_LONG)
-                                .show();
+                            //Toast.makeText(applicationContext, messageA, Toast.LENGTH_LONG)
+                              //  .show();
                             HandlerManager.resumeHandler(handlerC, mediaPlayer)
 
 
@@ -1392,7 +1392,7 @@ class GameSceneInitializer(
                 questionTv.text = tmpMap["question"] as String
 
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
-                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
+                bt.text = "DONE"//"Τα γράμματα σου είναι: " + tmpMap["letters"]
 
 
 
@@ -1416,7 +1416,7 @@ class GameSceneInitializer(
                     var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
                     val tmpMap: MutableMap<String, Any?> =
                         circle["data"] as MutableMap<String, Any?>
-                    bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
+                    bt.text = "DONE"//"Τα γράμματα σου είναι: " + tmpMap["letters"]
 
                 }
 
@@ -1429,7 +1429,7 @@ class GameSceneInitializer(
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
                 val tmpMap: MutableMap<String, Any?> =
                     circle["data"] as MutableMap<String, Any?>
-                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
+                bt.text = "DONE"//"Τα γράμματα σου είναι: " + tmpMap["letters"]
 
             }
 
@@ -1440,7 +1440,7 @@ class GameSceneInitializer(
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
                 val tmpMap: MutableMap<String, Any?> =
                     circle["data"] as MutableMap<String, Any?>
-                bt.text = "Τα γράμματα σου είναι: " + tmpMap["letters"]
+                bt.text = "DONE"//"Τα γράμματα σου είναι: " + tmpMap["letters"]
                 correctLayout.visibility = View.VISIBLE
 
             }
@@ -1617,11 +1617,11 @@ class GameSceneInitializer(
                     //Don't forget to add this line printing value or finishing activity must run on main thread
                     parentClass.runOnUiThread {
                         cameraSource.stop()
-                        Toast.makeText(
-                            applicationContext,
-                            "value- $scannedValueQr",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        //Toast.makeText(
+                         //   applicationContext,
+                        //    "value- $scannedValueQr",
+                         //   Toast.LENGTH_SHORT
+                        //).show()
 
                         qrCodeLayout.visibility = View.GONE
                         //parentClass.finish()
@@ -1629,9 +1629,9 @@ class GameSceneInitializer(
 
                     }
                 } else {
-                    Toast.makeText(
-                        applicationContext, "value- else", Toast.LENGTH_SHORT
-                    ).show()
+                   // Toast.makeText(
+                   //     applicationContext, "value- else", Toast.LENGTH_SHORT
+                    //).show()
 
                 }
             }
@@ -2036,7 +2036,7 @@ class GameSceneInitializer(
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(CameraXR.TAG, msg)
                     val uri = output.savedUri
                     val inputStream = applicationContext.contentResolver.openInputStream(uri!!)

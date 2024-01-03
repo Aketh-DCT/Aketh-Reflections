@@ -95,7 +95,7 @@ class ArCoreClass(applicationContext: Context, applicationActivity: Activity) {
         catch (e: UnavailableUserDeclinedInstallationException)
         {
             // Display an appropriate message to the user and return gracefully.
-            Toast.makeText(this.applicationContext, "TODO: handle exception"+e, Toast.LENGTH_LONG).show()
+            //Toast.makeText(this.applicationContext, "TODO: handle exception"+e, Toast.LENGTH_LONG).show()
             return
         }
 
@@ -246,8 +246,8 @@ class ArCoreClass(applicationContext: Context, applicationActivity: Activity) {
     fun checkIsSupportedDeviceOrFinish(activity: Activity): Boolean {
         if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
             Log.e("TEST", "Sceneform requires Android N or later")
-            Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG)
-                .show()
+            //Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG)
+              //  .show()
             activity.finish()
             return false
         }
@@ -257,8 +257,8 @@ class ArCoreClass(applicationContext: Context, applicationActivity: Activity) {
                 .glEsVersion
         if (openGlVersionString.toDouble() < MIN_OPENGL_VERSION) {
             Log.e("TEST", "Sceneform requires OpenGL ES 3.0 later")
-            Toast.makeText(activity, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG)
-                .show()
+            //Toast.makeText(activity, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG)
+              //  .show()
             activity.finish()
             return false
         }
