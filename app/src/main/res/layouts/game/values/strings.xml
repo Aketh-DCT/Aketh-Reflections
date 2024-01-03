@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="take_barcode_picture">Take picture\n</string>
-    <string name="scan_barcode">Scan Barcode\n</string>
-    <string name="open_camera">Open Camera</string>
-    <string name="title_activity_start">Start</string>
+    <string name="take_barcode_picture" translatable="false">Take picture\n</string>
+    <string name="scan_barcode" translatable="false">Scan Barcode\n</string>
+    <string name="open_camera" translatable="false">Open Camera</string>
+    <string name="title_activity_start" translatable="false">Start</string>
+    <string name="title_activity_intro" translatable="false">Intro</string>
+    <string name="tooltip_text">The game is available in the following locations!</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="contact_us_desc">Let\'s talk about our project</string>
+    <string name="contact_us_directorate">Directorate of Primary Education Trikala</string>
+    <string name="contact_us_coordinators_details">Coordinators contact details</string>
+    <string name="contact_us_project_website_link">playandlearnproject.eu</string>
+    <string name="contact_us_project_website">Project Website:</string>
+    <string name="contact_us_facebook_website">https://www.facebook.com/playingandlearningfromthepast?locale=el_GR</string>
+    <string name="contact_us_email">email: </string>
+    <string name="contact_us_email_dipe">mail@dipe.tri.sch.gr</string>
+    <string name="contact_us_website">http://dipe.tri.sch.gr/</string>
+    <string name="contact_us_website_prefix">website:</string>
+    <string name="contact_us_phone">0030 2431046475</string>
+    <string name="contact_us_phone_prefix">tel:</string>
+    <string name="photo_tooltip">Take a group photo</string>
+    <string name="ar_tooltip">Find and Scan this image, to discover more details</string>
 </resources>

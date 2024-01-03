@@ -1,27 +1,30 @@
 <resources>
-    <string name="app_name">Echoes_Aketh</string>
+    <string name="app_name" translatable="false">Echoes_Aketh</string>
 
-    <string name="default_gamedesc_text">This is the Trikala Game for the Project - Playing and Learning From The past</string>
-
-
-
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="company_name">Anaptixiako Kentro Thessalias</string>
+    <string name="default_gamedesc_text" translatable="false">This is the Trikala Game for the Project - Playing and Learning From The past</string>
 
 
 
-    <string name="take_photo">Take Photo</string>
-    <string name="start_capture">Start Capture</string>
-    <string name="stop_capture">Stop Capture</string>
-    <string name="hide_video">Done</string>
+    <string name="title_activity_main2" translatable="false">MainActivity2</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+    <string name="action_settings" translatable="false">Settings</string>
+
+    <string name="menu_home" translatable="false">Home</string>
+    <string name="menu_gallery" translatable="false">Gallery</string>
+    <string name="menu_slideshow" translatable="false">Slideshow</string>
+    <string name="company_name" translatable="false">Anaptixiako Kentro Thessalias</string>
+
+
+
+    <string name="take_photo" translatable="false">Take Photo</string>
+    <string name="start_capture" translatable="false">Start Capture</string>
+    <string name="stop_capture" translatable="false">Stop Capture</string>
+    <string name="hide_video" translatable="false">Done</string>
+
+    <string name="intro_text" translatable="false">This application is part of the intercultural Erasmus+ project  "Playing &amp; Learning From the Past" (2021–1-EL01-KA220-SCH-000027810 )that aims to contribute to the support and development of emerging cultural and digital  literacy of learners, along with the improvement of literacy skills, by utilizing the cultural identity of each country using online applications.</string>
+    <string name="select_language" translatable="false">Select Language</string>
 </resources>

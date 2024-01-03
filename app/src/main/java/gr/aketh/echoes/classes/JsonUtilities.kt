@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
@@ -59,13 +60,41 @@ object JsonUtilities
         }
     }
 
-    fun jsonArrayToMutableMap(jsonObject: JSONObject): MutableList<MutableMap<String,Any?>>
+    fun jsonArrayToMutableMap(jsonObject: JSONObject): Array<Any>
     {
         //var jsonArray: JSONArray = jsonObject.
         var rMap = jsonObject.toMap()
         var rMapD = rMap["data"] as List<*>;
         //var rMapList = rMap["data"] as rMap
         val jsonArray = jsonObject.getJSONArray("data");
+        var gameInfo : JSONObject
+        var gameInfoCharacterImages: JSONObject
+        val characterLayoutImages = mutableMapOf<String, String>()
+        try {
+            //Check if in the Json file has been provided the key-value pairs for images
+            //Images must be the same name a the actual R.drawable. correct name here
+            gameInfo = jsonObject.getJSONObject("game_info")
+            gameInfoCharacterImages = gameInfo.getJSONObject("character_images")
+            val gameInfoCharacterImagesKeys = gameInfoCharacterImages.keys()
+
+
+
+
+            while(gameInfoCharacterImagesKeys.hasNext()){
+                val key = gameInfoCharacterImagesKeys.next()
+                val value = gameInfoCharacterImages.getString(key)
+
+                characterLayoutImages[key] = value
+            }
+
+
+            Log.d("IMAGES_WORK", gameInfoCharacterImages.toString())
+        }
+        catch (_: JSONException)
+        {
+
+        }
+
         val dictList : MutableList<MutableMap<String,Any?>> = mutableListOf()
         //val dict = mutableMapOf<String,Any?>()
 
@@ -110,6 +139,13 @@ object JsonUtilities
             val content = circleProperties.getJSONObject("content")
 
             val musicSoundName = content.getString("sound")
+            var characterOrder : JSONArray
+            try {
+                characterOrder = content.getJSONArray("characters")
+            }catch (_: JSONException){
+                characterOrder = JSONArray("[\"ch1\",\"ch2\"]")
+            }
+
 
             var content_data_type = content.getString("type")
 
@@ -282,6 +318,7 @@ object JsonUtilities
             dict["sound"] = musicSoundName
             dict["type"] = content_data_type
             dict["title"] = title_of
+            dict["characters"] = characterOrder
 
             dict["running"] = false
             dict["finished"] = false
@@ -297,7 +334,7 @@ object JsonUtilities
         //Log.d("Is this true", rMapList!!::class.simpleName.toString())
 
 
-        return dictList
+        return arrayOf(dictList,characterLayoutImages)
     }
 
 

@@ -1,6 +1,9 @@
 package gr.aketh.echoes.composables
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
@@ -21,16 +24,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -38,6 +50,7 @@ import gr.aketh.echoes.R
 import org.json.JSONObject
 
 object  Games {
+
     @Composable
     fun CardView(title: String, description: String, image: Painter, onButtonClick: () -> Unit) {
         val configuration = LocalConfiguration.current
@@ -52,10 +65,13 @@ object  Games {
             ),
             modifier = Modifier.sizeIn(
                 minWidth = screenWidth * 0.8f,
-                minHeight = screenHeight * 0.9f,
+                minHeight = screenHeight * 0.8f,
                 maxWidth = screenWidth * 0.8f,
-                maxHeight = screenHeight * 0.9f
-            )
+                maxHeight = screenHeight * 0.8f
+            )//,
+          //  colors = CardDefaults.cardColors(
+                //containerColor = MaterialTheme.colorScheme.surface // Set the background color here
+          //  )
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(
@@ -71,8 +87,8 @@ object  Games {
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f)
                     )
-                    Text(text = title, style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center, modifier = Modifier.padding(bottom = 5.dp))
-                    Text(text = description, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Justify, modifier = Modifier.fillMaxWidth(0.9f))
+                    Text(text = title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.headlineLarge, textAlign = TextAlign.Center, modifier = Modifier.padding(bottom = 5.dp))
+                    Text(text = description,color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Justify, modifier = Modifier.fillMaxWidth(0.9f))
                 }
                 Box(modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -91,7 +107,7 @@ object  Games {
     }
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Carousel(nameAndjsonFiles: List<Pair<String, JSONObject>>, onButtonClick: (String) -> Unit) {
+    fun Carousel(nameAndjsonFiles: List<Pair<String, JSONObject>>, onButtonClick: (String) -> Unit, tooltipText: String) {
         val listState = rememberLazyListState()
         val snapBehavior = rememberSnapFlingBehavior(lazyListState = listState)
         val landScapeOrientation = LocalConfiguration.current.orientation ==  Configuration.ORIENTATION_LANDSCAPE
@@ -106,6 +122,11 @@ object  Games {
         )
         if(landScapeOrientation)
         {
+            Text(
+                text = tooltipText,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge
+            )
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
@@ -136,34 +157,61 @@ object  Games {
             }
         }
         else {
-            LazyRow(
-                state = listState,
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                flingBehavior = snapBehavior
+
+            var expanded by remember { mutableStateOf(false) }
+
+            val dividerWidth by animateDpAsState(
+                targetValue = if (expanded) 0.3f.dp else 0.dp, label = "",
+                animationSpec = tween(durationMillis = 2000)
+            )
+
+            LaunchedEffect(Unit) {
+                expanded = true
+            }
+
+            Column(
+                verticalArrangement = Arrangement.Top
             ) {
-                items(nameAndjsonFiles) { nameAndjsonFile ->
-                    val gameFileName = nameAndjsonFile.first
-                    val gameInfo = nameAndjsonFile.second.getJSONObject("game_info")
-                    val title = gameInfo.getString("title")
-                    val description = gameInfo.getString("description")
-                    val imageResource = gameInfo.getString("image")
+                Text(
+                    text = tooltipText,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp)
+                )
+                Divider(color = Color.Black, thickness = 5.dp, modifier = Modifier.fillMaxWidth(dividerWidth.value)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 7.0.dp, bottom = 2.0.dp)
+                    .clip(RoundedCornerShape(5.dp)))
+                LazyRow(
+                    state = listState,
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    flingBehavior = snapBehavior
+                ) {
+                    items(nameAndjsonFiles) { nameAndjsonFile ->
+                        val gameFileName = nameAndjsonFile.first
+                        val gameInfo = nameAndjsonFile.second.getJSONObject("game_info")
+                        val title = gameInfo.getString("title")
+                        val description = gameInfo.getString("description")
+                        val imageResource = gameInfo.getString("image")
 
-                    val context = LocalContext.current
-                    val packageName = context.packageName
+                        val context = LocalContext.current
+                        val packageName = context.packageName
 
-                    val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera }
+                        val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera }
 
-                    CardView(
-                        title = title,
-                        description = description,
-                        image = painterResource(id = id),
-                        onButtonClick = { onButtonClick(gameFileName) }
-                    )
+                        CardView(
+                            title = title,
+                            description = description,
+                            image = painterResource(id = id),
+                            onButtonClick = { onButtonClick(gameFileName) }
+                        )
+                    }
                 }
             }
+
         }
 
 
@@ -173,4 +221,6 @@ object  Games {
     fun Test(navController: NavHostController) {
         Text("Your dad")
     }
+
+
 }

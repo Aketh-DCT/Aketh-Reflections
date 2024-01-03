@@ -7,8 +7,8 @@
             "lat": 39.55082945541312,
             "lon": 21.77018562880516
           },
-          "circle_radius": 7,
-          "circle_color": "#FF00FF",
+          "circle_radius": 9,
+          "circle_color": "#7BEE6352",
           "id": 4
         },
         "content": {
@@ -41,8 +41,8 @@
             "lat": 39.55020694580428,
             "lon": 21.77098658744251
           },
-          "circle_radius": 10,
-          "circle_color": "#FF00FF",
+          "circle_radius": 12,
+          "circle_color": "#7BEE6352",
           "id": 4
         },
         "content": {
@@ -73,8 +73,8 @@
             "lat": 39.55537469854134,
             "lon": 21.76992645325066
           },
-          "circle_radius": 7,
-          "circle_color": "#FF00FF",
+          "circle_radius": 9,
+          "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {
@@ -115,8 +115,8 @@
             "lat": 39.55633106760214,
             "lon": 21.76928250734672
           },
-          "circle_radius": 5,
-          "circle_color": "#FF00FF",
+          "circle_radius": 8,
+          "circle_color": "#7BEE6352",
           "id": 2
         },
         "content": {
@@ -148,8 +148,8 @@
             "lat": 39.55540154699199,
             "lon": 21.766874373532332
           },
-          "circle_radius": 7,
-          "circle_color": "#FF00FF",
+          "circle_radius": 9,
+          "circle_color": "#7BEE6352",
           "id": 3
         },
         "content": {
@@ -189,8 +189,8 @@
             "lat": 39.55542721947203,
             "lon": 21.7676959945856
           },
-          "circle_radius": 7,
-          "circle_color": "#FF00FF",
+          "circle_radius": 9,
+          "circle_color": "#7BEE6352",
           "id": 3
         },
         "content": {
@@ -230,8 +230,8 @@
             "lat": 39.55662635701729,
             "lon": 21.764783167430238
           },
-          "circle_radius": 6,
-          "circle_color": "#FF00FF",
+          "circle_radius": 8,
+          "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {
@@ -271,8 +271,8 @@
             "lat": 39.556482522309715,
             "lon": 21.763873008836672
           },
-          "circle_radius": 7,
-          "circle_color": "#FF00FF",
+          "circle_radius": 9,
+          "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {
@@ -312,8 +312,8 @@
             "lat": 39.55737531709299,
             "lon": 21.762965724611004
           },
-          "circle_radius": 8,
-          "circle_color": "#FF00FF",
+          "circle_radius": 10,
+          "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {

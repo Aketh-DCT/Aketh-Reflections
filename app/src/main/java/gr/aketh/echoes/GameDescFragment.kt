@@ -1,5 +1,6 @@
 package gr.aketh.echoes
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -33,6 +34,9 @@ class GameDescFragment : Fragment() {
 
         //Starts activity when you click the button
         binding.buttonStart.setOnClickListener {
+
+
+
             val intent= Intent(context, GameTemplate::class.java)
             intent.putExtra("jsonFile", jsonFile)
 

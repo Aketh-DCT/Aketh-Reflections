@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -12,11 +13,16 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +50,7 @@ import gr.aketh.echoes.classes.GameSceneInitializer
 import gr.aketh.echoes.classes.JsonUtilities.loadJSONFromAsset
 import gr.aketh.echoes.classes.PermissionUtils
 import gr.aketh.echoes.classes.PermissionUtils.PermissionDeniedDialog.Companion.newInstance
+import gr.aketh.echoes.classes.PermissionUtils.isPermissionGranted
 import gr.aketh.echoes.databinding.ActivityGameTemplateBinding
 import gr.aketh.echoes.databinding.ActivityMainBinding
 import org.json.JSONArray
@@ -104,8 +111,18 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         Manifest.permission.INTERNET
     )
 
+    private val permissionStrSub = listOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.CAMERA,
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.INTERNET
+    )
+
     var permissionsCount = 0
     var permissionsList: ArrayList<String> = ArrayList()
+
+    var dialog : AlertDialog? = null
 
 
 
@@ -200,6 +217,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        dialog = setProgressDialog(this, "Loading...")
+        dialog?.show()
         // Needed stuff
         super.onCreate(savedInstanceState)
         viewBinding = ActivityGameTemplateBinding.inflate(layoutInflater)
@@ -233,6 +252,15 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         )
     }
 
+    private fun hasPermissions(vararg permissions: String): Boolean {
+        for (permission in permissions) {
+            if (ActivityCompat.checkSelfPermission(applicationContext, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
     private fun initGameCodeAfterPermissions(){
 
         //Loads all the stuff
@@ -259,7 +287,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         //Location Update Stuff
         mLocationRequest = LocationRequest.create().setInterval(1000)
             .setFastestInterval(1000)
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
             .setMaxWaitTime(100).setSmallestDisplacement(3F);
 
         //Location callback stuff
@@ -288,6 +316,8 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
             gameObjectInitialised = true
         }
+
+        dialog?.dismiss()
     }
 
 
@@ -301,7 +331,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mMap = googleMap
         googleMap.setOnMyLocationClickListener(this)
         googleMap.setOnMyLocationButtonClickListener(this)
-        enableMyLocation()
+        //enableMyLocation()
 
         //Marker stuff test
         val tsitsanisMuseum = LatLng(39.550598, 21.769916)
@@ -316,28 +346,15 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         googleMap.addMarker(
             MarkerOptions()
-                .position(tsitsanisMuseum)
+               .position(tsitsanisMuseum)
                 .title("Tsitsanis Museum")
         )
-        var fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            // Move the camera to the location of the device
-            mMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                LatLng(location.latitude, location.longitude), 20f))
-        }
 
-        /*
+
+
+
+
+
 
         if(this.gameSceneObject!=null && !gameObjectInitialised)
         {
@@ -347,12 +364,19 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             gameObjectInitialised = true
         }
         
-         */
+
+
+
 
         //Permission Array
 
-        permissionsList.addAll(permissionsStr.toList())
-        askForPermissions(permissionsList)
+        //permissionsList.addAll(permissionsStr.toList())
+        //askForPermissions(permissionsList)
+        if (!hasPermissions(*permissionsStr)) {
+            ActivityCompat.requestPermissions(this, permissionsStr, PERMISSION_ID)
+        }
+
+        Log.d("TEST","GIA")
 
     }
 
@@ -419,64 +443,61 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
     //Permission result
-    /*
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
-    ) {
+    )
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-            return
-        }
-
-        if (PermissionUtils.isPermissionGranted(
-                permissions,
-                grantResults,
+        //1. Check if permission granted
+        if (ContextCompat.checkSelfPermission(
+                this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) || PermissionUtils.isPermissionGranted(
-                permissions,
-                grantResults,
+            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            )
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            enableMyLocation()
-        } else{
-            //Permission was denied
-            permissionDenied=true
-        }
+            mMap.isMyLocationEnabled = true
 
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                startCamera()
-            } else {
-                Toast.makeText(this,
-                    "Permissions not granted by the user.",
-                    Toast.LENGTH_SHORT).show()
-                finish()
+            var fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                // Move the camera to the location of the device
+                mMap.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(location.latitude, location.longitude), 20f))
             }
         }
-
-        if(requestCode == REQUEST_CAMERA_PERMISSION)
-        {
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                //Do something
-            }
-            else{
-                Toast.makeText(applicationContext, "Permissions Denied!", Toast.LENGTH_SHORT)
-            }
+        else {
+            // Permission was denied. Display an error message
+            // Display the missing permission error dialog when the fragments resume.
+            permissionDenied = true
         }
 
-        if (!CameraPermissionHelper.hasCameraPermission(this)) {
-            Toast.makeText(this, "Camera permission is needed to run this application", Toast.LENGTH_LONG)
-                .show()
-            if (!CameraPermissionHelper. shouldShowRequestPermissionRationale(this)) {
-                // Permission denied with checking "Do not ask again".
-                CameraPermissionHelper.launchPermissionSettings(this)
+
+        when (requestCode) {
+            PERMISSION_ID -> {
+                val grantedPermissions = mutableListOf<String>()
+                for (i in permissions.indices) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        grantedPermissions.add(permissions[i])
+                    }
+                }
+
+                if(grantedPermissions.containsAll(permissionStrSub))
+                {
+                    initGameCodeAfterPermissions()
+                }
+
+                // All permissions have been granted, do your stuff here
+
+
+
+               //
             }
-            finish()
         }
 
 
@@ -484,7 +505,7 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     }
 
 
-     */
+
 
 
 
@@ -642,10 +663,10 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         //this.gameSceneObject.onResume()
         //Onresume first check if still inside circle
         // ARCore requires camera permission to operate.
-        if (!CameraPermissionHelper.hasCameraPermission(this)) {
-            CameraPermissionHelper.requestCameraPermission(this)
-            return
-        }
+       // if (!CameraPermissionHelper.hasCameraPermission(this)) {
+        //    CameraPermissionHelper.requestCameraPermission(this)
+       //     return
+       // }
 
 
     }
@@ -698,6 +719,48 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             doubleBackToExitPressedOnce = false
         }, 2000)
+    }
+
+    fun setProgressDialog(context: Context, message: String): AlertDialog {
+        val llPadding = 30
+        val ll = LinearLayout(context)
+        ll.orientation = LinearLayout.HORIZONTAL
+        ll.setPadding(llPadding, llPadding, llPadding, llPadding)
+        ll.gravity = Gravity.CENTER
+        var llParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        llParam.gravity = Gravity.CENTER
+        ll.layoutParams = llParam
+
+        val progressBar = ProgressBar(context)
+        progressBar.isIndeterminate = true
+        progressBar.setPadding(0, 0, llPadding, 0)
+        progressBar.layoutParams = llParam
+
+        llParam = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        llParam.gravity = Gravity.CENTER
+        val tvText = TextView(context)
+        tvText.text = message
+        tvText.setTextColor(Color.parseColor("#000000"))
+        tvText.textSize = 20.toFloat()
+        tvText.layoutParams = llParam
+
+        ll.addView(progressBar)
+        ll.addView(tvText)
+
+        val builder = AlertDialog.Builder(context)
+        builder.setCancelable(true)
+        builder.setView(ll)
+
+        val dialog = builder.create()
+        val window = dialog.window
+        if (window != null) {
+            val layoutParams = WindowManager.LayoutParams()
+            layoutParams.copyFrom(dialog.window?.attributes)
+            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+            dialog.window?.attributes = layoutParams
+        }
+        return dialog
     }
 
 

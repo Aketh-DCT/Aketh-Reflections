@@ -2,6 +2,7 @@ package gr.aketh.echoes.classes
 
 import GameInterface
 import android.Manifest
+import android.animation.ValueAnimator
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,9 +16,10 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.media.ExifInterface
-import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -26,30 +28,25 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.TranslateAnimation
 import android.webkit.ConsoleMessage
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.MediaController
 import android.widget.PopupWindow
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.VideoView
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -61,17 +58,20 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
+import com.google.android.gms.maps.model.GroundOverlay
+import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.google.ar.core.ArCoreApk
-import dev.romainguy.kotlin.math.Float3
 import dev.romainguy.kotlin.math.Quaternion
 import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
@@ -89,6 +89,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.ArrayList
 import java.util.Locale
 import kotlin.math.abs
 
@@ -103,46 +104,54 @@ class GameSceneInitializer(
     fragmentManagerS: FragmentManager
 
 ) {
-    lateinit var json: JSONObject
+    var json: JSONObject
     var jsonMapped = mutableMapOf<String, Any?>()
-    lateinit var jsonList: MutableList<MutableMap<String, Any?>>;
-    private lateinit var applicationContext: Context
+    var jsonList: MutableList<MutableMap<String, Any?>>
+    var jsonListImages: MutableMap<String,String>
+    private var applicationContext: Context
+
 
     //----------------------------------
-    private lateinit var activity: Activity
-    private lateinit var quizLayout: LinearLayout
-    private lateinit var wrongLayout: RelativeLayout
-    private lateinit var cameraLayout: ConstraintLayout
-    private lateinit var slidingPuzzleLayout: LinearLayout
-    private lateinit var pointsTextView: TextView
-    private lateinit var buttonArray: MutableList<MutableList<Float>>
-    private lateinit var buttonLayoutArray: MutableList<CustomButton>
-    private lateinit var correctLayout: RelativeLayout
-    private lateinit var characterLayout: ConstraintLayout
-    private lateinit var qrCodeLayout: ConstraintLayout
-    private lateinit var webViewLayoutC: ConstraintLayout
-    private lateinit var completedActivityLayout: LinearLayout
+    private var activity: Activity
+    private var quizLayout: LinearLayout
+    private var wrongLayout: RelativeLayout
+    private var cameraLayout: ConstraintLayout
+    private var slidingPuzzleLayout: LinearLayout
+    private var pointsTextView: TextView
+    private var buttonArray: MutableList<MutableList<Float>>
+    private var buttonLayoutArray: MutableList<CustomButton>
+    private var correctLayout: RelativeLayout
+    private var characterLayout: ConstraintLayout
+    private var characterLayoutImages = mutableMapOf(
+        "ch1" to R.drawable.play_and_learn_asclepius,
+        "ch2" to R.drawable.kara,
+        "ch3" to R.drawable.tsi,
+        "ch4" to R.drawable.play_and_learn_little_girl
+    )
+    private var qrCodeLayout: ConstraintLayout
+    private var webViewLayoutC: ConstraintLayout
+    private var completedActivityLayout: LinearLayout
 
     //private lateinit var arSceneLayout: ConstraintLayout
     private var arSceneView: ArSceneView? = null
     private var arvideoNode: VideoNode? = null
 
     //lateinit var modelTest: ModelNode
-    lateinit var arOrNotLayout: ViewGroup
+    var arOrNotLayout: ViewGroup
 
     //private lateinit var arSceneFragment: ArFragment
     private var webviewLayout: WebView
 
 
     private var imageCapture: ImageCapture? = null
-    private lateinit var btnTakePicture: Button
+    private var btnTakePicture: Button
 
     //private lateinit var btnScanBarcode: Button
     private lateinit var barcodeDetector: BarcodeDetector
     private lateinit var cameraSource: CameraSource
 
     //private lateinit var arCoreObj: ArCoreClass
-    private lateinit var arOrNotBtn: Button
+    private var arOrNotBtn: Button
 
     //private lateinit var detector: BarcodeDetector
     private var scannedValueQr = ""
@@ -158,11 +167,11 @@ class GameSceneInitializer(
 
     //Sound Stuff
     //private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var mediaPlayerList: MutableMap<String, MediaPlayer>
-    private lateinit var soundeffectsPlayerList: MutableList<MediaPlayer>
+    private var mediaPlayerList: MutableMap<String, MediaPlayer>
+    private var soundeffectsPlayerList: MutableList<MediaPlayer>
     private var hasStarted = false
 
-    private lateinit var allCirclesDebug: MutableList<Circle>
+    private var allCirclesDebug: MutableList<Circle>
 
 
     private val VIDEO_SAMPLE = "v1"
@@ -172,7 +181,7 @@ class GameSceneInitializer(
     var popupWindow: PopupWindow? = null
     var linearLayout1: RelativeLayout? = null
 
-    private lateinit var parentClass: GameTemplate
+    private var parentClass: GameTemplate
 
 
     //Image stuff
@@ -188,7 +197,11 @@ class GameSceneInitializer(
         Log.d("Inita", "Initizalized correctly")
 
         this.json = json
-        jsonList = jsonArrayToMutableMap(json)//Gets list of stuff
+        var jsonListA =
+            jsonArrayToMutableMap(json)[0] as MutableList<*>//Gets list of stuff
+        jsonList = jsonListA.filterIsInstance<MutableMap<String, Any?>>().toMutableList()
+        @Suppress("UNCHECKED_CAST")
+        jsonListImages = jsonArrayToMutableMap(json)[1] as MutableMap<String, String>
 
         //Load the binding
         this.activity = activity
@@ -292,6 +305,7 @@ class GameSceneInitializer(
 
         cameraLayout = this.activity.findViewById<ConstraintLayout>(R.id.include_camera_layout)
         var buttonDoneCamera = cameraLayout.findViewById<Button>(R.id.camera_bt_done)
+        var imageViewTest = cameraLayout.findViewById<ImageView>(R.id.imageViewTest)
         btnTakePicture = cameraLayout.findViewById<Button>(R.id.image_capture_button)
 
 
@@ -931,6 +945,8 @@ class GameSceneInitializer(
         buttonDoneCamera.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 cameraLayout.visibility = View.INVISIBLE
+                //Bug fix to not show again image after swapping to different location
+                imageViewTest.visibility = View.INVISIBLE
                 soundeffectsPlayerList[0].start()
                 points += 100
                 pointsTextView.text = "Points: " + points
@@ -977,9 +993,36 @@ class GameSceneInitializer(
 
     fun addCirclesToMap(googleMap: GoogleMap) {
         //Iterate through the list of circles
+        if(jsonListImages.isNotEmpty()){
+            characterLayoutImages = mutableMapOf<String,Int>()
+            jsonListImages.forEach{
+                //Created a map of the new values Images best on the json file
+                entry ->
+
+                    characterLayoutImages[entry.key] =
+                        applicationContext
+                            .resources
+                            .getIdentifier(entry.value,"drawable", applicationContext.packageName)
+
+                if(characterLayoutImages[entry.key]==0){
+                    characterLayoutImages[entry.key]=R.drawable.kara
+                    Log.d("ImageLoader", "Resource ${entry.value} does not exist!")
+                }
+
+
+
+            }
+
+
+        }
+
+
+        var circleList = arrayListOf<Circle>()
+
         for (circle in jsonList) {
             try {
                 Log.d("hello World", "Workes")
+
                 val currentCircle = googleMap.addCircle(
                     CircleOptions().clickable(true).center(
                         LatLng(
@@ -987,9 +1030,58 @@ class GameSceneInitializer(
                             circle["circle_center_lon"] as Double
                         )
                     ).radius(circle["circle_radius"] as Double)
-                        .strokeColor(Color.parseColor(circle["circle_color"] as String))
+                        .strokeColor(Color.parseColor("#FBD1A2"))
                         .fillColor(Color.parseColor(circle["circle_color"] as String))
-                );
+                )
+                circleList.add(currentCircle)
+                //animateCircle(currentCircle)
+
+
+                /*
+                              //Ground overlay
+                              val d = GradientDrawable()
+                              d.shape = GradientDrawable.OVAL
+                              d.setSize((2 * circle["circle_radius"] as Double).toInt(), (2 * circle["circle_radius"] as Double).toInt())
+                              d.setColor(Color.parseColor(circle["circle_color"] as String))
+                              d.setStroke(2, Color.TRANSPARENT)
+
+                              val bitmap = Bitmap.createBitmap(d.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                              val canvas = Canvas(bitmap)
+                              d.bounds = Rect(0, 0, canvas.width, canvas.height)
+                              d.draw(canvas)
+
+
+
+                              var grOv = googleMap.addGroundOverlay(
+                                  GroundOverlayOptions()
+                                  .position( LatLng(
+                                      circle["circle_center_lat"] as Double,
+                                      circle["circle_center_lon"] as Double
+                                  ), (2 * (circle["circle_radius"] as Double)).toFloat()
+                                  )
+                                  .image(BitmapDescriptorFactory.fromBitmap(bitmap)))
+                              grOv?.let { animateCircleGround(it,(circle["circle_radius"] as Double).toFloat()) }
+
+
+ */
+                val b = BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.drawable.playing_logo
+                )
+                val width = 240
+                val height = 135
+                val smallMarker = Bitmap.createScaledBitmap(b, width, height, false)
+
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(
+                            LatLng(
+                                circle["circle_center_lat"] as Double,
+                                circle["circle_center_lon"] as Double
+                            )
+                        ).icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                )
+
 
                 //Debbuging stuff  !!
                 //allCirclesDebug.add(currentCircle)
@@ -1011,6 +1103,67 @@ class GameSceneInitializer(
             }
 
         }
+
+        animateCircle(circleList)
+
+    }
+
+    //Animates the markers by adding animator that changes the opacity
+    fun animateMarkers(markers: List<Marker>) {
+        for (marker in markers) {
+            val animator = ValueAnimator.ofFloat(1f, 0f)
+            animator.duration = 1000
+
+            animator.repeatCount = ValueAnimator.INFINITE
+            animator.repeatMode = ValueAnimator.REVERSE
+            animator.addUpdateListener { animation ->
+                marker.alpha = animation.animatedValue as Float
+            }
+            animator.start()
+        }
+    }
+
+    fun animateCircle(circles: ArrayList<Circle>) {
+        if (circles.isNotEmpty()) {
+            val alpha = Color.alpha(circles[0].fillColor)
+            val red = Color.red(circles[0].fillColor)
+            val green = Color.green(circles[0].fillColor)
+            val blue = Color.blue(circles[0].fillColor)
+
+            val animator = ValueAnimator.ofFloat(
+                alpha.toFloat() / 255.0f,
+                0.1f, alpha.toFloat() / 255.0f
+            )
+            animator.duration = 1000
+            animator.repeatCount = ValueAnimator.INFINITE
+            animator.repeatMode = ValueAnimator.REVERSE
+            animator.addUpdateListener { animation ->
+                for (circle in circles) {
+                    circle.fillColor = Color.argb(
+                        ((animator.animatedValue as Float) * 255).toInt(),
+                        red,
+                        green,
+                        blue
+                    )
+                }
+
+            }
+            animator.start()
+        }
+
+    }
+
+    fun animateCircleGround(circle: GroundOverlay, radius: Float) {
+        val animator = ValueAnimator.ofFloat(0f, radius, 0f)
+        animator.duration = 10000
+        animator.repeatCount = ValueAnimator.INFINITE
+        animator.repeatMode = ValueAnimator.REVERSE
+        //animator.setFrameDelay(1000 / 60)
+        animator.addUpdateListener { animation ->
+            val animatedRadius = (animation.animatedValue as Float) * 2
+            //circle.
+        }
+        animator.start()
     }
 
     fun locationCallbackFunc(locationResult: LocationResult) {
@@ -1028,6 +1181,10 @@ class GameSceneInitializer(
                     circle["circle_center_lon"] as Double,
                     distance
                 )
+
+                //Check if finished
+
+
 
 
                 //Here everything is executed
@@ -1061,6 +1218,20 @@ class GameSceneInitializer(
                             skipVoice = false
                             this.mediaPlayerList[circle["sound"]]?.seekTo(this.mediaPlayerList[circle["sound"]]!!.duration.toInt())
                         }
+
+                        characterLayoutImages[(circle["characters"] as JSONArray)[0]]?.let {
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch1).setImageResource(
+                                it
+                            )
+                        }
+
+                        characterLayoutImages[(circle["characters"] as JSONArray)[1]]?.let {
+                            characterLayout.findViewById<ImageView>(R.id.character_iv_ch2).setImageResource(
+                                it
+                            )
+                        }
+                        /*
+
                         //tsitsani
                         //Temporary way
                         if ((circle["title"] as String) == "jewish") {
@@ -1077,6 +1248,8 @@ class GameSceneInitializer(
                             characterLayout.findViewById<ImageView>(R.id.character_iv_ch2)
                                 .setImageResource(R.drawable.kara)
                         }
+
+                         */
 
                         //Adds a listener to end the sound only if
                         this.mediaPlayerList[circle["sound"]]?.apply {
@@ -1157,14 +1330,25 @@ class GameSceneInitializer(
 
 
                     }
-                } else if ((distance[0] <= (circle["circle_radius"] as Double)) and circle["finished"] as Boolean) {
+                }
+                else if((distance[0] > circle["circle_radius"] as Double) and circle["finished"] as Boolean and circle["running"] as Boolean){
+
+                    circle["running"] = false
+                }
+                else if ((distance[0] <= (circle["circle_radius"] as Double)) and circle["finished"] as Boolean) {
                     //Show that it has finished
-                    showCorrectLayoutWithContent(mutableMapOf<String, Any?>().apply {
-                        put(
-                            "type",
-                            "finished"
-                        )
-                    })
+
+
+                    if(!(circle["running"] as Boolean)){
+                        showCorrectLayoutWithContent(mutableMapOf<String, Any?>().apply {
+                            put(
+                                "type",
+                                "finished"
+                            )
+                        })
+                        circle["running"] = true
+                    }
+
                 }
 
 
@@ -1287,8 +1471,6 @@ class GameSceneInitializer(
                         return true
                     }
                 }
-
-
 
 
                 //WebView.setWebContentsDebuggingEnabled(true)
