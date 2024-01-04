@@ -13,10 +13,12 @@ class GameInfoActivity : AppCompatActivity() {
 
         val gameDescFragment = GameDescFragment()
 
-        val jsonString = intent.getStringExtra("jsonFile")
+        val jsonString = intent.getStringArrayExtra("jsonFile")
         val bundle = Bundle()
-        bundle.putString("jsonFile", jsonString)
+        bundle.putStringArray("jsonFile", jsonString)
         gameDescFragment.arguments = bundle
+
+        supportActionBar?.hide();
 
 
         supportFragmentManager.beginTransaction().replace(R.id.activity_game_info_fragment, gameDescFragment).commit()

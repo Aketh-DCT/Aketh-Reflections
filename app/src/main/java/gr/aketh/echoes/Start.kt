@@ -305,7 +305,7 @@ class Start : ComponentActivity() {
     @Composable
     fun AppNavigation(
         nameAndjsonFiles: List<Pair<String, JSONObject>>?,
-        onButtonClick: (String) -> Unit
+        onButtonClick: (Array<String>) -> Unit
     ) {
         val navController = rememberNavController()
         var currentRoute by remember {

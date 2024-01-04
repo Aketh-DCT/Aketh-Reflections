@@ -8,17 +8,17 @@
 
 
     <ImageView
-        android:id="@+id/imageTest"
+        android:id="@+id/image_fragment_game_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@drawable/playing_logo" />
 
     <TextView
-        android:id="@+id/textTitle"
+        android:id="@+id/textTitle_fragment_game_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageTest"
+        android:layout_below="@+id/image_fragment_game_description"
         android:layout_centerInParent="true"
         android:layout_marginTop="0dp"
         android:padding="10dp"
@@ -27,53 +27,32 @@
         android:textSize="24sp" />
 
 
-    <ImageView
-        android:id="@+id/testImage2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textTitle"
-
-
-        android:layout_centerVertical="true"
-        android:padding="15dp"
-        android:src="@drawable/ic_battery" />
-
     <TextView
-        android:id="@+id/textSide"
+        android:id="@+id/intro_text_fragment_game_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textTitle"
-
-        android:layout_centerInParent="true"
-        android:layout_toEndOf="@+id/testImage2"
-        android:padding="15dp"
-        android:text="@string/company_name" />
-
-
-    <TextView
-        android:id="@+id/textTest2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/testImage2"
         android:layout_above="@+id/buttonStart"
 
+        android:layout_below="@+id/textTitle_fragment_game_description"
+        android:textColor="@color/raising_black"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="-1dp"
         android:padding="10dp"
-
         android:scrollbars="vertical"
         android:text="@string/default_gamedesc_text" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
         android:layout_alignParentBottom="true"
-
-        android:layout_centerHorizontal="true"
-        android:layout_marginHorizontal="10dp"
-
-        android:text="Start game" />
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
+        android:paddingHorizontal="15dp"
+        android:background="@drawable/button_bg"
+        android:text="Start game"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
 
     <ProgressBar
         android:id="@+id/progressbar"

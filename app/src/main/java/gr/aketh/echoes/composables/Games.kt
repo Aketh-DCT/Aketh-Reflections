@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import gr.aketh.echoes.R
+import org.json.JSONException
 import org.json.JSONObject
 
 object  Games {
@@ -107,7 +108,7 @@ object  Games {
     }
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun Carousel(nameAndjsonFiles: List<Pair<String, JSONObject>>, onButtonClick: (String) -> Unit, tooltipText: String) {
+    fun Carousel(nameAndjsonFiles: List<Pair<String, JSONObject>>, onButtonClick: (Array<String>) -> Unit, tooltipText: String) {
         val listState = rememberLazyListState()
         val snapBehavior = rememberSnapFlingBehavior(lazyListState = listState)
         val landScapeOrientation = LocalConfiguration.current.orientation ==  Configuration.ORIENTATION_LANDSCAPE
@@ -118,7 +119,11 @@ object  Games {
             "ic_menu_camera" to R.drawable.ic_menu_camera,
             "test" to R.drawable.dxahavtwgnr81,
             "test1" to R.drawable.karagkouna_zografia,
-            "test2" to R.drawable.playing_logo
+            "test2" to R.drawable.playing_logo,
+            "iasi_featured_image" to R.drawable.iasi_featured_image,
+            "trikala_featured_image" to R.drawable.trikala_featured_image,
+            "foligno_featured_image" to R.drawable.foligno_featured_image,
+            "istanbul_featured_img" to R.drawable.istanbul_featured_img
         )
         if(landScapeOrientation)
         {
@@ -141,17 +146,29 @@ object  Games {
                     val title = gameInfo.getString("title")
                     val description = gameInfo.getString("description")
                     val imageResource = gameInfo.getString("image")
+                    var introText: String
+                    try {
+                        //Check if there is text inside this variable in the json , if not who cares
+                        introText = gameInfo.getString("intro_text")
+                    }catch (_:JSONException){
+                        introText = "No text found."
+                    }
+
+
+
 
                     val context = LocalContext.current
                     val packageName = context.packageName
 
-                    val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera}
+                    val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera }
+
+                    var gameFileInfo = arrayOf(gameFileName, introText, id.toString())
 
                     CardView(
                         title = title,
                         description = description,
                         image = painterResource(id = id),
-                        onButtonClick = { onButtonClick(gameFileName) }
+                        onButtonClick = { onButtonClick(gameFileInfo) }
                     )
                 }
             }
@@ -200,13 +217,35 @@ object  Games {
                         val context = LocalContext.current
                         val packageName = context.packageName
 
+                        var introText: String
+                        var introSound: String
+
+                        //TODO could improve here and create a function to do this
+                        try {
+                            //Check if there is text inside this variable in the json , if not who cares
+                            introText = gameInfo.getString("intro_text")
+                        }catch (_:JSONException){
+                            introText = "No text found."
+                        }
+
+                        try {
+                            //Check if there is text inside this variable in the json , if not who cares
+                            introSound = gameInfo.getString("intro_sound")
+                        }catch (_:JSONException){
+                            introSound = "eng_intro"
+                        }
+
                         val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera }
+
+                        var gameFileInfo = arrayOf(gameFileName, introText, id.toString(), title, introSound)
+
+
 
                         CardView(
                             title = title,
                             description = description,
                             image = painterResource(id = id),
-                            onButtonClick = { onButtonClick(gameFileName) }
+                            onButtonClick = { onButtonClick(gameFileInfo) }
                         )
                     }
                 }

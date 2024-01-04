@@ -26,7 +26,7 @@ class GameDescFragment : Fragment() {
         binding = FragmentGameDescriptionBinding.bind(view)
 
 
-        val jsonFile = arguments?.getString("jsonFile")
+        val jsonFile = arguments?.getStringArray("jsonFile")
 
         //Toast.makeText(context, jsonFile, Toast.LENGTH_SHORT).show()
 
@@ -38,19 +38,31 @@ class GameDescFragment : Fragment() {
 
 
             val intent= Intent(context, GameTemplate::class.java)
-            intent.putExtra("jsonFile", jsonFile)
+            intent.putExtra("jsonFile", jsonFile?.get(0))
 
             startActivity(intent)
 
         }
 
+        val soundBytes = mapOf(
+            "eng_intro" to R.raw.eng_intro,
+            "en_ro_1_palace_of_culture" to R.raw.en_ro_1_palace_of_culture
+        )
 
-        sound = MediaPlayer.create(this.context, R.raw.eng_intro)
+
+        sound = soundBytes[jsonFile?.get(4)]?.let { MediaPlayer.create(this.context, it) }
 
         sound?.start()
 
         //Add scrollability to the textTest2
-        binding.textTest2.movementMethod = ScrollingMovementMethod()
+        var stringResource = resources.getString(R.string.default_gamedesc_text)
+        var introText = jsonFile?.get(1) + "\n\n" + stringResource
+        binding.introTextFragmentGameDescription.text = introText
+        binding.introTextFragmentGameDescription.movementMethod = ScrollingMovementMethod()
+
+
+        binding.textTitleFragmentGameDescription.text = jsonFile?.get(3)
+        jsonFile?.get(2)?.let { binding.imageFragmentGameDescription.setImageResource(it.toInt()) }
 
 
 

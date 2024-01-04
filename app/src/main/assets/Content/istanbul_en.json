@@ -385,15 +385,16 @@
         }
     ],
     "game_info": {
-        "title": "ISTANBUL EN",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        "image": "test",
+        "title": "Istanbul - Turkey",
+        "description": "Istanbul is a major city in Turkey that straddles Europe and Asia across the Bosphorus Strait. Its Old City reflects cultural influences of the many empires that once ruled here. In the Sultanahmet district, the open-air, Roman-era Hippodrome was for centuries the site of chariot races, and Egyptian obelisks also remain. Istanbul is the largest city in Turkey, serving as the country's economic, cultural and historic hub and has served as an imperial capital for almost 1600 years: during the Roman/Byzantine (330–1204), Latin (1204–1261), late Byzantine (1261–1453), and Ottoman (1453–1922) empires.",
+        "image": "istanbul_featured_img",
         "character_images" : {
             "ch1": "play_and_learn_asclepius",
             "ch2": "kara",
             "ch3": "tsi",
             "ch4": "play_and_learn_little_girl"
         },
+        "intro_text": " - Character 1: Hey guys!!\n - Character 2: Welcome to the historical heart of Istanbul!\n - Character 1: I am Ezgi! \n - Character 2: And I'm Zeynep! \n - Character 1: We will be your guide of adventure today! \n - Character 2: Ready? Let’s explore the ancient history of this beautiful city together! \n",
         "language": "en"
     }
 }

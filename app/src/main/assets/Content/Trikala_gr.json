@@ -338,9 +338,16 @@
     }
   ],
   "game_info": {
-    "title": "TRIKALA GR",
-    "description": "Et pharetra pharetra massa massa ultricies mi. Neque laoreet suspendisse interdum consectetur libero id faucibus. Eget mi proin sed libero enim sed faucibus turpis in. In hac habitasse platea dictumst. Sit amet justo donec enim diam vulputate ut pharetra. Id nibh tortor id aliquet lectus proin. Maecenas pharetra convallis posuere morbi leo urna molestie at. Enim lobortis scelerisque fermentum dui faucibus in. Pretium viverra suspendisse potenti nullam ac tortor vitae. Tristique senectus et netus et. Pretium lectus quam id leo. Nec ullamcorper sit amet risus. At in tellus integer feugiat. Elit ut aliquam purus sit amet luctus.",
-    "image": "test1",
+    "title": "Τρίκαλα - Ελλάδα",
+    "description": "Τα Τρίκαλα είναι πόλη της δυτικής Θεσσαλίας, πρωτεύουσα της Περιφερειακής Ενότητας Τρικάλων και του Δήμου Τρικκαίων και διασχίζεται από τον ποταμό Ληθαίο, ο οποίος αποτελεί παραπόταμο του Πηνειού. Βρίσκεται πολύ κοντά στα Μετέωρα και την Καλαμπάκα και στον ορεινό όγκο της νότιας Πίνδου όπου βρίσκονται γνωστοί προορισμοί (Ελάτη, Περτούλι και Πύλη). Η πόλη των Τρικάλων είναι ιδιαίτερα γραφική με χαρακτηριστικά αξιοθέατα και σημεία ενδιαφέροντος όπως το Ασκληπιείο της Τρίκκης, το Βυζαντινό Κάστρο, η Παλιά Πόλη των Τρικάλων, το Τζαμί Οσμάν Σαχ κ.λπ.",
+    "image": "trikala_featured_image",
+    "character_images" : {
+      "ch1": "play_and_learn_asclepius",
+      "ch2": "kara",
+      "ch3": "tsi",
+      "ch4": "play_and_learn_little_girl"
+    },
+    "intro_text": "- Character 1: Hello boys and girls!!\n- Character 2: Welcome to the city of Asclepius!\n- Character 1: I am Asclepius!\n- Character 2: And I am...\n- Character 1: And we will be your guides on this magical trip, to the history of Trikala!!\nCharacter 2: Ready? Smile, be patient and hang in..... Our adventure begins......",
     "language": "el"
   }
 }
