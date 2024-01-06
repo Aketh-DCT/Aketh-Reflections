@@ -1,6 +1,9 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      var imagesA = JSON.parse(AndroidImages.getImages());
+    </script>
     <style>
       /* Variables */
       :root {
@@ -127,31 +130,7 @@
         background-position: center;
       }
 
-      /* Icons */
-      [data-view="card"].correct[data-item="sass"],
-      [data-view="card"].flipped[data-item="sass"] {
-        background-image: url("play_and_learn_little_girl.png");
-      }
 
-      [data-view="card"].correct[data-item="gulp"],
-      [data-view="card"].flipped[data-item="gulp"] {
-        background-image: url("play_and_learn_asclepius.png");
-      }
-
-      [data-view="card"].correct[data-item="grunt"],
-      [data-view="card"].flipped[data-item="grunt"] {
-        background-image: url("karagkouna_zografia.png");
-      }
-
-      [data-view="card"].correct[data-item="git"],
-      [data-view="card"].flipped[data-item="git"] {
-        background-image: url("git.jpg");
-      }
-
-      [data-view="card"].correct[data-item="css"],
-      [data-view="card"].flipped[data-item="css"] {
-        background-image: url("tsitsanis.png");
-      }
 
       .flipped {
         transition: 0.6s;
@@ -188,6 +167,47 @@
   </body>
 
   <script>
+  //var imagesA = JSON.parse(AndroidImages.getImages());
+
+  function setImage(element, imageName) {
+    if (element && imageName) {
+        element.style.setProperty('background-image', 'url(' + imageName + ')', 'important');
+    }
+}
+
+  function setImages(imagesA) {
+    //var sassCardCorrect = document.querySelector('[data-view="card"][data-item="sass"]');
+//var gulpCardCorrect = document.querySelector('[data-view="card"][data-item="gulp"]');
+    // Add more selectors as needed...
+
+    //setImage(sassCardCorrect, imagesA[0]);
+    //setImage(sassCardFlipped, imagesA[0]);
+    //setImage(gulpCardCorrect, imagesA[1]);
+    //setImage(gulpCardFlipped, imagesA[1]);
+    // Add more conditions as needed...
+  }
+
+
+  window.onload = function() {
+    //var imagesA = JSON.parse(AndroidImages.getImages());
+    //console.log("all images"+ imagesA)
+    //console.log("just_one" + imagesA[0])
+    //setImages(imagesA);
+  };
+
+      const imageMapA = {
+     sass: imagesA[0],
+     gulp: imagesA[1],
+     grunt: imagesA[2],
+     git: imagesA[3],
+     css: imagesA[4]
+    };
+
+    let styleElement = document.createElement('style');
+    document.head.appendChild(styleElement);
+
+
+
     var myCards = document.getElementById("container");
     var resultsArray = [];
     var counter = 0;
@@ -218,6 +238,13 @@
       card.dataset.item = cards[i];
       card.dataset.view = "card";
       myCards.appendChild(card);
+
+      // Add the CSS rule for this card
+      let cssRule = `[data-view="card"].correct[data-item="${cards[i]}"],\
+                [data-view="card"].flipped[data-item="${cards[i]}"] {\
+                background-image: url("${imageMapA[cards[i]]}");\
+                }\n`;
+        styleElement.textContent += cssRule;
 
       card.onclick = function () {
         if (this.className != "flipped" && this.className != "correct") {

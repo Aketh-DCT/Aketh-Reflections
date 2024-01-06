@@ -251,8 +251,19 @@ object JsonUtilities
                 val url = "file:///android_asset/Content/MatchPairs/matching_pairs.html"
 
                 val sliding_puzzle_letters = typeData.getString("letters")
+
                 val dict_quiz_data = mutableMapOf<String,Any?>()
                 dict_quiz_data["letters"] = sliding_puzzle_letters
+                try{
+                    dict_quiz_data["imgs"] = typeData.getJSONArray("imgs")
+                }catch (_: JSONException){
+                    dict_quiz_data["imgs"] = JSONArray(listOf( "css.jpg",
+                        "gulp.jpg",
+                        "git.jpg",
+                        "sass.jpg",
+                        "tsitsanis.png"))
+                }
+
 
                 dict["data"] = dict_quiz_data
                 dict["gameUrl"] = url

@@ -1,5 +1,6 @@
 import android.util.Log
 import android.webkit.JavascriptInterface
+import com.google.gson.Gson
 import gr.aketh.echoes.GameTemplate
 
 class GameInterface(private val gameActivity: GameTemplate) {
@@ -16,4 +17,6 @@ class GameInterface(private val gameActivity: GameTemplate) {
             }
         }
     }
+
+
 }

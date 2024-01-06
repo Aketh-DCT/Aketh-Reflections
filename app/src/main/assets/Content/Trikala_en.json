@@ -214,11 +214,15 @@
                     "local_img_url": "bb",
                     "title": "Αρχαία Τρίκκη",
                     "description": "Έξω απο το ακεθ 6",
-                    "sound": "eng_8",
+                    "sound": "wrong_answer",
                     "characters": ["ch1","ch2"],
                     "type": "matchPairs",
                     "data": {
-                        "imgs": "Notthing right now",
+                        "imgs": ["kara.png",
+                            "play_and_learn_asclepius.png",
+                            "play_and_learn_little_girl.png",
+                            "tsitsanis.png",
+                            "karagkouna_zografia.png"],
                         "letters": "Λ, Ο"
                     }
                 }

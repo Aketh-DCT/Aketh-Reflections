@@ -16,8 +16,6 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.media.ExifInterface
 import android.media.MediaPlayer
@@ -26,6 +24,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
@@ -63,7 +62,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.GroundOverlay
-import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -77,21 +75,20 @@ import gr.aketh.echoes.GameTemplate
 import gr.aketh.echoes.R
 import gr.aketh.echoes.classes.JsonUtilities.jsonArrayToMutableMap
 import io.github.sceneview.ar.ArSceneView
-import io.github.sceneview.ar.node.AugmentedImageNode
 import io.github.sceneview.ar.node.AugmentedImageNodeF
 import io.github.sceneview.math.Position
-import io.github.sceneview.math.Rotation
 import io.github.sceneview.node.ModelNode
 import io.github.sceneview.node.VideoNode
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Locale
-import kotlin.math.abs
 
 
 class GameSceneInitializer(
@@ -358,6 +355,9 @@ class GameSceneInitializer(
 
         webViewLayoutC = this.activity.findViewById<ConstraintLayout>(R.id.include_webview_layout)
         webviewLayout = webViewLayoutC.findViewById<WebView>(R.id.webview_web)
+        webviewLayout.onPause();
+        webviewLayout.pauseTimers();
+
         var btX = webViewLayoutC.findViewById<Button>(R.id.webview_bt_x)
 
 
@@ -971,6 +971,8 @@ class GameSceneInitializer(
             override fun onClick(v: View?) {
                 webViewLayoutC.visibility = View.GONE
                 correctLayout.visibility = View.VISIBLE
+                webviewLayout.onPause();
+                webviewLayout.pauseTimers();
             }
         })
 
@@ -1040,7 +1042,8 @@ class GameSceneInitializer(
             "en_ro_5_metrop"  to R.raw.en_ro_5_metrop,
             "en_ro_6_nati"  to R.raw.en_ro_6_nati,
             "en_ro_7_grand_hotel_traian" to R.raw.en_ro_7_grand_hotel_traian,
-            "en_ro_8_centra" to R.raw.en_ro_8_centra
+            "en_ro_8_centra" to R.raw.en_ro_8_centra,
+            "wrong_answer" to R.raw.wrong_answer
 
         )
 
@@ -1504,8 +1507,11 @@ class GameSceneInitializer(
             }
 
             "puzzleV2", "wordSearch", "matchPairs" -> {
-                webViewLayoutC.visibility = View.VISIBLE
-                webviewLayout.visibility = View.VISIBLE
+                webviewLayout.onResume();
+                webviewLayout.resumeTimers();
+
+
+
                 webviewLayout.settings.javaScriptEnabled = true
                 webviewLayout.addJavascriptInterface(
                     GameInterface(activity as GameTemplate),
@@ -1525,23 +1531,48 @@ class GameSceneInitializer(
 
                 webviewLayout.webChromeClient = object : WebChromeClient() {
                     override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
-                        Log.d("WebViewConsole", consoleMessage.message())
-                        return true
+                        Log.d("WebView", consoleMessage.message())
+                        return super.onConsoleMessage(consoleMessage)
                     }
                 }
+                //pass the images
 
+                val tmpMap: MutableMap<String, Any?> =
+                    circle["data"] as MutableMap<String, Any?>
+                val tmpArray: JSONArray = tmpMap["imgs"] as JSONArray
 
+                val jsonImagePassStrings = bitmapImagesToJson(tmpArray)
                 //WebView.setWebContentsDebuggingEnabled(true)
+
+
 
 
                 // Enable loading local content
                 webviewLayout.settings.allowFileAccess = true
                 webviewLayout.settings.allowFileAccessFromFileURLs = true
                 webviewLayout.settings.allowUniversalAccessFromFileURLs = true
+                
+
 
                 Log.d("gameUrl", circle["gameUrl"] as String)
+                webviewLayout.addJavascriptInterface(WebAppInterface(applicationContext, jsonImagePassStrings), "AndroidImages")
                 webviewLayout.loadUrl(circle["gameUrl"] as String)
+                //webviewLayout.evaluateJavascript(jsonImagePassStrings, null)
                 //webviewLayout.loadUrl("file:///android_asset/Content/WordSearch/index.html")
+                Log.d("IMAGESTRINGS", jsonImagePassStrings.toString())
+
+                //webviewLayout.evaluateJavascript(jsonImagePassStrings, null)
+
+                //Pass the image data to the html, so it can load
+                //webviewLayout.webViewClient = object : WebViewClient() {
+                //    override fun onPageFinished(view: WebView?, url: String?) {
+                //        super.onPageFinished(view, url)
+                //        view?.evaluateJavascript(jsonImagePassStrings, null)
+                //    }
+               // }
+
+                webViewLayoutC.visibility = View.VISIBLE
+                webviewLayout.visibility = View.VISIBLE
 
             }
 
@@ -1601,6 +1632,33 @@ class GameSceneInitializer(
                 completedActivityLayout.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun bitmapImagesToJson(jsonArrayImageNames: JSONArray): List<String> {
+        val bitmaps = mutableListOf<String>()
+        for (index in 0 until jsonArrayImageNames.length()) {
+            //Loop everything and put text
+            bitmaps.add(jsonArrayImageNames[index].toString())
+        }
+
+
+
+        /*
+        val bitmapStrings = bitmaps.map { resourceId ->
+            val bitmap = BitmapFactory.decodeResource(applicationContext.resources, resourceId)
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, false)
+            val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
+            scaledBitmap.copyPixelsToBuffer(buffer)
+            val byteArray = buffer.array()
+            val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+            Log.d("IMAGEBITS", base64String)
+            base64String
+        }
+
+         */
+
+
+        return bitmaps.toList()
     }
 
     private fun setupControls() {
