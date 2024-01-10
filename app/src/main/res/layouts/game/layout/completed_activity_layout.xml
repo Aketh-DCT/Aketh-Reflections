@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Έχεις ήδη κάνει αυτή την δραστηριότητα!"
+        android:text="@string/you_already_completed_activity"
         android:textColor="@color/black"
 
         android:textSize="18sp" />
@@ -32,7 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="OK"
+        android:text="@string/ok"
+        android:backgroundTint="@color/raising_black"
         />
 
     <TextView

@@ -485,6 +485,7 @@
   </script>
 
   <script type="text/javascript">
+  var imagesA = JSON.parse(AndroidImages.getImages());
     document.addEventListener(
       "DOMContentLoaded",
       (function () {
@@ -520,7 +521,7 @@
           this.difficulty;
           this.settings = {
             el: null,
-            image: "palia_agora.jpg",
+            image: imagesA[0],
             fullImg: null,
             numcolumns: 3,
             numrows: 3,

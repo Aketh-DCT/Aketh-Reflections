@@ -81,11 +81,11 @@
                     "local_img_url": "bb",
                     "title": "Νομαρχια",
                     "description": "Έξω απο το ακεθ 3",
-                    "sound": "eng_3",
+                    "sound": "wrong_answer",
                     "characters": ["ch1","ch2"],
                     "type": "puzzleV2",
                     "data": {
-                        "imgs": "Notthing right now",
+                        "imgs": ["palia_agora.jpg"],
                         "letters": "Λ, Ο"
                     }
                 }
@@ -143,6 +143,7 @@
                     "characters": ["ch1","ch2"],
                     "type": "wordSearch",
                     "data": {
+                        "word" : "HEALTH",
                         "imgs": "Notthing right now",
                         "letters": "Λ, Ο"
                     }
@@ -214,7 +215,7 @@
                     "local_img_url": "bb",
                     "title": "Αρχαία Τρίκκη",
                     "description": "Έξω απο το ακεθ 6",
-                    "sound": "wrong_answer",
+                    "sound": "eng_8",
                     "characters": ["ch1","ch2"],
                     "type": "matchPairs",
                     "data": {

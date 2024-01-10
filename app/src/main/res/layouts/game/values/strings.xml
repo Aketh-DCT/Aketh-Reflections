@@ -21,4 +21,7 @@
     <string name="contact_us_phone_prefix" translatable="false">tel:</string>
     <string name="photo_tooltip" translatable="false">Take a group photo</string>
     <string name="ar_tooltip" translatable="false">Find and Scan this image, to discover more details</string>
+    <string name="game_points" translatable="false">"Points: "</string>
+    <string name="you_already_completed_activity" translatable="false">You have already completed this activity!</string>
+    <string name="ok" translatable="false">OK</string>
 </resources>

@@ -190,14 +190,21 @@
     <TextView
         android:id="@+id/points"
         android:layout_width="113dp"
-        android:layout_height="81dp"
+        android:layout_height="30dp"
         android:layout_alignStart="@+id/map"
         android:layout_alignParentTop="true"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:text="Points: 0"
-        android:textColor="@color/black"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="150dp"
 
+
+        android:layout_marginTop="30dp"
+
+
+        android:background="@drawable/button_bg"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
+        android:text="Points: 0"
+        android:textColor="@color/raising_black"
         android:textSize="20sp" />
 
 

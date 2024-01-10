@@ -48,11 +48,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="20dp"
-        android:paddingHorizontal="15dp"
         android:background="@drawable/button_bg"
+        android:paddingHorizontal="15dp"
         android:text="Start game"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
     <ProgressBar
         android:id="@+id/progressbar"

@@ -7,6 +7,15 @@
     android:id="@+id/layout_webview"
     >
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+
+
     <WebView
         android:id="@+id/webview_web"
         android:layout_width="0dp"
@@ -24,7 +33,11 @@
         android:width="30dp"
         android:height="30dp"
         android:text="X"
-        app:layout_constraintTop_toTopOf="@id/layout_webview"
-        app:layout_constraintEnd_toEndOf="@id/layout_webview" />
+        android:backgroundTint="@color/raising_black"
+
+
+        app:layout_constraintEnd_toEndOf="@id/guideline_33"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

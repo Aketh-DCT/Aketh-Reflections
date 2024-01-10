@@ -1,4 +1,8 @@
-    var rows = 6;
+
+var language = JSON.parse(AndroidImages.getLanguage())[0];
+var wordU = JSON.parse(AndroidImages.getWord())[0];
+
+var rows = 6;
 var columns = 6;
 
 function touchCallback(td, locations, array) {
@@ -66,7 +70,23 @@ function createClickListener(td, locations, array) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var letters = "αβγδεζηθικλμνξοπρστυφγψω";
+  var lettersGreek = "αβγδεζηθικλμνξοπρστυφγψω"
+  var lettersEnglish = "abcdefghijklmnopqrstuvwxyz"
+
+  var letters = "";
+
+  switch(language){
+    case "el":
+        letters = lettersGreek
+        break;
+    case "en":
+        letters = lettersEnglish
+        break;
+    default:
+        letters = lettersEnglish
+  }
+
+
 
   var table = document.createElement("table");
   var tbody = document.createElement("tbody");
@@ -138,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return locations;
   };
 
-  locations = putWordIn("ΥΓΕΙΑ".toUpperCase(), arrayTable);
+  locations = putWordIn(wordU.toUpperCase(), arrayTable);
   console.log(locations);
 });
 

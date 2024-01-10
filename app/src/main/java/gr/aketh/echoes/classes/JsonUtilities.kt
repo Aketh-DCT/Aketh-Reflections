@@ -70,6 +70,18 @@ object JsonUtilities
         var gameInfo : JSONObject
         var gameInfoCharacterImages: JSONObject
         val characterLayoutImages = mutableMapOf<String, String>()
+        val gameInfoTmp = jsonObject.getJSONObject("game_info")
+
+        //Checks if there is language set
+        var language  = "en"
+        try {
+            language = gameInfoTmp.getString("language")
+
+
+        }catch (_: JSONException){
+        }
+
+
         try {
             //Check if in the Json file has been provided the key-value pairs for images
             //Images must be the same name a the actual R.drawable. correct name here
@@ -224,8 +236,10 @@ object JsonUtilities
                 val url = "file:///android_asset/Content/WordSearch/index.html"
 
                 val sliding_puzzle_letters = typeData.getString("letters")
+                val word_search_answer = typeData.getString("word")
                 val dict_quiz_data = mutableMapOf<String,Any?>()
                 dict_quiz_data["letters"] = sliding_puzzle_letters
+                dict_quiz_data["word"] = word_search_answer
 
                 dict["data"] = dict_quiz_data
                 dict["gameUrl"] = url
@@ -239,6 +253,12 @@ object JsonUtilities
                 val sliding_puzzle_letters = typeData.getString("letters")
                 val dict_quiz_data = mutableMapOf<String,Any?>()
                 dict_quiz_data["letters"] = sliding_puzzle_letters
+
+                try{
+                    dict_quiz_data["imgs"] = typeData.getJSONArray("imgs")
+                }catch (_: JSONException){
+                    dict_quiz_data["imgs"] = JSONArray(listOf( "mega-mega-man-big.png"))
+                }
 
                 dict["data"] = dict_quiz_data
                 dict["gameUrl"] = url
@@ -330,6 +350,7 @@ object JsonUtilities
             dict["type"] = content_data_type
             dict["title"] = title_of
             dict["characters"] = characterOrder
+            dict["language"] = language
 
             dict["running"] = false
             dict["finished"] = false

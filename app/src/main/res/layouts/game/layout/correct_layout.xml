@@ -40,6 +40,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:text="Close"
+        android:backgroundTint="@color/raising_black"
         android:textSize="30sp" />
 
 

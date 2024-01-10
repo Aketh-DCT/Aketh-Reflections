@@ -464,10 +464,16 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
             var fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                // Move the camera to the location of the device
-                mMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location.latitude, location.longitude), 20f))
+                // Check if location is not null
+                if (location != null) {
+                    // Move the camera to the location of the device
+                    mMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(location.latitude, location.longitude), 20f))
+                } else {
+                    // Handle case where last known location is not available
+                    Log.d("TAG", "Last known location is not available")
+                }
             }
         }
         else {

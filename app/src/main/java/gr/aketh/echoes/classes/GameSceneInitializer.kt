@@ -2,6 +2,7 @@ package gr.aketh.echoes.classes
 
 import GameInterface
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 
 import android.annotation.SuppressLint
@@ -53,10 +54,12 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Circle
@@ -372,7 +375,8 @@ class GameSceneInitializer(
         btnCompleteActivity.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
 
-                completedActivityLayout.visibility = View.INVISIBLE
+                //completedActivityLayout.visibility = View.INVISIBLE
+                fadeOutView(completedActivityLayout)
             }
         })
 
@@ -382,7 +386,7 @@ class GameSceneInitializer(
         arOrNotLayout = activity.findViewById<ConstraintLayout>(R.id.include_no_ar_layout)
         //This checks if the ArCore is supported and stuff like that
         if (ArCoreApk.getInstance()
-                .checkAvailability(activity) === ArCoreApk.Availability.SUPPORTED_INSTALLED
+                .checkAvailability(activity) === ArCoreApk.Availability.SUPPORTED_INSTALLED && false
         ) {
             // ARCore is supported on this device
 
@@ -406,7 +410,8 @@ class GameSceneInitializer(
 
             arOrNotBtn = arOrNotLayout.findViewById<Button>(R.id.no_ar_bt_close)
             arOrNotBtn.setOnClickListener {
-                arOrNotLayout.visibility = View.INVISIBLE
+                //arOrNotLayout.visibility = View.INVISIBLE
+                fadeOutView(arOrNotLayout)
 
                 //throw RuntimeException("Test Crash") // Force a crash
                 //if(arSceneView!=null){
@@ -909,19 +914,22 @@ class GameSceneInitializer(
                     //val tmpArray: JSONArray = tmpMap["answers"] as JSONArray
 
 
-                    quizLayout.visibility = View.INVISIBLE
+                    //quizLayout.visibility = View.INVISIBLE
+                    fadeOutView(quizLayout)
                     //Compare hidden text to text
                     if (radio.text == quizLayout.findViewById<TextView>(R.id.quiz_hiddenVariable).text) {
                         //if its correct
-                        soundeffectsPlayerList[0].start()
-                        points += 100
-                        pointsTextView.text = "Points: " + points
 
-                        correctLayout.visibility = View.VISIBLE
+
+                        addPointsWithAnimation(100)
+
+                        //correctLayout.visibility = View.VISIBLE
+                        fadeInView(correctLayout)
                     } else {
                         //if its wrong
                         soundeffectsPlayerList[1].start()
-                        wrongLayout.visibility = View.VISIBLE
+                        //wrongLayout.visibility = View.VISIBLE
+                        fadeInView(wrongLayout)
                     }
 
                 }
@@ -934,28 +942,31 @@ class GameSceneInitializer(
         //Become invisible when clicked
         buttonWrong.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                wrongLayout.visibility = View.INVISIBLE
+                //wrongLayout.visibility = View.INVISIBLE
+                fadeOutView(wrongLayout)
             }
         })
 
         //Become invisible when clicked
         buttonCorrect.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                correctLayout.visibility = View.INVISIBLE
+                //correctLayout.visibility = View.INVISIBLE
+                fadeOutView(correctLayout)
             }
         })
 
         //Become invisible when clicked and add points
         buttonDoneCamera.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                cameraLayout.visibility = View.INVISIBLE
+                //cameraLayout.visibility = View.INVISIBLE
+                fadeOutView(cameraLayout)
                 //Bug fix to not show again image after swapping to different location
-                imageViewTest.visibility = View.INVISIBLE
-                soundeffectsPlayerList[0].start()
-                points += 100
-                pointsTextView.text = "Points: " + points
-                correctLayout.visibility =
-                    View.VISIBLE//Sets the new visibility so it works correctly
+                //imageViewTest.visibility = View.INVISIBLE
+                fadeOutView(imageViewTest)
+                addPointsWithAnimation(100)
+                //correctLayout.visibility =
+                 //   View.VISIBLE//Sets the new visibility so it works correctly
+                fadeInView(correctLayout)
             }
         })
         btnTakePicture.setOnClickListener(object : View.OnClickListener {
@@ -969,8 +980,12 @@ class GameSceneInitializer(
         //Become invisible when clicked
         btX.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                webViewLayoutC.visibility = View.GONE
-                correctLayout.visibility = View.VISIBLE
+                //webViewLayoutC.visibility = View.GONE
+                //correctLayout.visibility = View.VISIBLE
+                fadeOutView(webViewLayoutC)
+                fadeInView(correctLayout)
+
+
                 webviewLayout.onPause();
                 webviewLayout.pauseTimers();
             }
@@ -1054,7 +1069,6 @@ class GameSceneInitializer(
             jsonListImages.forEach{
                 //Created a map of the new values Images best on the json file
                 entry ->
-
                     characterLayoutImages[entry.key] =
                         applicationContext
                             .resources
@@ -1064,8 +1078,6 @@ class GameSceneInitializer(
                     characterLayoutImages[entry.key]=R.drawable.kara
                     Log.d("ImageLoader", "Resource ${entry.value} does not exist!")
                 }
-
-
 
             }
 
@@ -1144,6 +1156,8 @@ class GameSceneInitializer(
                 )
 
 
+
+
                 //Debbuging stuff  !!
                 //allCirclesDebug.add(currentCircle)
 
@@ -1151,9 +1165,19 @@ class GameSceneInitializer(
 
 
                 //Changes color when you click
-                googleMap.setOnCircleClickListener {
-                    it.fillColor = Color.BLUE
+                googleMap.setOnCircleClickListener(null)
+                //   it.fillColor = Color.BLUE
 
+
+                //}
+
+                googleMap.setOnMarkerClickListener{
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        var coordinate = LatLng(it.position.latitude, it.position.longitude)
+                        var location = CameraUpdateFactory.newLatLngZoom(coordinate, 20f)
+                        googleMap.animateCamera(location)
+                    }, 500) // Delay of 500 milliseconds
+                    false
                 }
 
 
@@ -1335,7 +1359,8 @@ class GameSceneInitializer(
                                 circle["handler"] = handlerC
 
                                 HandlerManager.subscribeHandler(handlerC, {
-                                    this.quizLayout.visibility = View.VISIBLE
+                                    //this.quizLayout.visibility = View.VISIBLE
+                                    fadeInView(this.quizLayout)
                                     disableCharacterLayoutVisibility()
                                     this.showCorrectLayoutWithContent(circle)
                                 }, mediaPlayer)
@@ -1447,6 +1472,7 @@ class GameSceneInitializer(
 
                 for (index in 0 until answersRb.size) {//Loop everything and make them invisible. For now..
                     answersRb[index].visibility = View.INVISIBLE
+                    //fadeOutView(answersRb[index])
                 }
 
 
@@ -1461,6 +1487,7 @@ class GameSceneInitializer(
                     //Loop everything and put text
                     answersRb[index].text = tmpArray[index].toString()
                     answersRb[index].visibility = View.VISIBLE
+                    //fadeInView(answersRb[index])
                 }
 
                 Log.d("TypeAAA", (tmpMap["correct_answer"] as Int).toString())
@@ -1473,7 +1500,8 @@ class GameSceneInitializer(
             "camera" -> {
                 if (this.cameraEnabled) {
                     startCamera()
-                    cameraLayout.visibility = View.VISIBLE
+                    //cameraLayout.visibility = View.VISIBLE
+                    fadeInView(cameraLayout)
                     var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
                     val tmpMap: MutableMap<String, Any?> =
                         circle["data"] as MutableMap<String, Any?>
@@ -1484,7 +1512,8 @@ class GameSceneInitializer(
             }
 
             "slidingPuzzle" -> {
-                slidingPuzzleLayout.visibility = View.VISIBLE
+                //slidingPuzzleLayout.visibility = View.VISIBLE
+                fadeInView(slidingPuzzleLayout)
                 //qrPuzzle =
 
                 var bt = correctLayout.findViewById<TextView>(R.id.correct_tv_desc)
@@ -1502,7 +1531,8 @@ class GameSceneInitializer(
                 val tmpMap: MutableMap<String, Any?> =
                     circle["data"] as MutableMap<String, Any?>
                 bt.text = "DONE"//"Τα γράμματα σου είναι: " + tmpMap["letters"]
-                correctLayout.visibility = View.VISIBLE
+                //correctLayout.visibility = View.VISIBLE
+                fadeInView(correctLayout)
 
             }
 
@@ -1535,59 +1565,69 @@ class GameSceneInitializer(
                         return super.onConsoleMessage(consoleMessage)
                     }
                 }
-                //pass the images
-
-                val tmpMap: MutableMap<String, Any?> =
-                    circle["data"] as MutableMap<String, Any?>
-                val tmpArray: JSONArray = tmpMap["imgs"] as JSONArray
-
-                val jsonImagePassStrings = bitmapImagesToJson(tmpArray)
-                //WebView.setWebContentsDebuggingEnabled(true)
-
-
-
-
                 // Enable loading local content
                 webviewLayout.settings.allowFileAccess = true
                 webviewLayout.settings.allowFileAccessFromFileURLs = true
                 webviewLayout.settings.allowUniversalAccessFromFileURLs = true
-                
 
 
-                Log.d("gameUrl", circle["gameUrl"] as String)
-                webviewLayout.addJavascriptInterface(WebAppInterface(applicationContext, jsonImagePassStrings), "AndroidImages")
+                //Read data from map
+                val tmpMap: MutableMap<String, Any?> =
+                    circle["data"] as MutableMap<String, Any?>
+
+                val tmpListString = mutableMapOf<String, List<String>>()
+
+                //Match pairs part
+                if(tmpMap.contains("imgs")){
+                    val tmpArray: JSONArray = tmpMap["imgs"] as JSONArray
+
+                    val jsonImagePassStrings = bitmapImagesToJson(tmpArray)
+                    tmpListString["imgs"] = jsonImagePassStrings
+                    //WebView.setWebContentsDebuggingEnabled(true)
+
+
+
+                }
+                if(circle.contains("language")){
+                    tmpListString["language"] = listOf(circle["language"] as String)
+                }
+                if(tmpMap.contains("word")){
+                    tmpListString["word"] = listOf(tmpMap["word"] as String)
+                }
+
+                webviewLayout.addJavascriptInterface(WebAppInterface(applicationContext, tmpListString), "AndroidImages")
+
+
+
+
+
+
+
                 webviewLayout.loadUrl(circle["gameUrl"] as String)
-                //webviewLayout.evaluateJavascript(jsonImagePassStrings, null)
-                //webviewLayout.loadUrl("file:///android_asset/Content/WordSearch/index.html")
-                Log.d("IMAGESTRINGS", jsonImagePassStrings.toString())
+                //webViewLayoutC.visibility = View.VISIBLE
+                //webviewLayout.visibility = View.VISIBLE
 
-                //webviewLayout.evaluateJavascript(jsonImagePassStrings, null)
+                fadeInView(webViewLayoutC)
+                fadeInView(webviewLayout)
 
-                //Pass the image data to the html, so it can load
-                //webviewLayout.webViewClient = object : WebViewClient() {
-                //    override fun onPageFinished(view: WebView?, url: String?) {
-                //        super.onPageFinished(view, url)
-                //        view?.evaluateJavascript(jsonImagePassStrings, null)
-                //    }
-               // }
-
-                webViewLayoutC.visibility = View.VISIBLE
-                webviewLayout.visibility = View.VISIBLE
 
             }
 
             "qrCode" -> {
-                qrCodeLayout.visibility = View.VISIBLE
+                //qrCodeLayout.visibility = View.VISIBLE
+                fadeInView(qrCodeLayout)
                 setupControls()
             }
 
             "AR" -> {
                 if (arSceneView != null) {
                     //Needs to change a bit
-                    arOrNotLayout.visibility = View.VISIBLE
+                    //arOrNotLayout.visibility = View.VISIBLE
+                    fadeInView(arOrNotLayout)
                     setupAROrNot()
                 } else {
-                    this.quizLayout.visibility = View.VISIBLE
+                    //this.quizLayout.visibility = View.VISIBLE
+                    fadeInView(this.quizLayout)
                     val questionTv = quizLayout.findViewById<TextView>(R.id.quiz_tv_title)
                     var answersRb = arrayOf(
                         quizLayout.findViewById<RadioButton>(R.id.quiz_rb_1),
@@ -1605,6 +1645,7 @@ class GameSceneInitializer(
 
                     for (index in 0 until answersRb.size) {//Loop everything and make them invisible. For now..
                         answersRb[index].visibility = View.INVISIBLE
+                        //fadeOutView(answersRb[index])
                     }
 
 
@@ -1619,6 +1660,7 @@ class GameSceneInitializer(
                         //Loop everything and put text
                         answersRb[index].text = tmpArray[index].toString()
                         answersRb[index].visibility = View.VISIBLE
+                        //fadeInView(answersRb[index])
                     }
 
                     Log.d("TypeAAA", (tmpMap["correct_answer"] as Int).toString())
@@ -1629,7 +1671,8 @@ class GameSceneInitializer(
             }
 
             "finished" -> {
-                completedActivityLayout.visibility = View.VISIBLE
+                //completedActivityLayout.visibility = View.VISIBLE
+                fadeInView(completedActivityLayout)
             }
         }
     }
@@ -1739,7 +1782,8 @@ class GameSceneInitializer(
                          //   Toast.LENGTH_SHORT
                         //).show()
 
-                        qrCodeLayout.visibility = View.GONE
+                        //qrCodeLayout.visibility = View.GONE
+                        fadeOutView(qrCodeLayout)
                         //parentClass.finish()
 
 
@@ -1886,8 +1930,7 @@ class GameSceneInitializer(
 
                     if (AR1_c) {
                         AR1_c = false
-                        soundeffectsPlayerList[0].start()
-                        points += 100
+                        addPointsWithAnimation(100)
                     }
 
                     if (node.isTracking) {
@@ -1957,8 +2000,7 @@ class GameSceneInitializer(
 
                     if (AR2_c) {
                         AR2_c = false
-                        soundeffectsPlayerList[0].start()
-                        points += 100
+                        addPointsWithAnimation(100)
                     }
 
                     if (node.isTracking) {
@@ -2012,24 +2054,30 @@ class GameSceneInitializer(
 
     private fun toggleCharacterLayoutVisibility() {
         if (this.characterLayout.visibility == View.VISIBLE) {
-            this.characterLayout.visibility = View.INVISIBLE
+            //.characterLayout.visibility = View.INVISIBLE
+            fadeOutView(this.characterLayout)
         } else {
-            this.characterLayout.visibility = View.VISIBLE
+            //this.characterLayout.visibility = View.VISIBLE
+            fadeInView(this.characterLayout)
         }
 
     }
 
     private fun enableCharacterLayoutVisibility() {
-        this.characterLayout.visibility = View.VISIBLE
+        //this.characterLayout.visibility = View.VISIBLE
+        fadeInView(this.characterLayout)
     }
 
     private fun disableCharacterLayoutVisibility() {
-        this.characterLayout.visibility = View.GONE
+        //this.characterLayout.visibility = View.GONE
+        fadeOutView(this.characterLayout)
     }
 
     private fun slidingDone() {
-        slidingPuzzleLayout.visibility = View.INVISIBLE
-        correctLayout.visibility = View.VISIBLE
+        //slidingPuzzleLayout.visibility = View.INVISIBLE
+        fadeOutView(slidingPuzzleLayout)
+        //correctLayout.visibility = View.VISIBLE
+        fadeInView(correctLayout)
     }
 
     public fun cameraPermissionsDone() {
@@ -2230,7 +2278,8 @@ class GameSceneInitializer(
                                 var tmpView =
                                     cameraLayout.findViewById<ImageView>(R.id.imageViewTest)
                                 tmpView.setImageBitmap(sepiaBitmap);
-                                tmpView.visibility = View.VISIBLE
+                                //tmpView.visibility = View.VISIBLE
+                                fadeInView(tmpView)
 
                                 val imageUri = applicationContext.contentResolver.insert(
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -2514,13 +2563,67 @@ class GameSceneInitializer(
 
     fun onGameCompleted(points: Int) {
         Log.d("POINTS", points.toString())
-        this.points += points
-        this.pointsTextView.text = "Points: " + this.points
-        soundeffectsPlayerList[0].start()
+        //this.points += points
+        //this.pointsTextView.text = "Points: " + this.points
+        addPointsWithAnimation(points)
 
 
         //Disable Manually
         //this.webViewLayoutC.visibility = View.GONE
+    }
+
+    private fun addPointsWithAnimation(pointsToAdd: Int) {
+        var fDuration = 1000L
+        pointsTextView.animate().scaleX(1.2f).scaleY(1.2f).setDuration(fDuration/2).withEndAction {
+            pointsTextView.animate().scaleX(1f).scaleY(1f).setDuration(fDuration/2).start()
+        }.start()
+
+        val animator = ValueAnimator.ofInt(this.points, pointsToAdd+this.points).apply {
+            duration = fDuration
+            addUpdateListener { animation ->
+                val currentPoint = animation.animatedValue as Int
+                val pointsString = applicationContext.getString(R.string.game_points) + currentPoint
+                pointsTextView.text = pointsString
+            }
+            doOnEnd {
+                points += pointsToAdd+points
+            }
+        }
+        animator.start()
+        soundeffectsPlayerList[0].start()
+        shakeView(pointsTextView)
+    }
+
+    private fun shakeView(view: View) {
+        view.animate().setDuration(100).rotation(-5f).translationX(-10f).withEndAction {
+            view.animate().setDuration(100).rotation(5f).translationX(10f).withEndAction {
+                view.animate().setDuration(100).rotation(-5f).translationX(-10f).withEndAction {
+                    view.animate().setDuration(100).rotation(5f).translationX(10f).withEndAction {
+                        view.animate().setDuration(100).rotation(-5f).translationX(-10f).withEndAction {
+                            view.animate().setDuration(100).rotation(0f).translationX(0f).start()
+                        }.start()
+                    }.start()
+                }.start()
+            }.start()
+        }.start()
+    }
+
+    fun fadeInView(view: View) {
+        view.visibility = View.VISIBLE
+        val fadeInAnimation = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).apply {
+            duration = 500
+        }
+        fadeInAnimation.start()
+    }
+
+    fun fadeOutView(view: View) {
+        val fadeOutAnimation = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f).apply {
+            duration = 500
+            doOnEnd {
+                view.visibility = View.GONE
+            }
+        }
+        fadeOutAnimation.start()
     }
 
 
