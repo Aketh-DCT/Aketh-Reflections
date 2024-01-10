@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
 
         android:layout_marginTop="30dp"
-        android:text="Στοιχεία"
+        android:text="@string/correct_layout_nice_job"
         android:textColor="@color/black"
         android:textSize="50sp" />
 
@@ -28,7 +28,7 @@
 
 
         android:layout_centerInParent="true"
-        android:text="Your letter is: "
+        android:text=""
         android:textColor="@color/black"
         android:textSize="30sp" />
 

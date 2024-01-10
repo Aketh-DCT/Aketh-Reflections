@@ -24,4 +24,5 @@
     <string name="game_points" translatable="false">"Points: "</string>
     <string name="you_already_completed_activity" translatable="false">You have already completed this activity!</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="correct_layout_nice_job" translatable="false">Nice Job!</string>
 </resources>

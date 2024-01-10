@@ -46,7 +46,8 @@ class GameDescFragment : Fragment() {
 
         val soundBytes = mapOf(
             "eng_intro" to R.raw.eng_intro,
-            "en_ro_1_palace_of_culture" to R.raw.en_ro_1_palace_of_culture
+            "en_ro_1_palace_of_culture" to R.raw.en_ro_1_palace_of_culture,
+            "italian_english_intro" to R.raw.intro_it_en_01
         )
 
 

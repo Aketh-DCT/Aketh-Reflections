@@ -1058,7 +1058,16 @@ class GameSceneInitializer(
             "en_ro_6_nati"  to R.raw.en_ro_6_nati,
             "en_ro_7_grand_hotel_traian" to R.raw.en_ro_7_grand_hotel_traian,
             "en_ro_8_centra" to R.raw.en_ro_8_centra,
-            "wrong_answer" to R.raw.wrong_answer
+            "wrong_answer" to R.raw.wrong_answer,
+
+            //Italian english language
+            "intro_it_en_01" to R.raw.intro_it_en_01,
+            "piazza_della_repubblica_it_en_02" to R.raw.piazza_della_repubblica_it_en_02,
+            "chiesa_di_s_niccolo_it_en_03" to R.raw.chiesa_di_s_niccolo_it_en_03,
+            "parco_dei_canape_it_en_04" to R.raw.parco_dei_canape_it_en_04,
+            "murales_cileni_it_en_05" to R.raw.murales_cileni_it_en_05,
+            "hercules_it_en_06" to R.raw.hercules_it_en_06
+
 
         )
 
