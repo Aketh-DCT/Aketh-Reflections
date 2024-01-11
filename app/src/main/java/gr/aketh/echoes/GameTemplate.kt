@@ -467,9 +467,9 @@ class GameTemplate : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 // Check if location is not null
                 if (location != null) {
                     // Move the camera to the location of the device
-                    mMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(location.latitude, location.longitude), 20f))
+                    //mMap.animateCamera(
+                    //    CameraUpdateFactory.newLatLngZoom(
+                    //        LatLng(location.latitude, location.longitude), 20f))
                 } else {
                     // Handle case where last known location is not available
                     Log.d("TAG", "Last known location is not available")

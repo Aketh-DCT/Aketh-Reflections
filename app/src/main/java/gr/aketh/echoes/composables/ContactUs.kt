@@ -146,6 +146,7 @@ object ContactUs {
                     .padding(top = 20.0.dp)
                     .width(width = 40.dp)
                     .clickable(onClick = {
+                        
 
                         if (facebook_site.startsWith("https://www.facebook.com/")) {
                             facebook_site = facebook_site.replace("https://www.facebook.com/", "")

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import gr.aketh.echoes.R
+import gr.aketh.echoes.classes.MediaResources
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -115,16 +116,7 @@ object  Games {
 
 
         //
-        val drawableMap = mapOf(
-            "ic_menu_camera" to R.drawable.ic_menu_camera,
-            "test" to R.drawable.dxahavtwgnr81,
-            "test1" to R.drawable.karagkouna_zografia,
-            "test2" to R.drawable.playing_logo,
-            "iasi_featured_image" to R.drawable.iasi_featured_image,
-            "trikala_featured_image" to R.drawable.trikala_featured_image,
-            "foligno_featured_image" to R.drawable.foligno_featured_image,
-            "istanbul_featured_img" to R.drawable.istanbul_featured_img
-        )
+        val drawableMap = MediaResources.introImage
         if(landScapeOrientation)
         {
             Text(

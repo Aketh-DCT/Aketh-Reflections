@@ -159,23 +159,7 @@
           "sound": "voice_6_test",
           "type": "wordSearch",
           "data": {
-            "pieces": [
-              [
-                4,
-                7,
-                3
-              ],
-              [
-                2,
-                6,
-                8
-              ],
-              [
-                5,
-                1,
-                -1
-              ]
-            ],
+            "word":  "ΥΓΕΙΑ",
             "imgs": "Notthing right now",
             "letters": "Λ, Ο"
           }

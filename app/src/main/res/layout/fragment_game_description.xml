@@ -50,7 +50,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_bg"
         android:paddingHorizontal="15dp"
-        android:text="Start game"
+        android:text="@string/game_start"
         android:textColor="@color/white"
         android:textSize="20sp" />
 

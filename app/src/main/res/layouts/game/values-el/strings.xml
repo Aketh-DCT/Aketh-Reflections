@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="take_barcode_picture" >Βγάλε Φωτογραφία\n</string>
+    <string name="scan_barcode" >Scan Barcode\n</string>
+    <string name="open_camera" >Open Camera</string>
+    <string name="title_activity_start" >Ξεκίνα</string>
+    <string name="title_activity_intro" >Εισαγωγή</string>
+    <string name="tooltip_text" >The game is available in the following locations!</string>
+    <string name="contact_us" >Επικοινωνία</string>
+    <string name="contact_us_desc" >Ας μιλήσουμε για το Πρόγραμμα μας</string>
+    <string name="contact_us_directorate" >Directorate of Primary Education Trikala</string>
+    <string name="contact_us_coordinators_details">Στοιχεία επικοινωνίας συντονιστή</string>
+    <string name="contact_us_project_website_link" >playandlearnproject.eu</string>
+    <string name="contact_us_project_website" >Ιστοσελία προγράμματος:</string>
+    <string name="contact_us_facebook_website" >https://www.facebook.com/playingandlearningfromthepast?locale=el_GR</string>
+    <string name="contact_us_email" >email: </string>
+    <string name="contact_us_email_dipe" >mail@dipe.tri.sch.gr</string>
+    <string name="contact_us_website" >http://dipe.tri.sch.gr/</string>
+    <string name="contact_us_website_prefix" >Ιστοσελίδα:</string>
+    <string name="contact_us_phone" >0030 2431046475</string>
+    <string name="contact_us_phone_prefix" >τηλ:</string>
+    <string name="photo_tooltip" >Βγάλτε μια ομαδική φωτογραφία</string>
+    <string name="ar_tooltip" >Βρείτε και σκανάρετε αυτή την φωτογραφία, για περισσότερες πληροφορίες</string>
+    <string name="game_points" >"Πόντοι: "</string>
+    <string name="you_already_completed_activity" >Έχεις είδη ολοκληρώση αυτή την δραστηριότητα!</string>
+    <string name="ok" >Εντάξει</string>
+    <string name="correct_layout_nice_job" >Μπράβο!</string>
+    <string name="game_start">Ξεκινα το Παιχνιδι</string>
+</resources>

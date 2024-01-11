@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import gr.aketh.echoes.classes.MediaResources
 import gr.aketh.echoes.databinding.FragmentGameDescriptionBinding
 
 
@@ -44,11 +45,7 @@ class GameDescFragment : Fragment() {
 
         }
 
-        val soundBytes = mapOf(
-            "eng_intro" to R.raw.eng_intro,
-            "en_ro_1_palace_of_culture" to R.raw.en_ro_1_palace_of_culture,
-            "italian_english_intro" to R.raw.intro_it_en_01
-        )
+        val soundBytes = MediaResources.soundBytesIntro
 
 
         sound = soundBytes[jsonFile?.get(4)]?.let { MediaPlayer.create(this.context, it) }
