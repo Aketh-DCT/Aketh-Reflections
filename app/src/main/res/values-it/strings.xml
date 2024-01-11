@@ -26,5 +26,5 @@
     <string name="hide_video" translatable="false">Done</string>
 
     <string name="intro_text" translatable="false">This application is part of the intercultural Erasmus+ project  "Playing &amp; Learning From the Past" (2021–1-EL01-KA220-SCH-000027810 )that aims to contribute to the support and development of emerging cultural and digital  literacy of learners, along with the improvement of literacy skills, by utilizing the cultural identity of each country using online applications.</string>
-    <string name="select_language" translatable="false">Επέλεξε γλώσσα</string>
+    <string name="select_language" translatable="false">Seleziona la lingua</string>
 </resources>
