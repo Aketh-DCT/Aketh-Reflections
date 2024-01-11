@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Echoes_Aketh</string>
+    <string name="app_name" translatable="false">Play and learn - Reflections</string>
 
     <string name="default_gamedesc_text">On the following screen, you\'ll see an interactive map. Move towards Points of Interest (POIs), listen to exciting cultural stories, and answer quiz questions for points. Enjoy your cultural adventure, have a fantastic time exploring and learning about different cultures!</string>
 
