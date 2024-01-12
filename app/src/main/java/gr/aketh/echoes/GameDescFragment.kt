@@ -60,8 +60,18 @@ class GameDescFragment : Fragment() {
 
 
         binding.textTitleFragmentGameDescription.text = jsonFile?.get(3)
-        jsonFile?.get(2)?.let { binding.imageFragmentGameDescription.setImageResource(it.toInt()) }
 
+        //Change image
+        //jsonFile?.get(2)?.let { binding.imageFragmentGameDescription.setImageResource(it.toInt()) }
+        val imagesIntro = MediaResources.introImage
+        val imagesIntroChoice = jsonFile?.get(5)
+        if (imagesIntroChoice != null) {
+            imagesIntro[imagesIntroChoice]?.let {
+                binding.imageFragmentGameDescription.setImageResource(
+                    it
+                )
+            }
+        }
 
 
 

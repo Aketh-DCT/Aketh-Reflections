@@ -205,6 +205,13 @@ object  Games {
                         val title = gameInfo.getString("title")
                         val description = gameInfo.getString("description")
                         val imageResource = gameInfo.getString("image")
+                        var imageIntroResource = gameInfo.getString("image")
+                        try{
+                            imageIntroResource = gameInfo.getString("intro_image")
+
+                        }catch (_:JSONException){
+
+                        }
 
                         val context = LocalContext.current
                         val packageName = context.packageName
@@ -229,7 +236,7 @@ object  Games {
 
                         val id = drawableMap.getOrElse(imageResource) { R.drawable.ic_menu_camera }
 
-                        var gameFileInfo = arrayOf(gameFileName, introText, id.toString(), title, introSound)
+                        val gameFileInfo = arrayOf(gameFileName, introText, id.toString(), title, introSound, imageIntroResource)
 
 
 

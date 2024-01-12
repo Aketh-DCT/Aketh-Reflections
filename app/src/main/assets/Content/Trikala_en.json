@@ -291,6 +291,7 @@
         "title": "Trikala - Greece",
         "description": "Trikala is a city in northwestern Thessaly, Greece, and the capital of the Trikala regional unit. The city straddles the Lithaios river, which is a tributary of Pineios. Trikala is a lively Greek city with picturesque monuments and old neighborhoods with traditional architecture. The city is near Meteora and also near the mountain range of south Pindus. Trikala today is a vibrant greek city, well known throughout Greece for its river that bisects the city center and also for the historic monuments and the picturesque old town. Some of the most important sights of Trikala are Asklepieion of Trikke, Byzantine Castle, Old Town of Trikala, Osman Shah Mosque etc.",
         "image": "trikala_featured_image",
+        "intro_image": "trikala_featured_image",
         "character_images" : {
             "ch1": "play_and_learn_asclepius",
             "ch2": "kara",

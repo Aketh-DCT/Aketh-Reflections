@@ -168,11 +168,11 @@ class Intro : ComponentActivity() {
                     }
 
 
-                    Image(painterResource(id = R.drawable.erasmus),
+                    Image(painterResource(id = R.drawable.banner_iky),
                         contentDescription = "Test",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
-                            .fillMaxWidth(0.8f))
+                            .fillMaxWidth(0.9f))
                 }
             }
                 }
