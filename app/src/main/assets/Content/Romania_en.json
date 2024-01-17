@@ -187,6 +187,7 @@
           "sound": "en_ro_7_grand_hotel_traian",
           "type": "wordSearch",
           "data": {
+            "word": "HEALTH",
             "imgs": "Notthing right now",
             "letters": "Λ, Ο"
           }
@@ -211,7 +212,8 @@
           "sound": "en_ro_8_centra",
           "type": "wordSearch",
           "data": {
-            "imgs": "Notthing right now",
+            "word": "HEALTH",
+            "imgs": "Nothing right now",
             "letters": "Λ, Ο"
           }
         }
