@@ -4,10 +4,10 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 47.157431471636066,
-            "lon": 27.58702723034173
+            "lat": 47.157740917387216,
+            "lon": 27.586740468189575
           },
-          "circle_radius": 20,
+          "circle_radius": 40,
           "circle_color": "#7BEE6352",
           "id": 4
         },
@@ -36,10 +36,10 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 47.1590412466505,
-            "lon": 27.586725647928443
+            "lat": 47.158924432401584,
+            "lon": 27.586487344023393
           },
-          "circle_radius": 10,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 4
         },
@@ -49,10 +49,17 @@
           "description": "Tzami",
           "sound": "en_ro_2_museum_of_metropolit_dosoftei",
           "characters": ["ch1","ch2"],
-          "type": "camera",
+          "type": "quiz",
           "data": {
-            "imgs": "Notthing right now",
-            "letters": "Λ, Ο"
+            "question": "Which books were not printed during the time of Metropolitan Dosoftei?",
+            "answers": [
+              "Missal (Liturghier)",
+              "Finances",
+              "The Apostle"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": ""
           }
         }
       }
@@ -64,13 +71,13 @@
             "lat": 47.16498813112366,
             "lon": 27.58920441276285
           },
-          "circle_radius": 7,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {
           "local_img_url": "bb",
-          "title": "Trei Ierarhi Monastery",
+          "title": "Golia Monastery\n",
           "description": "Έξω απο το ακεθ 3",
           "sound": "en_ro_3_theth_1",
           "characters": ["ch1","ch2"],
@@ -93,10 +100,10 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 47.16040827651142,
-            "lon": 27.582901405006307
+            "lat": 47.160771957480506,
+            "lon": 27.583355206682498
           },
-          "circle_radius": 5,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 2
         },
@@ -106,10 +113,16 @@
           "description": "bb",
           "sound": "en_ro_4_cath",
           "characters": ["ch1","ch2"],
-          "type": "matchPairs",
+          "type": "quiz",
           "data": {
-            "imgs": "Notthing right now",
-            "letters": "Λ, Ο"
+            "question": "Also, I ask you, did Pope Francis officiate a mass here in 2019?",
+            "answers": [
+              "True",
+              "False"
+            ],
+            "correct_answer": 0,
+            "points": 100,
+            "letters": ""
           }
         }
       }
@@ -118,10 +131,10 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 47.161681864957316,
-            "lon": 27.581963361647436
+            "lat": 47.16194622140796,
+            "lon": 27.583003043641654
           },
-          "circle_radius": 7,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 3
         },
@@ -152,13 +165,13 @@
             "lat": 47.16498813112366,
             "lon": 27.58920441276285
           },
-          "circle_radius": 7,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 3
         },
         "content": {
           "local_img_url": "bb",
-          "title": "6.National Theater of Iasi,”Vasile Alecsandri’’",
+          "title": "6.National Theater of Iasi,”Vasile Alecsandri GOLIA’’",
           "description": "Έξω απο το ακεθ 5",
           "sound": "en_ro_6_nati",
           "type": "camera",
@@ -173,10 +186,10 @@
       "circleProperties": {
         "properties": {
           "circle_center": {
-            "lat": 47.16632838817202,
-            "lon": 27.57933555807713
+            "lat": 47.16615576379289,
+            "lon": 27.57956572868873
           },
-          "circle_radius": 6,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 1
         },
@@ -185,11 +198,16 @@
           "title": "7. Grand Hotel Traian",
           "description": "Έξω απο το ακεθ 6",
           "sound": "en_ro_7_grand_hotel_traian",
-          "type": "wordSearch",
+          "type": "quiz",
           "data": {
-            "word": "HEALTH",
-            "imgs": "Notthing right now",
-            "letters": "Λ, Ο"
+            "question": "In this building the most famous Romanian writers of the 19th century read their works. Associate their names with the literary work they created:",
+            "answers": [
+              "Ion Creangă - Evening star, Mihai Eminescu - A stormy night, Ion Luca Caragiale - Childhood Memories",
+              "Ion Creangă - Childhood Memories, Mihai Eminescu - Evening star, Ion Luca Caragiale - A stormy night"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": ""
           }
         }
       }
@@ -201,20 +219,56 @@
             "lat":  47.1701224962822,
             "lon":  27.575828942021605
           },
-          "circle_radius": 6,
+          "circle_radius": 20,
           "circle_color": "#7BEE6352",
           "id": 1
         },
         "content": {
           "local_img_url": "bb",
-          "title": "7 duplicate change. Grand Hotel Traian",
+          "title": "Mihai Eminescu University Library",
           "description": "Έξω απο το ακεθ 6",
           "sound": "en_ro_8_centra",
-          "type": "wordSearch",
+          "type": "quiz",
           "data": {
-            "word": "HEALTH",
-            "imgs": "Nothing right now",
-            "letters": "Λ, Ο"
+            "question": "Associate the names of the personalities in the given list with the field in which they contributed to the cultural development of Iasi:",
+            "answers": [
+              "Nicolae Iorga -(history), Petre Andrei - (sociology), Alexandru Philipide - (philology), Grigore T. Popa - (medicine), Radu Cernătescu - (physics), Ștefan Procopiu - (chemistry)",
+              "Nicolae Iorga -(sociology), Petre Andrei - (history), Alexandru Philipide - (physics), Grigore T. Popa - (chemistry), Radu Cernătescu - (philology), Ștefan Procopiu - (medicine)"
+            ],
+            "correct_answer": 0,
+            "points": 100,
+            "letters": ""
+          }
+        }
+      }
+    },
+    {
+      "circleProperties": {
+        "properties": {
+          "circle_center": {
+            "lat": 47.16314213343808,
+            "lon": 27.58481119510492
+          },
+          "circle_radius": 20,
+          "circle_color": "#7BEE6352",
+          "id": 1
+        },
+        "content": {
+          "local_img_url": "bb",
+          "title": "Vasile Alecsandri National Theater",
+          "description": "Έξω απο το ακεθ 6",
+          "sound": "en_ro_7_grand_hotel_traian",
+          "type": "quiz",
+          "data": {
+            "question": "Which of the following plays was written by Vasile Alecsandri?",
+            "answers": [
+              "The Cherry Orchard",
+              "Chirița in the province",
+              "The miser"
+            ],
+            "correct_answer": 1,
+            "points": 100,
+            "letters": ""
           }
         }
       }
